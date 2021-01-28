@@ -3,6 +3,7 @@
 use CodeIgniter\Controller;
 use App\Models\JabatanModel;
 use App\Models\BidangModel;
+use App\Models\PegawaiModel;
 
 class Admin extends BaseController
 {
@@ -16,8 +17,10 @@ class Admin extends BaseController
 
     public function data_pegawai()
     {
+        $model = new PegawaiModel();
         $data['title'] = 'Data Pegawai';
         $data['page'] = 'data_pegawai';
+        $data['pegawai'] = $model->getData();
         echo view('index', $data);
     }
 
@@ -40,37 +43,46 @@ class Admin extends BaseController
 			$rules = [
 				'nama' => 'required|min_length[3]|max_length[50]',
                 'no_ktp' => 'required|min_length[3]|max_length[16]',
-                'tempat_lahir'  => 'required|min_length[3]|max_length[30]',
-                'tanggal_lahir' => 'required',
-                'jenis_kelamin' => 'required',
-                'status_perkawinan' => '',
-                'status_pegawai'    => '',
-                'alamat'    => '',
-                'pendidikan_terakhir'   => '',
-                'no_rumah'  => '',
-                'id_jabatan'    => '',
-                'tanggal_pengangkatan'  => '',
-                'id_bidang' => '',
-                'no_hp' => '',
-				'email' => 'required|min_length[6]|max_length[50]|valid_email|is_unique[users.email]',
+                'email' => 'required|min_length[6]|max_length[50]|valid_email|is_unique[pegawai.email]',
+                'foto' => 'uploaded[foto]|mime_in[foto,image/jpg,image/jpeg,image/gif,image/png]|max_size[foto,2048]',
 			];
 
 			if (! $this->validate($rules)) {
-				$data['validation'] = $this->validator;
+                $data['validation'] = $this->validator;
+                $session = session();
+				$session->setFlashdata('error', 'Data tidak Disimpan, ada kesalahan, silahkan isi ulang');
+				return redirect()->to('/add_pegawai');
 			}else{
-				$model = new UserModel();
-
-				$newData = [
-					'firstname' => $this->request->getVar('firstname'),
-					'lastname' => $this->request->getVar('lastname'),
-					'email' => $this->request->getVar('email'),
-					'password' => $this->request->getVar('password'),
-				];
-				$model->save($newData);
-				$session = session();
-				$session->setFlashdata('success', 'Data Pegawai Berhasil Disimpan');
-				return redirect()->to('/data_pegawai');
-
+                $model = new PegawaiModel();
+                $foto = $this->request->getFile('foto');
+                $namabaru = $foto->getRandomName();
+                if ($foto->move(ROOTPATH . 'public/img/pegawai', $namabaru)) {
+                    $newData = [
+                        'nama' => $this->request->getVar('nama'),
+                        'nik' => $this->request->getVar('no_ktp'),
+                        'tempat_lahir' => $this->request->getVar('tempat_lahir'),
+                        'tanggal_lahir' => $this->request->getVar('tanggal_lahir'),
+                        'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
+                        'status_perkawinan' => $this->request->getVar('status_perkawinan'),
+                        'status_pegawai'    => $this->request->getVar('status_pegawai'),
+                        'alamat'    => $this->request->getVar('alamat'),
+                        'pendidikan_terakhir'   => $this->request->getVar('pendidikan_terakhir'),
+                        'jabatan_id'    => $this->request->getVar('jabatan_id'),
+                        'tanggal_pengangkatan'  => $this->request->getVar('tanggal_pengangkatan'),
+                        'bidang_id' => $this->request->getVar('bidang_id'),
+                        'no_hp' => $this->request->getVar('no_hp'),
+                        'email' => $this->request->getVar('email'),
+                        'foto' => $namabaru,
+                    ];
+                    $model->save($newData);
+                    $session = session();
+                    $session->setFlashdata('success', 'Data Pegawai Berhasil Disimpan');
+                    return redirect()->to('/data_pegawai');
+                } else {
+                    $session = session();
+                    $session->setFlashdata('error', 'Ada kesalahan');
+                    return redirect()->to('/add_pegawai');
+                }
 			}
 		}
     }

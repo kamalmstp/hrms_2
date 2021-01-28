@@ -29,7 +29,7 @@
                                 <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Nama Lengkap</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="nama" class="form-control" />
+                                    <input type="text" name="nama" class="form-control" required/>
                                 </div>
                                 </div>
                             </div>
@@ -69,8 +69,8 @@
                                 <div class="col-sm-9">
                                     <select name="jenis_kelamin" class="form-control">
                                     <option disabled selected>-- Pilih --</option>
-                                    <option value="Laki-laki">Laki-laki</option>
-                                    <option value="Perempuan">Perempuan</option>
+                                    <option value="L">Laki-laki</option>
+                                    <option value="P">Perempuan</option>
                                     </select>
                                 </div>
                                 </div>
@@ -98,8 +98,8 @@
                                     <div class="col-sm-9">
                                         <select name="status_pegawai" class="form-control">
                                         <option disabled selected>-- Pilih --</option>
-                                        <option value="Karyawan tetap">Karyawan tetap</option>
-                                        <option value="Karyawan kontrak">Karyawan kontrak</option>
+                                        <option value="Tetap">Karyawan tetap</option>
+                                        <option value="Kontrak">Karyawan kontrak</option>
                                         </select>
                                     </div>
                                 </div>
@@ -108,7 +108,7 @@
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Nama Jabatan</label>
                                     <div class="col-sm-9">
-                                        <select name="id_jabatan" class="form-control">
+                                        <select name="jabatan_id" class="form-control">
                                         <option disabled selected>-- Pilih --</option>
                                         <?php foreach ($jabatan as $row):?>
                                             <option value="<?=$row['jabatan_id']?>"><?=$row['nama']?></option>
@@ -131,7 +131,7 @@
                             <div class="form-group row">
                             <label class="col-sm-3 col-form-label">Nama Bidang</label>
                             <div class="col-sm-9">
-                                <select name="id_bidang" class="form-control">
+                                <select name="bidang_id" class="form-control">
                                 <option disabled selected>-- Pilih --</option>
                                 <?php foreach ($bidang as $row):?>
                                     <option value="<?=$row['bidang_id']?>"><?=$row['nama']?></option>
@@ -160,8 +160,9 @@
                                 <div class="col-sm-9">
                                     <select name="pendidikan_terakhir" class="form-control">
                                     <option disabled selected>-- Pilih --</option>
-                                    <option value="SMP/SMA">SMP/SMA</option>
-                                    <option value="Diploma">Diploma</option>
+                                    <option value="SMP/SLTP">SMP/SLTP</option>
+                                    <option value="SMA/SLTA">SMA/SLTA</option>
+                                    <option value="D3">D3</option>
                                     <option value="S1">S1</option>
                                     <option value="S2">S2</option>
                                     <option value="S3">S3</option>
@@ -175,7 +176,7 @@
                             <div class="form-group row">
                             <label class="col-sm-3 col-form-label">No. Handphone</label>
                                 <div class="col-sm-9">
-                                    <input type="number" name="no_hp" class="form-control" />
+                                    <input type="number" name="no_hp" class="form-control" max_length="15"/>
                                 </div>
                             </div>
                         </div>
@@ -183,7 +184,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label">Email</label>
                                 <div class="col-sm-9">
-                                    <input type="email" name="email" class="form-control" />
+                                    <input type="email" name="email" class="form-control" required/>
                                 </div>
                             </div>
                         </div>
