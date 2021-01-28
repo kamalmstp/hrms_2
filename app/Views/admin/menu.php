@@ -31,6 +31,31 @@
               </li>
             </ul>
           </li>
+
+          <li class="nav-item <?php $val = ($page == 'data_jabatan' || $page == 'data_bidang') ? 'menu-open' : '' ; echo $val?>">
+            <a href="#" class="nav-link <?php $val = ($page == 'data_jabatan' || $page == 'data_bidang') ? 'active' : '' ; echo $val?>">
+              <i class="nav-icon fas fa-cogs"></i>
+              <p>
+                Master Data
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="/data_jabatan" class="nav-link <?php $val = ($page == 'data_jabatan') ? 'active' : '' ; echo $val?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Data Jabatan</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/data_bidang" class="nav-link <?php $val = ($page == 'data_bidang') ? 'active' : '' ; echo $val?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Data Bidang</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+
           <li class="nav-header">EXAMPLES</li>
           <li class="nav-item">
             <a href="pages/calendar.html" class="nav-link">

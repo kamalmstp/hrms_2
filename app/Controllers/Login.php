@@ -27,11 +27,17 @@ class Login extends BaseController
 					'user_id'	=> $data['user_id'],
 					'name'		=> $data['name'],
 					'email'		=> $data['email'],
-					'role_id'	=> $data['role_id'],
+					'role'		=> $data['role'],
 					'logged_in'	=> TRUE
 				];
 				$session->set($ses_data);
-				return redirect()->to('/admin');
+				if ($data['role'] == 'Admin') {
+					return redirect()->to('/admin');
+				} else if ($data['role'] == 'Kepala') {
+					return redirect()->to('/kepala');
+				} else {
+					return redirect()->to('/pegawai');
+				}
 			} else {
 				$session->setFlashdata('msg', 'Password Salah!');
 				return redirect()->to('/login');

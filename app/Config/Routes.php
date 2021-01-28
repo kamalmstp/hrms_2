@@ -31,10 +31,21 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Login::index');
-
+$routes->get('logout', 'Login::logout');
 // Admin
 $routes->get('admin', 'Admin::index',['filter' => 'auth']);
 $routes->get('data_pegawai', 'Admin::data_pegawai',['filter' => 'auth']);
+$routes->get('add_pegawai', 'Admin::add_pegawai',['filter' => 'auth']);
+$routes->post('save_pegawai', 'Admin::save_pegawai',['filter' => 'auth']);
+//Master Data
+$routes->get('data_jabatan', 'Admin::data_jabatan',['filter' => 'auth']);
+$routes->post('save_jabatan', 'Admin::save_jabatan',['filter' => 'auth']);
+$routes->post('update_jabatan', 'Admin::update_jabatan',['filter' => 'auth']);
+$routes->post('del_jabatan', 'Admin::del_jabatan', ['filter' => 'auth']);
+$routes->get('data_bidang', 'Admin::data_bidang',['filter' => 'auth']);
+$routes->post('save_bidang', 'Admin::save_bidang',['filter' => 'auth']);
+$routes->post('update_bidang', 'Admin::update_bidang',['filter' => 'auth']);
+$routes->post('del_bidang', 'Admin::del_bidang', ['filter' => 'auth']);
 /**
  * --------------------------------------------------------------------
  * Additional Routing

@@ -5,6 +5,12 @@
 <script>
   $.widget.bridge('uibutton', $.ui.button)
 </script>
+
+<!-- SweetAlert2 -->
+<script src="/AdminLTE/plugins/sweetalert2/sweetalert2.min.js"></script>
+<!-- Toastr -->
+<script src="/AdminLTE/plugins/toastr/toastr.min.js"></script>
+
 <!-- Bootstrap 4 -->
 <script src="/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- ChartJS -->
@@ -44,11 +50,39 @@
 <script src="/AdminLTE/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="/AdminLTE/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="/AdminLTE/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+
+<?php if (!empty(session()->getFlashdata('success'))):?>
+  <script>
+$(function() {
+    var Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: true,
+      timer: 300
+    });
+      toastr.success("<?=session()->getFlashdata('success')?>")
+  });
+</script>
+<?php endif;?>
+<?php if (!empty(session()->getFlashdata('error'))):?>
+  <script>
+$(function() {
+    var Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: true,
+      timer: 300
+    });
+      toastr.error("<?=session()->getFlashdata('error')?>")
+  });
+</script>
+<?php endif;?>
+
 <script>
   $(function () {
     $("#example1").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      "buttons": ["copy", "excel", "pdf", "print"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
     $('#example2').DataTable({
       "paging": true,

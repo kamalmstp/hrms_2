@@ -1,4 +1,4 @@
-
+<?php $role = session()->get('role'); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
