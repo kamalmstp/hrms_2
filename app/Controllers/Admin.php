@@ -4,6 +4,7 @@ use CodeIgniter\Controller;
 use App\Models\JabatanModel;
 use App\Models\BidangModel;
 use App\Models\PegawaiModel;
+use App\Models\PeriodeModel;
 
 class Admin extends BaseController
 {
@@ -38,6 +39,81 @@ class Admin extends BaseController
     }
 
     public function save_pegawai()
+    {
+        if ($this->request->getMethod() == 'post') {
+			$rules = [
+				'nama' => 'required|min_length[3]|max_length[50]',
+                'no_ktp' => 'required|min_length[3]|max_length[20]',
+                'email' => 'required|min_length[6]|max_length[50]|valid_email|is_unique[pegawai.email]',
+                'foto' => 'uploaded[foto]|mime_in[foto,image/jpg,image/jpeg,image/gif,image/png]|max_size[foto,2048]',
+			];
+
+			if (! $this->validate($rules)) {
+                $data['validation'] = $this->validator;
+                $session = session();
+				$session->setFlashdata('error', 'Data tidak Disimpan, ada kesalahan, silahkan isi ulang');
+				return redirect()->to('/add_pegawai');
+			}else{
+                
+                $foto = $this->request->getFile('foto');
+                $namabaru = $foto->getRandomName();
+                if (!empty($this->request->getFile('foto'))) {
+                    if ($foto->move(ROOTPATH . 'public/img/pegawai', $namabaru)) {
+                        $model = new PegawaiModel();
+                        $newData = [
+                            'nama' => $this->request->getVar('nama'),
+                            'nik' => $this->request->getVar('no_ktp'),
+                            'tempat_lahir' => $this->request->getVar('tempat_lahir'),
+                            'tanggal_lahir' => $this->request->getVar('tanggal_lahir'),
+                            'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
+                            'status_perkawinan' => $this->request->getVar('status_perkawinan'),
+                            'status_pegawai'    => $this->request->getVar('status_pegawai'),
+                            'alamat'    => $this->request->getVar('alamat'),
+                            'pendidikan_terakhir'   => $this->request->getVar('pendidikan_terakhir'),
+                            'jabatan_id'    => $this->request->getVar('jabatan_id'),
+                            'tanggal_pengangkatan'  => $this->request->getVar('tanggal_pengangkatan'),
+                            'bidang_id' => $this->request->getVar('bidang_id'),
+                            'no_hp' => $this->request->getVar('no_hp'),
+                            'email' => $this->request->getVar('email'),
+                            'foto' => $namabaru,
+                        ];
+                        $model->save($newData);
+                        $session = session();
+                        $session->setFlashdata('success', 'Data Pegawai Berhasil Disimpan');
+                        return redirect()->to('/data_pegawai');
+                    } else {
+                        $session = session();
+                        $session->setFlashdata('error', 'Ada kesalahan');
+                        return redirect()->to('/add_pegawai');
+                    }
+                } else {
+                    $model2 = new PegawaiModel();
+                    $newData2 = [
+                        'nama' => $this->request->getVar('nama'),
+                        'nik' => $this->request->getVar('no_ktp'),
+                        'tempat_lahir' => $this->request->getVar('tempat_lahir'),
+                        'tanggal_lahir' => $this->request->getVar('tanggal_lahir'),
+                        'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
+                        'status_perkawinan' => $this->request->getVar('status_perkawinan'),
+                        'status_pegawai'    => $this->request->getVar('status_pegawai'),
+                        'alamat'    => $this->request->getVar('alamat'),
+                        'pendidikan_terakhir'   => $this->request->getVar('pendidikan_terakhir'),
+                        'jabatan_id'    => $this->request->getVar('jabatan_id'),
+                        'tanggal_pengangkatan'  => $this->request->getVar('tanggal_pengangkatan'),
+                        'bidang_id' => $this->request->getVar('bidang_id'),
+                        'no_hp' => $this->request->getVar('no_hp'),
+                        'email' => $this->request->getVar('email'),
+                    ];
+                    $model2->save($newData2);
+                    $session = session();
+                    $session->setFlashdata('success', 'Data Pegawai Berhasil Disimpan');
+                    return redirect()->to('/data_pegawai');
+                }
+			}
+		}
+    }
+
+    public function update_pegawai()
     {
         if ($this->request->getMethod() == 'post') {
 			$rules = [
@@ -103,7 +179,7 @@ class Admin extends BaseController
     {
         if ($this->request->getMethod() == 'post') {
 			$rules = [
-				'bidang' => 'required|min_length[3]|max_length[50]',
+				'jabatan' => 'required|min_length[3]|max_length[50]',
                 'keterangan' => 'max_length[100]',
 			];
 
@@ -111,7 +187,7 @@ class Admin extends BaseController
                 $data['validation'] = $this->validator;
                 $session = session();
 				$session->setFlashdata('error', 'Data Gagal Disimpan');
-				return redirect()->to('/data_bidang');
+				return redirect()->to('/data_jabatan');
 			}else{
                 $model = new JabatanModel();
 
@@ -216,6 +292,78 @@ class Admin extends BaseController
         $session = session();
         $session->setFlashdata('success', 'Data Bidang Berhasil Dihapus!');
         return redirect()->to('/data_bidang');
+    }
+
+    public function data_periode()
+    {
+        helper('form');
+        $periode = new PeriodeModel();
+        $data['periode'] = $periode->getData();
+
+        $data['title'] = 'Data Periode';
+        $data['page'] = 'data_periode';
+
+        echo view('index', $data);
+    }
+
+    public function save_periode()
+    {
+        if ($this->request->getMethod() == 'post') {
+			$rules = [
+				'kode' => 'required|min_length[3]',
+                'date_start' => 'required',
+                'date_end' => 'required',
+                'total' => 'required',
+			];
+
+			if (! $this->validate($rules)) {
+                $data['validation'] = $this->validator;
+                $session = session();
+				$session->setFlashdata('error', 'Data Gagal Disimpan');
+				return redirect()->to('/data_periode');
+			}else{
+				$model = new PeriodeModel();
+
+				$newData = [
+					'kode' => $this->request->getVar('kode'),
+					'date_start' => $this->request->getVar('date_start'),
+					'date_end' => $this->request->getVar('date_end'),
+					'total' => $this->request->getVar('total'),
+				];
+				$model->save($newData);
+				$session = session();
+				$session->setFlashdata('success', 'Data Periode Berhasil Disimpan');
+				return redirect()->to('/data_periode');
+
+			}
+		}
+    }
+
+    public function update_periode()
+    {
+        $model = new PeriodeModel();
+        $id = $this->request->getVar('periode_id');
+        $data = [
+            'kode' => $this->request->getVar('kode'),
+            'date_start' => $this->request->getVar('date_start'),
+            'date_end' => $this->request->getVar('date_end'),
+            'total' => $this->request->getVar('total'),
+        ];
+        $model->update($id, $data);
+        $session = session();
+        $session->setFlashdata('success', 'Data Periode Berhasil Dirubah!');
+        return redirect()->to('/data_periode');
+    }
+
+    public function del_periode()
+    {
+        $model = new PeriodeModel();
+        
+        $id = $this->request->getVar('periode_id');
+        $model->where('periode_id', $id)->delete($id);
+        $session = session();
+        $session->setFlashdata('success', 'Data periode Berhasil Dihapus!');
+        return redirect()->to('/data_periode');
     }
 
 }

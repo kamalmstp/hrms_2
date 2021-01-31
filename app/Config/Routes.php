@@ -46,6 +46,10 @@ $routes->get('data_bidang', 'Admin::data_bidang',['filter' => 'auth']);
 $routes->post('save_bidang', 'Admin::save_bidang',['filter' => 'auth']);
 $routes->post('update_bidang', 'Admin::update_bidang',['filter' => 'auth']);
 $routes->post('del_bidang', 'Admin::del_bidang', ['filter' => 'auth']);
+$routes->get('data_periode', 'Admin::data_periode',['filter' => 'auth']);
+$routes->post('save_periode', 'Admin::save_periode',['filter' => 'auth']);
+$routes->post('update_periode', 'Admin::update_periode',['filter' => 'auth']);
+$routes->post('del_periode', 'Admin::del_periode', ['filter' => 'auth']);
 /**
  * --------------------------------------------------------------------
  * Additional Routing

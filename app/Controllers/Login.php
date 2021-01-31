@@ -31,9 +31,9 @@ class Login extends BaseController
 					'logged_in'	=> TRUE
 				];
 				$session->set($ses_data);
-				if ($data['role'] == 'Admin') {
+				if ($data['role'] == 'admin') {
 					return redirect()->to('/admin');
-				} else if ($data['role'] == 'Kepala') {
+				} else if ($data['role'] == 'kepala') {
 					return redirect()->to('/kepala');
 				} else {
 					return redirect()->to('/pegawai');
