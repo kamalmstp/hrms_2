@@ -5,6 +5,7 @@ use App\Models\JabatanModel;
 use App\Models\BidangModel;
 use App\Models\PegawaiModel;
 use App\Models\PeriodeModel;
+use App\Models\AsetyayasanModel;
 
 class Admin extends BaseController
 {
@@ -161,6 +162,71 @@ class Admin extends BaseController
                 }
 			}
 		}
+    }
+
+    public function aset_yayasan()
+    {
+        helper('form');
+        $aset = new AsetyayasanModel();
+        $data['aset'] = $aset->getData();
+
+        $data['title'] = 'Company Assets';
+        $data['page'] = 'aset_yayasan';
+
+        echo view('index', $data);
+    }
+
+    public function save_asetc()
+    {
+        if ($this->request->getMethod() == 'post') {
+			$rules = [
+				'jabatan' => 'required|min_length[3]|max_length[50]',
+                'keterangan' => 'max_length[100]',
+			];
+
+			if (! $this->validate($rules)) {
+                $data['validation'] = $this->validator;
+                $session = session();
+				$session->setFlashdata('error', 'Data Gagal Disimpan');
+				return redirect()->to('/data_jabatan');
+			}else{
+                $model = new JabatanModel();
+
+                $newData = [
+                    'nama' => $this->request->getVar('jabatan'),
+                    'ket' => $this->request->getVar('keterangan'),
+                ];
+                $model->save($newData);
+                $session = session();
+                $session->setFlashdata('success', 'Data Jabatan Berhasil Disimpan!');
+                return redirect()->to('/data_jabatan');
+            }
+        }
+    }
+
+    public function update_asetc()
+    {
+        $model = new JabatanModel();
+        $id = $this->request->getVar('jabatan_id');
+        $data = [
+            'nama' => $this->request->getVar('jabatan'),
+            'ket' => $this->request->getVar('keterangan'),
+        ];
+        $model->update($id, $data);
+        $session = session();
+        $session->setFlashdata('success', 'Data Jabatan Berhasil Dirubah!');
+        return redirect()->to('/data_jabatan');
+    }
+
+    public function del_asetc()
+    {
+        $model = new JabatanModel();
+        
+        $id = $this->request->getVar('jabatan_id');
+        $model->where('jabatan_id', $id)->delete($id);
+        $session = session();
+        $session->setFlashdata('success', 'Data Jabatan Berhasil Dihapus!');
+        return redirect()->to('/data_jabatan');
     }
 
     public function data_jabatan()

@@ -50,6 +50,15 @@ $routes->get('data_periode', 'Admin::data_periode',['filter' => 'auth']);
 $routes->post('save_periode', 'Admin::save_periode',['filter' => 'auth']);
 $routes->post('update_periode', 'Admin::update_periode',['filter' => 'auth']);
 $routes->post('del_periode', 'Admin::del_periode', ['filter' => 'auth']);
+//Assets
+$routes->get('aset_yayasan', 'Admin::aset_yayasan',['filter' => 'auth']);
+$routes->post('save_asetc', 'Admin::save_asetc',['filter' => 'auth']);
+$routes->post('update_asetc', 'Admin::update_asetc',['filter' => 'auth']);
+$routes->post('del_asetc', 'Admin::del_asetc', ['filter' => 'auth']);
+$routes->get('aset_pegawai', 'Admin::aset_pegawai',['filter' => 'auth']);
+$routes->post('save_asetp', 'Admin::save_asetp',['filter' => 'auth']);
+$routes->post('update_asetp', 'Admin::update_asetp',['filter' => 'auth']);
+$routes->post('del_asetp', 'Admin::del_asetp', ['filter' => 'auth']);
 /**
  * --------------------------------------------------------------------
  * Additional Routing
