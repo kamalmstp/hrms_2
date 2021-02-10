@@ -76,17 +76,20 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="namaaset">Name</label>
+                    <label for="namaaset">Aset Name *</label>
                     <input type="text" class="form-control" name="nama" id="namaaset" required>
                 </div>
                 <div class="form-group">
-                    <label for="jumlah">Quantity</label>
+                    <label for="jumlah">Quantity *</label>
                     <input type="number" class="form-control" name="jumlah" id="jumlah" required>
+                </div>
+                <div class="form-group">
+                    <label for="file">File</label>
+                    <input type="file" class="form-control" name="doc" id="file">
                 </div>
                 <div class="form-group">
                     <label for="ket">Description</label>
                     <textarea name="keterangan" id="ket" class="form-control" cols="30" rows="2"></textarea>
-                    <!-- <input type="text" name="keterangan" id="ketjabatan"> -->
                 </div>
             </div>
             <div class="modal-footer justify-content-between">

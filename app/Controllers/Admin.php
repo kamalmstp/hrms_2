@@ -180,27 +180,104 @@ class Admin extends BaseController
     {
         if ($this->request->getMethod() == 'post') {
 			$rules = [
-				'jabatan' => 'required|min_length[3]|max_length[50]',
-                'keterangan' => 'max_length[100]',
+				'nama' => 'required|min_length[3]|max_length[50]',
+                'jumlah' => 'max_length[10]',
 			];
 
 			if (! $this->validate($rules)) {
                 $data['validation'] = $this->validator;
                 $session = session();
 				$session->setFlashdata('error', 'Data Gagal Disimpan');
-				return redirect()->to('/data_jabatan');
+				return redirect()->to('/aset_yayasan');
 			}else{
-                $model = new JabatanModel();
-
-                $newData = [
-                    'nama' => $this->request->getVar('jabatan'),
-                    'ket' => $this->request->getVar('keterangan'),
-                ];
-                $model->save($newData);
-                $session = session();
-                $session->setFlashdata('success', 'Data Jabatan Berhasil Disimpan!');
-                return redirect()->to('/data_jabatan');
+                $file = $this->request->getFile('doc');
+                $newname = $file->getRandomName();
+                if (!empty($this->request->getFile('doc'))) {
+                    if ($file->move(ROOTPATH. 'public/document', $newname)) {
+                        $model = new AsetyayasanModel();
+    
+                        $newData = [
+                            'nama' => $this->request->getVar('nama'),
+                            'jumlah' => $this->request->getVar('jumlah'),
+                            'file' => $newname,
+                            'keterangan' => $this->request->getVar('keterangan'),
+                        ];
+                        $model->save($newData);
+                        $session = session();
+                        $session->setFlashdata('success', 'Data Aset Berhasil Disimpan!');
+                        return redirect()->to('/aset_yayasan');
+                    }else {
+                        $session = session();
+                        $session->setFlashdata('error', 'Ada Kesalahan, Silahkan Ulangi');
+                        return redirect()->to('/aset_yayasan');
+                    }
+                } else {
+                    $model = new AsetyayasanModel();
+    
+                    $newData = [
+                        'nama' => $this->request->getVar('nama'),
+                        'jumlah' => $this->request->getVar('jumlah'),
+                        'keterangan' => $this->request->getVar('keterangan'),
+                    ];
+                    $model->save($newData);
+                    $session = session();
+                    $session->setFlashdata('success', 'Data Aset Berhasil Disimpan!');
+                    return redirect()->to('/aset_yayasan');
+                }
             }
+        }
+    }
+
+    public function do_upload()
+    {	
+
+    	if ($this->request->getMethod() !== 'post') {
+            return redirect()->to(base_url('uploadfile?msg=Method Salah'));
+        }
+
+        //$request = \Config\Services::request();
+        $file = $this->request->getFile('uploadedFile');
+        $name = $file->getName();// Mengetahui Nama File
+        $originalName = $file->getClientName();// Mengetahui Nama Asli
+        $tempfile = $file->getTempName();// Mengetahui Nama TMP File name
+        $ext = $file->getClientExtension();// Mengetahui extensi File
+        $type = $file->getClientMimeType();// Mengetahui Mime File
+        $size_kb = $file->getSize('kb'); // Mengetahui Ukuran File dalam kb
+        $size_mb = $file->getSize('mb');// Mengetahui Ukuran File dalam mb
+
+        
+        //$namabaru = $file->getRandomName();//define nama fiel yang baru secara acak
+        
+        if ($type == (('image/png') or ('image/jpeg'))) //cek mime file
+        {	// File Tipe Sesuai
+        	$image = \Config\Services::image('gd'); //Load Image Libray
+        	$info = $image->withFile($file)->getFile()->getProperties(true); //Mendapatkan Files Propertis
+        	$width = $info['width'];// Mengetahui Image Width
+        	$height = $info['height'];// Mengetahui Image Height
+
+        	helper('filesystem'); // Load Helper File System
+        	$direktori = ROOTPATH.'upload'; //definisikan direktori upload
+        	$namabaru = 'user_name.jpg'; //definisikan nama fiel yang baru
+        	$map = directory_map($direktori, FALSE, TRUE); // List direktori
+
+	        /* Cek File apakah ada */
+	        foreach ($map as $key) {
+	        	if ($key == $namabaru){
+	        		delete_files($direktori,$namabaru); //Hapus terlebih dahulu jika file ada
+	        	}
+	        }
+	        //Metode Upload Pilih salah satu
+        	//$path = $this->request->getFile('uploadedFile')->store($direktori, $namabaru);
+        	//$file->move($direktori, $namabaru)
+	        if ($file->move($direktori, $namabaru)){
+	        	return redirect()->to(base_url('uploadfile?msg=Upload Berhasil'));
+	        }else{
+
+	        	return redirect()->to(base_url('uploadfile?msg=Upload Gagal'));
+	        }
+        }else{
+        	// File Tipe Tidak Sesuai
+        	return redirect()->to(base_url('uploadfile?msg=Format File Salah'));
         }
     }
 
