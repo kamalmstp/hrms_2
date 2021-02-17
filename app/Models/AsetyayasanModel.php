@@ -13,7 +13,7 @@ class AsetyayasanModel extends Model
         if ($id === false) {
             return $this->findAll();
         } else {
-            return $this->getWhere(['periode_id' => $id]);
+            return $this->getWhere(['aset_yayasan_id' => $id]);
         }
     }
 

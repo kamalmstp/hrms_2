@@ -6,11 +6,12 @@ use App\Models\BidangModel;
 use App\Models\PegawaiModel;
 use App\Models\PeriodeModel;
 use App\Models\AsetyayasanModel;
+use App\Models\AsetpegawaiModel;
 
 class Admin extends BaseController
 {
-	public function index()
-	{
+		public function index()
+		{
         $data['title'] = 'Dashboard';
         $data['page'] = 'dashboard';
 
@@ -55,7 +56,7 @@ class Admin extends BaseController
 				$session->setFlashdata('error', 'Data tidak Disimpan, ada kesalahan, silahkan isi ulang');
 				return redirect()->to('/add_pegawai');
 			}else{
-                
+
                 $foto = $this->request->getFile('foto');
                 $namabaru = $foto->getRandomName();
                 if (!empty($this->request->getFile('foto'))) {
@@ -176,6 +177,20 @@ class Admin extends BaseController
         echo view('index', $data);
     }
 
+		public function aset_pegawai()
+    {
+        helper('form');
+        $aset = new AsetpegawaiModel();
+				$pegawai = new PegawaiModel();
+        $data['aset'] = $aset->getData();
+				$data['pegawai'] = $pegawai->getData();
+
+        $data['title'] = 'Asset Pegawai';
+        $data['page'] = 'aset_pegawai';
+
+        echo view('index', $data);
+    }
+
     public function save_asetc()
     {
         if ($this->request->getMethod() == 'post') {
@@ -195,7 +210,7 @@ class Admin extends BaseController
                 if (!empty($this->request->getFile('doc'))) {
                     if ($file->move(ROOTPATH. 'public/document', $newname)) {
                         $model = new AsetyayasanModel();
-    
+
                         $newData = [
                             'nama' => $this->request->getVar('nama'),
                             'jumlah' => $this->request->getVar('jumlah'),
@@ -213,7 +228,7 @@ class Admin extends BaseController
                     }
                 } else {
                     $model = new AsetyayasanModel();
-    
+
                     $newData = [
                         'nama' => $this->request->getVar('nama'),
                         'jumlah' => $this->request->getVar('jumlah'),
@@ -228,8 +243,38 @@ class Admin extends BaseController
         }
     }
 
+		public function save_asetp()
+    {
+        if ($this->request->getMethod() == 'post') {
+			$rules = [
+				'nama' => 'required|min_length[3]|max_length[50]',
+                'jumlah' => 'max_length[10]',
+			];
+
+			if (! $this->validate($rules)) {
+                $data['validation'] = $this->validator;
+                $session = session();
+				$session->setFlashdata('error', 'Data Gagal Disimpan');
+				return redirect()->to('/aset_pegawai');
+			}else{
+                $model = new AsetpegawaiModel();
+
+                $newData = [
+                    'nama' => $this->request->getVar('nama'),
+                    'jumlah' => $this->request->getVar('jumlah'),
+										'pegawai_id' => $this->request->getVar('pegawai_id'),
+                    'keterangan' => $this->request->getVar('keterangan'),
+                ];
+                $model->save($newData);
+                $session = session();
+                $session->setFlashdata('success', 'Data Aset Berhasil Disimpan!');
+                return redirect()->to('/aset_pegawai');
+            }
+        }
+    }
+
     public function do_upload()
-    {	
+    {
 
     	if ($this->request->getMethod() !== 'post') {
             return redirect()->to(base_url('uploadfile?msg=Method Salah'));
@@ -245,9 +290,9 @@ class Admin extends BaseController
         $size_kb = $file->getSize('kb'); // Mengetahui Ukuran File dalam kb
         $size_mb = $file->getSize('mb');// Mengetahui Ukuran File dalam mb
 
-        
+
         //$namabaru = $file->getRandomName();//define nama fiel yang baru secara acak
-        
+
         if ($type == (('image/png') or ('image/jpeg'))) //cek mime file
         {	// File Tipe Sesuai
         	$image = \Config\Services::image('gd'); //Load Image Libray
@@ -295,15 +340,42 @@ class Admin extends BaseController
         return redirect()->to('/data_jabatan');
     }
 
+		public function update_asetp()
+    {
+        $model = new AsetpegawaiModel();
+        $id = $this->request->getVar('aset_pegawai_id');
+        $data = [
+            'nama' => $this->request->getVar('nama'),
+						'jumlah' => $this->request->getVar('jumlah'),
+						'pegawai_id' => $this->request->getVar('pegawai_id'),
+						'keterangan' => $this->request->getVar('keterangan'),
+        ];
+        $model->update($id, $data);
+        $session = session();
+        $session->setFlashdata('success', 'Data Asset Berhasil Dirubah!');
+        return redirect()->to('/aset_pegawai');
+    }
+
     public function del_asetc()
     {
         $model = new JabatanModel();
-        
+
         $id = $this->request->getVar('jabatan_id');
         $model->where('jabatan_id', $id)->delete($id);
         $session = session();
         $session->setFlashdata('success', 'Data Jabatan Berhasil Dihapus!');
         return redirect()->to('/data_jabatan');
+    }
+
+		public function del_asetp()
+    {
+        $model = new AsetpegawaiModel();
+
+        $id = $this->request->getVar('aset_pegawai_id');
+        $model->where('aset_pegawai_id', $id)->delete($id);
+        $session = session();
+        $session->setFlashdata('success', 'Data Aset Berhasil Dihapus!');
+        return redirect()->to('/aset_pegawai');
     }
 
     public function data_jabatan()
@@ -363,7 +435,7 @@ class Admin extends BaseController
     public function del_jabatan()
     {
         $model = new JabatanModel();
-        
+
         $id = $this->request->getVar('jabatan_id');
         $model->where('jabatan_id', $id)->delete($id);
         $session = session();
@@ -429,7 +501,7 @@ class Admin extends BaseController
     public function del_bidang()
     {
         $model = new BidangModel();
-        
+
         $id = $this->request->getVar('bidang_id');
         $model->where('bidang_id', $id)->delete($id);
         $session = session();
@@ -501,7 +573,7 @@ class Admin extends BaseController
     public function del_periode()
     {
         $model = new PeriodeModel();
-        
+
         $id = $this->request->getVar('periode_id');
         $model->where('periode_id', $id)->delete($id);
         $session = session();
