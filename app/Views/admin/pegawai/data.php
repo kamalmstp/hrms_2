@@ -1,0 +1,113 @@
+<?= $this->extend('layout/index'); ?>
+
+<?= $this->section('content'); ?>
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3><?= $page ?></h3>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2><?= $title ?></h2>
+                        <div class="nav navbar-right panel_toolbox">
+                            <a href="/admin/add_pegawai" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Add </a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <table id="datatable-buttons" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama</th>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Jabatan</th>
+                                    <th>TTL</th>
+                                    <th>Akun</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $i = 1; ?>
+                                <?php foreach ($pegawai as $row) : ?>
+                                    <tr>
+                                        <td width="2%"><?= $i++ ?></td>
+                                        <td><?= $row['gelar_depan'] . ' ' . $row['nama'] . ' ' . $row['gelar_belakang'] ?></td>
+                                        <td><?php if ($row['jenis_kelamin'] == 'L') {
+                                                echo "Laki-Laki";
+                                            } else {
+                                                echo "Perempuan";
+                                            } ?>
+                                        </td>
+                                        <td></td>
+                                        <td><?= $row['tempat_lahir'] . ', ' . $row['tanggal_lahir'] ?></td>
+                                        <td><a class="btn btn-round btn-success btn-xs"><i class="fa fa-key"></i> Aktif</a></td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-info btn-xs">Aksi</button>
+                                                <button type="button" class="btn btn-info btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                    <span class="caret"></span>
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <ul class="dropdown-menu" role="menu">
+                                                    <li><a href="#">Action</a>
+                                                    </li>
+                                                    <li><a href="#">Another action</a>
+                                                    </li>
+                                                    <li><a href="#">Something else here</a>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#">Separated link</a>
+                                                    </li>
+                                                </ul>
+                                                <a class="btn btn-warning btn-xs" type="button"><i class="fa fa-pencil"></i> Edit</a>
+                                                <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target=".modal-del<?= $row['pegawai_id'] ?>"><i class="fa fa-trash-o"></i> Delete </button>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php foreach ($pegawai as $row) : ?>
+    <div class="modal fade modal-del<?= $row['pegawai_id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+
+                <form action="/admin/pegawai_del" method="post" class="form-horizontal form-label-left">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Delete</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <p>Apakah anda yakin ingin menghapus <strong><?= $row['nama'] ?></strong>?</p>
+                        <input type="hidden" name="pegawai_id" value="<?= $row['pegawai_id'] ?>">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Delete</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+<?php endforeach; ?>
+<?= $this->endSection(); ?>

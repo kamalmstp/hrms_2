@@ -1,12 +1,15 @@
-<?php namespace App\Models;
+<?php
+
+namespace App\Models;
 
 use CodeIgniter\Model;
 
 class PegawaiModel extends Model
 {
-    protected $table = "pegawai";
-    protected $primaryKey = "pegawai_id";
-    protected $allowedFields = ['nama','nik','tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'status_perkawinan', 'status_pegawai', 'alamat', 'pendidikan_terakhir', 'jabatan_id', 'tanggal_pengangkatan', 'jabatan_id', 'tanggal_pengangkatan', 'bidang_id', 'no_hp', 'email', 'foto'];
+    protected $table = 'pegawai';
+    protected $primaryKey = 'pegawai_id';
+
+    protected $allowedFields = ['jenis_pegawai_id', 'nama', 'gelar_depan', 'gelar_belakang', 'nip', 'nik', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin', 'status_perkawin', 'provinsi', 'kota', 'kecamatan', 'kelurahan', 'alamat', 'telepon', 'email', 'rekening', 'gambar', 'keterangan', 'status_pegawai'];
 
     public function getData($id = false)
     {
@@ -16,5 +19,4 @@ class PegawaiModel extends Model
             return $this->getWhere(['pegawai_id' => $id]);
         }
     }
-
 }

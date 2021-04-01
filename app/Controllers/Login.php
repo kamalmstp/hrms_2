@@ -1,34 +1,45 @@
-<?php namespace App\Controllers;
+<?php
 
-use CodeIgniter\Controller;
+namespace App\Controllers;
+
 use App\Models\UserModel;
 
 class Login extends BaseController
 {
 	public function index()
 	{
-		helper(['form']);
-		$data['title'] = "Login | HRMS Almazaya Islamic School";
-		echo view('login', $data);
+		$session = session();
+		if ($session->get('role') == 'Admin') {
+			return redirect()->to('/admin');
+		} elseif ($session->get('role') == 'Kepala') {
+			return redirect()->to('/kepala');
+		} elseif ($session->get('role') == 'Pegawai') {
+			return redirect()->to('/pegawai');
+		} else {
+			$data = [
+				'title' => 'Login | HRMS'
+			];
+			return view('login', $data);
+		}
 	}
 
 	public function login()
 	{
 		$session = session();
 		$model = new UserModel();
-		$email = $this->request->getVar('email');
+		$username = $this->request->getVar('username');
 		$password = $this->request->getVar('password');
-		$data = $model->where('email', $email)->first();
+		$data = $model->where('username', $username)->first();
 		if ($data) {
 			$pass = $data['password'];
 			$verify_pass = password_verify($password, $pass);
 			if ($verify_pass) {
 				$ses_data = [
-					'user_id'	=> $data['user_id'],
-					'name'		=> $data['name'],
-					'email'		=> $data['email'],
-					'role'		=> $data['role'],
-					'logged_in'	=> TRUE
+					'user_id'    => $data['user_id'],
+					'username'        => $data['username'],
+					'pegawai_id'        => $data['pegawai_id'],
+					'role'        => $data['role'],
+					'logged_in'    => TRUE
 				];
 				$session->set($ses_data);
 				if ($data['role'] == 'Admin') {
@@ -46,20 +57,12 @@ class Login extends BaseController
 			$session->setFlashdata('msg', 'Email Salah/Tidak Tersedia!');
 			return redirect()->to('/login');
 		}
-		
-
 	}
 
-	public function logout(){
+	public function logout()
+	{
 		$session = session();
 		$session->destroy();
 		return redirect()->to('login');
 	}
-
-	public function forgot()
-	{
-		$data['title'] = "Forgot Password";
-		return view('reset_password', $data);
-	}
-
 }
