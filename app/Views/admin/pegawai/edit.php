@@ -24,25 +24,25 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="nama">Nama Lengkap *:</label>
-                                    <input type="text" id="nama" class="form-control" name="nama" required />
+                                    <input type="text" id="nama" class="form-control" value="<?= $pegawai['nama'] ?>" name="nama" required />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="nik">NIK :</label>
-                                    <input type="number" id="nik" class="form-control" name="nik" />
+                                    <input type="number" id="nik" class="form-control" value="<?= $pegawai['nik'] ?>" name="nik" />
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="gelar_depan">Gelar Depan :</label>
-                                    <input type="text" id="gelar_depan" class="form-control" name="gelar_depan" />
+                                    <input type="text" id="gelar_depan" class="form-control" value="<?= $pegawai['gelar_depan'] ?>" name="gelar_depan" />
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="gelar_belakang">Gelar Belakang :</label>
-                                    <input type="text" id="gelar_belakang" class="form-control" name="gelar_belakang" />
+                                    <input type="text" id="gelar_belakang" class="form-control" value="<?= $pegawai['gelar_belakang'] ?>" name="gelar_belakang" />
                                 </div>
                             </div>
 
@@ -50,8 +50,14 @@
                                 <div class="form-group">
                                     <label for="jenis_kelamin">Jenis Kelamin :</label>
                                     <select id="jenis_kelamin" name="jenis_kelamin" class="form-control">
-                                        <option value="P">Perempuan</option>
-                                        <option value="L">Laki-laki</option>
+                                        <option value="P" <?php if ($pegawai['jenis_kelamin'] == 'P') {
+                                                                echo 'selected';
+                                                            } else {
+                                                            } ?>>Perempuan</option>
+                                        <option value="L" <?php if ($pegawai['jenis_kelamin'] == 'L') {
+                                                                echo 'selected';
+                                                            } else {
+                                                            } ?>>Laki-laki</option>
                                     </select>
                                 </div>
                             </div>
@@ -59,12 +65,30 @@
                                 <div class="form-group">
                                     <label for="status_perkawinan">Status Perkawinan :</label>
                                     <select name="status_perkawinan" id="status_perkawinan" class="form-control">
-                                        <option value="Belum Menikah">Belum Menikah</option>
-                                        <option value="Menikah">Menikah</option>
-                                        <option value="Janda Cerai">Janda Cerai</option>
-                                        <option value="Janda Mati">Janda Mati</option>
-                                        <option value="Duda Cerai">Duda Cerai</option>
-                                        <option value="Duda Mati">Duda Mati</option>
+                                        <option value="Belum Menikah" <?php if ($pegawai['status_perkawin'] == 'Belum Menikah') {
+                                                                            echo 'selected';
+                                                                        } else {
+                                                                        } ?>>Belum Menikah</option>
+                                        <option value="Menikah" <?php if ($pegawai['status_perkawin'] == 'Menikah') {
+                                                                    echo 'selected';
+                                                                } else {
+                                                                } ?>>Menikah</option>
+                                        <option value="Janda Cerai" <?php if ($pegawai['status_perkawin'] == 'Janda Cerai') {
+                                                                        echo 'selected';
+                                                                    } else {
+                                                                    } ?>>Janda Cerai</option>
+                                        <option value="Janda Mati" <?php if ($pegawai['status_perkawin'] == 'Janda Mati') {
+                                                                        echo 'selected';
+                                                                    } else {
+                                                                    } ?>>Janda Mati</option>
+                                        <option value="Duda Cerai" <?php if ($pegawai['status_perkawin'] == 'Duda Cerai') {
+                                                                        echo 'selected';
+                                                                    } else {
+                                                                    } ?>>Duda Cerai</option>
+                                        <option value="Duda Mati" <?php if ($pegawai['status_perkawin'] == 'Duda Mati') {
+                                                                        echo 'selected';
+                                                                    } else {
+                                                                    } ?>>Duda Mati</option>
                                     </select>
                                 </div>
                             </div>
@@ -72,14 +96,14 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="tempat_lahir">Tempat Lahir :</label>
-                                    <input type="text" id="tempat_lahir" class="form-control" name="tempat_lahir" />
+                                    <input type="text" id="tempat_lahir" class="form-control" value="<?= $pegawai['tempat_lahir'] ?>" name="tempat_lahir" />
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="tanggal_lahir">Tanggal Lahir :</label>
                                     <div class="col-md-11 xdisplay_inputx form-group has-feedback">
-                                        <input type="text" class="form-control has-feedback-left" id="single_cal3" placeholder="Tanggal Lahir" name="tanggal_lahir">
+                                        <input type="text" class="form-control has-feedback-left" id="single_cal3" placeholder="Tanggal Lahir" value="<?= $pegawai['tanggal_lahir'] ?>" name="tanggal_lahir">
                                         <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                                     </div>
                                 </div>
@@ -88,13 +112,13 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="telepon">Nomor Telpon * :</label>
-                                    <input type="number" id="telepon" class="form-control" name="telepon" required />
+                                    <input type="number" id="telepon" class="form-control" value="<?= $pegawai['telepon'] ?>" name="telepon" required />
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="email">Email *:</label>
-                                    <input type="email" id="email" class="form-control" name="email" required />
+                                    <input type="email" id="email" class="form-control" value="<?= $pegawai['email'] ?>" name="email" required />
                                 </div>
                             </div>
 
@@ -114,7 +138,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="alamat">Alamat :</label>
-                                    <textarea class="form-control" name="alamat" id="alamat" cols="30" rows="5"></textarea>
+                                    <textarea class="form-control" name="alamat" id="alamat" cols="30" rows="5"><?= $pegawai['alamat'] ?></textarea>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -135,7 +159,10 @@
                                     <select name="jenis_pegawai" id="jenis_pegawai" class="form-control">
                                         <option value="">--Pilih--</option>
                                         <?php foreach ($jenis_peg as $row) : ?>
-                                            <option value="<?= $row['jenis_pegawai_id'] ?>"><?= $row['jenis_pegawai'] ?></option>
+                                            <option value="<?= $row['jenis_pegawai_id'] ?>" <?php if ($row['jenis_pegawai_id'] == $pegawai['jenis_pegawai_id']) {
+                                                                                                echo 'selected';
+                                                                                            } else {
+                                                                                            } ?>><?= $row['jenis_pegawai'] ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -145,7 +172,7 @@
                                     <label for="tanggal_masuk">Tanggal Masuk :</label>
 
                                     <div class="col-md-11 xdisplay_inputx form-group has-feedback">
-                                        <input type="text" class="form-control has-feedback-left" id="single_cal2" placeholder="Tanggal Masuk">
+                                        <input type="text" class="form-control has-feedback-left" id="single_cal2" name="tanggal_masuk" value="" placeholder="Tanggal Masuk">
                                         <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
                                         <span id="inputSuccess2Status2" class="sr-only">(success)</span>
                                     </div>
@@ -156,15 +183,19 @@
                                 <div class="form-group">
                                     <label for="status_pegawai">Status Pegawai :</label>
                                     <select name="status_pegawai" class="form-control" id="status_pegawai">
-                                        <option value="1">Aktif</option>
-                                        <option value="0">Tidak Aktif</option>
+                                        <option value="1" <?php if ($pegawai['status_pegawai'] == '1') {
+                                                                echo 'selected';
+                                                            } ?>>Aktif</option>
+                                        <option value="0" <?php if ($pegawai['status_pegawai'] == '0') {
+                                                                echo 'selected';
+                                                            } ?>>Tidak Aktif</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="rekening">Nomor Bank Kalsel :</label>
-                                    <input type="number" id="rekening" class="form-control" name="rekening" />
+                                    <input type="number" id="rekening" class="form-control" value="<?= $pegawai['rekening'] ?>" name="rekening" />
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -184,7 +215,7 @@
                                 <div class="form-group">
                                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                         <button class="btn btn-primary" type="button">Cancel</button>
-                                        <button type="submit" class="btn btn-success">Save Pegawai</button>
+                                        <button type="submit" class="btn btn-success">Update Pegawai</button>
                                     </div>
                                 </div>
 

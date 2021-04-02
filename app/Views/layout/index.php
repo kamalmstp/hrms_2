@@ -139,35 +139,97 @@
 
     <!-- Custom Theme Scripts -->
     <script type="text/javascript" src="/build/js/custom.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('.ui-pnotify').remove();
-        });
-    </script>
-    <?php if (!empty($session->getFlashdata('success'))) : ?>
+    <?php if (empty($session->getFlashdata('success'))) { ?>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('.ui-pnotify').remove();
+            });
+        </script>
+    <?php } elseif (!empty($session->getFlashdata('success'))) { ?>
         <script>
+            $(document).ready(function() {
+                $('.ui-pnotify').remove();
+            });
             $(function() {
+                var animate_in = $("#animate_in").val(),
+                    animate_out = $("#animate_out").val();
                 new PNotify({
-                    title: 'Regular Success',
-                    text: <?= $session->getFlashdata('success') ?>,
-                    type: 'success',
-                    styling: 'bootstrap3'
+                    title: "Berhasil !",
+                    text: "<?= $session->getFlashdata('success') ?>",
+                    type: "success",
+                    styling: "bootstrap3",
+                    animate: {
+                        animate: true,
+                        in_class: "bounceInLeft",
+                        out_class: "slideOutUp"
+                    }
                 });
             });
         </script>
-    <?php endif; ?>
-    <?php if (!empty($session->getFlashdata('error'))) : ?>
+    <?php } elseif (!empty($session->getFlashdata('error'))) { ?>
         <script>
+            $(document).ready(function() {
+                $('.ui-pnotify').remove();
+            });
             $(function() {
+                var animate_in = $("#animate_in").val(),
+                    animate_out = $("#animate_out").val();
                 new PNotify({
-                    title: 'Regular Success',
-                    text: <?= $session->getFlashdata('error') ?>,
-                    type: 'error',
-                    styling: 'bootstrap3'
+                    title: "Gagal !",
+                    text: "<?= $session->getFlashdata('error') ?>",
+                    type: "error",
+                    styling: "bootstrap3",
+                    animate: {
+                        animate: true,
+                        in_class: "bounceInLeft",
+                        out_class: "slideOutUp"
+                    }
                 });
             });
         </script>
-    <?php endif; ?>
+    <?php } elseif (!empty($session->getFlashdata('warning'))) { ?>
+        <script>
+            $(document).ready(function() {
+                $('.ui-pnotify').remove();
+            });
+            $(function() {
+                var animate_in = $("#animate_in").val(),
+                    animate_out = $("#animate_out").val();
+                new PNotify({
+                    title: "Peringatan !",
+                    text: "<?= $session->getFlashdata('warning') ?>",
+                    type: "warning",
+                    styling: "bootstrap3",
+                    animate: {
+                        animate: true,
+                        in_class: "bounceInLeft",
+                        out_class: "slideOutUp"
+                    }
+                });
+            });
+        </script>
+    <?php } elseif (!empty($session->getFlashdata('info'))) { ?>
+        <script>
+            $(document).ready(function() {
+                $('.ui-pnotify').remove();
+            });
+            $(function() {
+                var animate_in = $("#animate_in").val(),
+                    animate_out = $("#animate_out").val();
+                new PNotify({
+                    title: "Peringatan !",
+                    text: "<?= $session->getFlashdata('info') ?>",
+                    type: "info",
+                    styling: "bootstrap3",
+                    animate: {
+                        animate: true,
+                        in_class: "bounceInLeft",
+                        out_class: "slideOutUp"
+                    }
+                });
+            });
+        </script>
+    <?php }; ?>
 </body>
 
 </html>

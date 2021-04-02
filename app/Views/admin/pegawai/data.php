@@ -48,7 +48,9 @@
                                         </td>
                                         <td></td>
                                         <td><?= $row['tempat_lahir'] . ', ' . $row['tanggal_lahir'] ?></td>
-                                        <td><a class="btn btn-round btn-success btn-xs"><i class="fa fa-key"></i> Aktif</a></td>
+                                        <td>
+                                            <button type="button" class="btn btn-round btn-success btn-xs" data-toggle="modal" data-target=".modal-akun<?= $row['pegawai_id'] ?>"><i class="fa fa-key"></i> Aktif </button>
+                                        </td>
                                         <td>
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-info btn-xs">Aksi</button>
@@ -67,7 +69,7 @@
                                                     <li><a href="#">Separated link</a>
                                                     </li>
                                                 </ul>
-                                                <a class="btn btn-warning btn-xs" type="button"><i class="fa fa-pencil"></i> Edit</a>
+                                                <a href="/admin/edit_pegawai/<?= $row['pegawai_id']; ?>" class="btn btn-warning btn-xs" type="button"><i class="fa fa-pencil"></i> Edit</a>
                                                 <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target=".modal-del<?= $row['pegawai_id'] ?>"><i class="fa fa-trash-o"></i> Delete </button>
                                             </div>
 
@@ -84,6 +86,57 @@
 </div>
 
 <?php foreach ($pegawai as $row) : ?>
+    <div class="modal fade modal-akun<?= $row['pegawai_id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <form action="/admin/pegawai_akun_create" method="post" class="form-horizontal form-label-left">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Buat Akun</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="role">Level Akun<span class="required">*</span>
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select class="form-control col-md-7 col-xs-12" name="role" id="role">
+                                    <option value="">--Pilih--</option>
+                                    <option value="Admin">Admin</option>
+                                    <option value="Kepala">Kepala</option>
+                                    <option value="Pegawai">Pegawai</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="username">Username
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="hidden" name="pegawai_id" value="<?= $row['pegawai_id'] ?>">
+                                <input type="text" id="username" name="username" value="<?= $row['email'] ?>" class="form-control col-md-7 col-xs-12" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="password">Password
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <input type="text" id="password" name="password" value="<?= $row['nik'] ?>" class="form-control col-md-7 col-xs-12" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade modal-del<?= $row['pegawai_id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">

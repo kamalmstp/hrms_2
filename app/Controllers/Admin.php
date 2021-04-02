@@ -388,4 +388,22 @@ class Admin extends BaseController
         $session->setFlashdata('success', 'Data Berhasil Dihapus!');
         return redirect()->to('/admin/data_pegawai');
     }
+
+    public function edit_pegawai($id)
+    {
+        $jenis_peg = $this->jenisPegawai->getData();
+        $pegawai = $this->pegawaiModel->getData($id)->getRowArray();
+        $data = [
+            'title' => 'Edit Pegawai',
+            'page' => 'Pegawai',
+            'jenis_peg' => $jenis_peg,
+            'pegawai' => $pegawai,
+        ];
+        return view('admin/pegawai/edit', $data);
+    }
+
+    public function pegawai_akun_create()
+    {
+        $id = $this->request->getVar('pegawai_id');
+    }
 }
