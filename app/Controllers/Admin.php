@@ -321,7 +321,10 @@ class Admin extends BaseController
     //Pegawai
     public function data_pegawai()
     {
-        $pegawai = $this->pegawaiModel->getData();
+        $this->db = \Config\Database::connect();
+        $sql = $this->db->table('pegawai')->select('*')->join('users', 'users.pegawai_id = pegawai.pegawai_id', 'Left')->get();
+        $pegawai = $sql->getResultArray();
+        // $pegawai = $this->pegawaiModel->getData();
         $data = [
             'title' => 'Data Pegawai',
             'page' => 'Pegawai',
@@ -345,8 +348,6 @@ class Admin extends BaseController
     {
         $rules = [
             'nama' => 'required|max_length[50]',
-            'nik' => 'max_length[20]',
-            'nomor_telpon' => 'required|min_length[8]|max_length[15]',
             'email' => 'required|max_length[30]',
         ];
 
@@ -432,5 +433,14 @@ class Admin extends BaseController
             $session->setFlashdata('success', 'Akun Pegawai Berhasil Dibuat!');
             return redirect()->to('/admin/data_pegawai');
         }
+    }
+
+    public function pegawai_akun_delete()
+    {
+        $id = $this->request->getVar('user_id');
+        $this->userModel->where('user_id', $id)->delete($id);
+        $session = session();
+        $session->setFlashdata('success', 'Data Akun Berhasil Dihapus!');
+        return redirect()->to('/admin/data_pegawai');
     }
 }

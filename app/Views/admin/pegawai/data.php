@@ -49,7 +49,11 @@
                                         <td></td>
                                         <td><?= $row['tempat_lahir'] . ', ' . $row['tanggal_lahir'] ?></td>
                                         <td>
-                                            <button type="button" class="btn btn-round btn-success btn-xs" data-toggle="modal" data-target=".modal-akun<?= $row['pegawai_id'] ?>"><i class="fa fa-key"></i> Aktif </button>
+                                            <!-- <?php if ($row['pegawai_id'] == NULL) { ?>
+                                                <button type="button" class="btn btn-round btn-success btn-xs" data-toggle="modal" data-target=".modal-akun<?= $row['pegawai_id'] ?>"><i class="fa fa-key"></i> Aktif </button>
+                                            <?php } else { ?>
+                                                <button type="button" class="btn btn-round btn-danger btn-xs" data-toggle="modal" data-target=".modal-akundel<?= $row['pegawai_id'] ?>"><i class="fa fa-key"></i> Non-aktif </button>
+                                            <?php } ?> -->
                                         </td>
                                         <td>
                                             <div class="btn-group">
@@ -130,6 +134,32 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade modal-akundel<?= $row['pegawai_id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <form action="/admin/pegawai_akun_delete" method="post" class="form-horizontal form-label-left">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Hapus Akun</h4>
+                    </div>
+                    <div class="modal-body">
+
+                        <p>Apakah anda yakin ingin menghapus akun <strong><?= $row['nama'] ?></strong>?</p>
+                        <input type="hidden" name="pegawai_id" value="<?= $row['pegawai_id'] ?>">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Delete</button>
                     </div>
                 </form>
 
