@@ -54,7 +54,7 @@ CREATE TABLE `hubkel` (
   `hubkel` varchar(50) DEFAULT NULL,
   `keterangan` text DEFAULT NULL,
   PRIMARY KEY (`hubkel_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -63,7 +63,7 @@ CREATE TABLE `hubkel` (
 
 LOCK TABLES `hubkel` WRITE;
 /*!40000 ALTER TABLE `hubkel` DISABLE KEYS */;
-INSERT INTO `hubkel` VALUES (2,'Suami/Istri','tes');
+INSERT INTO `hubkel` VALUES (2,'Suami/Istri','tes'),(3,'Orang Tua','Tes'),(4,'Adik','ts'),(5,'Kakak','tes');
 /*!40000 ALTER TABLE `hubkel` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,7 +176,7 @@ CREATE TABLE `pegawai` (
   `update_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`pegawai_id`),
   UNIQUE KEY `nip` (`nip`,`nik`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -185,7 +185,7 @@ CREATE TABLE `pegawai` (
 
 LOCK TABLES `pegawai` WRITE;
 /*!40000 ALTER TABLE `pegawai` DISABLE KEYS */;
-INSERT INTO `pegawai` VALUES (13,0,'Mustapa Ahmad Kamal','H.','S.Kom',NULL,'1234567890','Amuntai','0000-00-00','L','Belum Menikah','',NULL,'','','',NULL,'mustapakamalkml1@gmail.com','08766431356',NULL,NULL,1,'0000-00-00 00:00:00','2021-04-01 13:28:33');
+INSERT INTO `pegawai` VALUES (14,1,'Mustapa Ahmad Kamal','H.','S.Kom',NULL,'234456789','Amuntai','0000-00-00','L','Belum Menikah','',NULL,'','','',NULL,'mustapakamalkml@gmail.com','',NULL,NULL,1,'0000-00-00 00:00:00','2021-04-02 08:08:55'),(15,2,'Akhmad Reza Haitami','','',NULL,'24351426789','','0000-00-00','L','Menikah','',NULL,'','','','08223775577','haitamireza@gmail.com','',NULL,NULL,0,'0000-00-00 00:00:00','2021-04-02 09:30:55'),(16,1,'Test','','',NULL,'2345234535','','0000-00-00','L','Menikah','',NULL,'','','','082237755772','admin@gmail.com','',NULL,NULL,1,'0000-00-00 00:00:00','2021-04-02 10:28:47');
 /*!40000 ALTER TABLE `pegawai` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -254,7 +254,7 @@ CREATE TABLE `users` (
   `role` varchar(10) DEFAULT NULL,
   `pegawai_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -305,4 +305,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-04-02 13:32:06
+-- Dump completed on 2021-04-02 21:04:39
