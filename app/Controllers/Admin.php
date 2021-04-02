@@ -7,6 +7,7 @@ use App\Models\JenisPegModel;
 use App\Models\JenisPendModel;
 use App\Models\JenjPendModel;
 use App\Models\PegawaiModel;
+use App\Models\UserModel;
 
 class Admin extends BaseController
 {
@@ -15,6 +16,8 @@ class Admin extends BaseController
     protected $jenjangPendidikan;
     protected $hubunganKeluarga;
     protected $pegawaiModel;
+    protected $userModel;
+
 
     public function __construct()
     {
@@ -23,6 +26,7 @@ class Admin extends BaseController
         $this->jenjangPendidikan = new JenjPendModel();
         $this->hubunganKeluarga = new HubkelModel();
         $this->pegawaiModel = new PegawaiModel();
+        $this->userModel = new UserModel();
     }
 
     public function index()
@@ -405,5 +409,28 @@ class Admin extends BaseController
     public function pegawai_akun_create()
     {
         $id = $this->request->getVar('pegawai_id');
+        $rules = [
+            'username' => 'required|is_unique[users.username]',
+            'password' => 'min_length[5]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data['validation'] = $this->validator;
+            $session = session();
+            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $validation = \Config\Services::validation();
+            return redirect()->to('/admin/data_pegawai')->withInput()->with('validation', $validation);
+        } else {
+            $pass = password_hash($this->request->getVar('password'), PASSWORD_BCRYPT);
+            $this->userModel->save([
+                'username' => $this->request->getVar('username'),
+                'password' => $pass,
+                'role' => $this->request->getVar('role'),
+                'pegawai_id' => $this->request->getVar('pegawai_id'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Akun Pegawai Berhasil Dibuat!');
+            return redirect()->to('/admin/data_pegawai');
+        }
     }
 }

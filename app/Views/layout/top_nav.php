@@ -10,7 +10,7 @@
                 <?php if ($session->get('pegawai_id') == NULL) { ?>
                     <li class="">
                         <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            <img src="<?= base_url() ?>/images/img.jpg" alt="">Administrator
+                            <img src="/images/img.jpg" alt="">Administrator
                             <span class=" fa fa-angle-down"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -18,9 +18,19 @@
                         </ul>
                     </li>
                 <?php } else { ?>
+                    <?php
+                    $db = \Config\Database::connect();
+                    $id = $session->get('pegawai_id');
+                    $user = $db->query("SELECT * FROM pegawai WHERE pegawai_id = " . $id)->getRow();
+                    ?>
                     <li class="">
                         <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            <img src="<?= base_url() ?>/images/img.jpg" alt="">John Doe
+                            <?php if (!empty($user->gambar)) { ?>
+                                <img src="/images/<?= $user->gambar ?>" alt="">
+                            <?php } else { ?>
+                                <img src="/images/user.png" alt="">
+                            <?php } ?>
+                            <?= $user->nama ?>
                             <span class=" fa fa-angle-down"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-usermenu pull-right">

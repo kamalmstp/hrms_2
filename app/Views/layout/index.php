@@ -48,7 +48,7 @@
 <body class="nav-md">
     <div class="container body">
         <div class="main_container">
-            <?= $this->include('layout/nav') ?>
+            <?= $this->include('layout/nav' . $session->get('role')) ?>
 
             <!-- top navigation -->
             <?= $this->include('layout/top_nav') ?>
