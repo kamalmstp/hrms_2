@@ -322,9 +322,12 @@ class Admin extends BaseController
     public function data_pegawai()
     {
         $this->db = \Config\Database::connect();
-        $sql = $this->db->table('pegawai')->select('*')->join('users', 'users.pegawai_id = pegawai.pegawai_id', 'Left')->get();
+        $sql = $this->db->table('pegawai p')
+                ->select('p.pegawai_id, p.nama, p.gelar_depan, p.gelar_belakang, p.nik, p.tempat_lahir, p.tanggal_lahir, p.jenis_kelamin, p.telepon, p.email, p.gambar, u.user_id, u.username, u.role, u.pegawai_id as id')
+                ->join('users u', 'u.pegawai_id = p.pegawai_id', 'Left')->get();
         $pegawai = $sql->getResultArray();
         // $pegawai = $this->pegawaiModel->getData();
+        // dd($pegawai);
         $data = [
             'title' => 'Data Pegawai',
             'page' => 'Pegawai',
@@ -335,11 +338,14 @@ class Admin extends BaseController
 
     public function add_pegawai()
     {
+        $prov = new \App\Models\ProvinsiModel();
+        $provinsi = $prov->getData();
         $jenis_peg = $this->jenisPegawai->getData();
         $data = [
             'title' => 'Tambah Pegawai',
             'page' => 'Pegawai',
             'jenis_peg' => $jenis_peg,
+            'provinsi' => $provinsi,
         ];
         return view('admin/pegawai/add', $data);
     }
@@ -443,4 +449,20 @@ class Admin extends BaseController
         $session->setFlashdata('success', 'Data Akun Berhasil Dihapus!');
         return redirect()->to('/admin/data_pegawai');
     }
+
+    public function ambil_data()
+    {
+        $kabModel = new \App\Models\KabModel();
+        $modul = $this->request->getVar('modul');
+        $prov_id = $this->request->getVar('id');
+        
+        if ($modul == "kabupaten") {
+            echo $this->kabModel->getData($prov_id);
+        }elseif ($modul == "kecamatan") {
+            
+        }elseif ($modul == "kelurahan") {
+            
+        }
+    }
+
 }

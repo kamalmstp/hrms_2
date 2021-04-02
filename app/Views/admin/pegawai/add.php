@@ -103,11 +103,18 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="provinsi">Provinsi :</label>
-                                    <input type="text" id="provinsi" class="form-control" name="provinsi" />
+                                    <select name="provinsi" class="form-control" id="provinsi">
+                                        <option value="">--Pilih Provinsi--</option>
+                                        <?php foreach($provinsi as $prov): ?>
+                                        <option value="<?=$prov['id']?>"><?=$prov['name']?></option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="kabupaten">Kabupaten :</label>
-                                    <input type="text" id="kabupaten" class="form-control" name="kabupaten" />
+                                    <label for="kabupaten">Kabupaten/Kota :</label>
+                                    <select name="kabupaten" id="kabupaten" class="form-control">
+                                        <option value="">--Pilih Kabupaten--</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -120,13 +127,17 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="kecamatan">Kecamatan :</label>
-                                    <input type="text" id="kecamatan" class="form-control" name="kecamatan" />
+                                    <select name="kecamatan" id="kecamatan" class="form-control">
+                                        <option value="">--Pilih Kecamatan--</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="kelurahan">Kelurahan :</label>
-                                    <input type="text" id="kelurahan" class="form-control" name="kelurahan" />
+                                    <label for="kelurahan">Kelurahan/Desa :</label>
+                                    <select name="kelurahan" id="kelurahan" class="form-control">
+                                        <option value="">--Pilih Kelurahan--</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-3">
