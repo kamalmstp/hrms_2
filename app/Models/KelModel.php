@@ -16,7 +16,7 @@ class KelModel extends Model
         if ($id === false) {
             return $this->findAll();
         } else {
-            return $this->getWhere(['id' => $id]);
+            return $this->getWhere(['district_id' => $id]);
         }
     }
 }

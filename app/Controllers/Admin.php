@@ -8,6 +8,8 @@ use App\Models\JenisPendModel;
 use App\Models\JenjPendModel;
 use App\Models\PegawaiModel;
 use App\Models\UserModel;
+use App\Models\IzinJenisModel;
+use App\Models\IzinModel;
 
 class Admin extends BaseController
 {
@@ -17,6 +19,8 @@ class Admin extends BaseController
     protected $hubunganKeluarga;
     protected $pegawaiModel;
     protected $userModel;
+    protected $izinjenisModel;
+    protected $izinModel;
 
 
     public function __construct()
@@ -27,6 +31,8 @@ class Admin extends BaseController
         $this->hubunganKeluarga = new HubkelModel();
         $this->pegawaiModel = new PegawaiModel();
         $this->userModel = new UserModel();
+        $this->izinjenisModel = new IzinJenisModel;
+        $this->izinModel = new IzinModel;
     }
 
     public function index()
@@ -178,6 +184,137 @@ class Admin extends BaseController
         return redirect()->to('/admin/jns_pend');
     }
 
+    public function izin()
+    {
+        $izinjenis = $this->izinjenisModel->getData();
+        $this->db = \Config\Database::connect();
+        $sql = $this->db->table('izin i')->select('i.izin_id, i.nama, j.izin_jenis_id, j.nama as nama_jenis')->join('izin_jenis j', 'j.izin_jenis_id = i.izin_jenis_id')->get();
+        $izin = $sql->getResultArray();
+        // dd($izin);
+        $data = [
+            'title' => 'Data Izin',
+            'title1' => 'Data Izin Jenis',
+            'title2' => 'Data Izin',
+            'page' => 'Master Data',
+            'izinjenis' => $izinjenis,
+            'izin' => $izin,
+        ];
+
+        return view('admin/master/izin', $data);
+    }
+
+    public function izin_jenis_save()
+    {
+        $rules = [
+            'jenis_izin' => 'required|max_length[30]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data['validation'] = $this->validator;
+            $session = session();
+            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $validation = \Config\Services::validation();
+            return redirect()->to('/admin/izin')->withInput()->with('validation', $validation);
+        } else {
+            $this->izinjenisModel->save([
+                'nama' => $this->request->getVar('jenis_izin'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Jenis Izin Berhasil Disimpan!');
+            return redirect()->to('/admin/izin');
+        }
+    }
+
+    public function izin_jenis_update()
+    {
+        $rules = [
+            'jenis_izin' => 'required|max_length[30]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data['validation'] = $this->validator;
+            $session = session();
+            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $validation = \Config\Services::validation();
+            return redirect()->to('/admin/izin')->withInput()->with('validation', $validation);
+        } else {
+            $id = $this->request->getVar('izin_jenis_id');
+            $this->izinjenisModel->update($id, [
+                'nama' => $this->request->getVar('jenis_izin'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Jenis Izin Berhasil Dirubah!');
+            return redirect()->to('/admin/izin');
+        }
+    }
+
+    public function izin_jenis_del()
+    {
+        $id = $this->request->getVar('izin_jenis_id');
+        $this->izinjenisModel->where('izin_jenis_id', $id)->delete($id);
+        $session = session();
+        $session->setFlashdata('success', 'Data Jenis Izin Berhasil Dihapus!');
+        return redirect()->to('/admin/izin');
+    }
+
+    public function izin_save()
+    {
+        $rules = [
+            'jenis_izin' => 'required',
+            'nama_izin' => 'required|max_length[50]'
+        ];
+
+        if (!$this->validate($rules)) {
+            $data['validation'] = $this->validator;
+            $session = session();
+            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $validation = \Config\Services::validation();
+            return redirect()->to('/admin/izin')->withInput()->with('validation', $validation);
+        } else {
+            $this->izinModel->save([
+                'izin_jenis_id' => $this->request->getVar('jenis_izin'),
+                'nama' => $this->request->getVar('nama_izin'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Izin Berhasil Disimpan!');
+            return redirect()->to('/admin/izin');
+        }
+    }
+
+    public function izin_update()
+    {
+        $rules = [
+            'jenis_izin' => 'required',
+            'nama_izin' => 'required|max_length[50]'
+        ];
+
+        if (!$this->validate($rules)) {
+            $data['validation'] = $this->validator;
+            $session = session();
+            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $validation = \Config\Services::validation();
+            return redirect()->to('/admin/izin')->withInput()->with('validation', $validation);
+        } else {
+            $id = $this->request->getVar('izin_id');
+            $this->izinModel->update($id, [
+                'izin_jenis_id' => $this->request->getVar('jenis_izin'),
+                'nama' => $this->request->getVar('nama_izin'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Izin Berhasil Dirubah!');
+            return redirect()->to('/admin/izin');
+        }
+    }
+
+    public function izin_del()
+    {
+        $id = $this->request->getVar('izin_id');
+        $this->izinModel->where('izin_id', $id)->delete($id);
+        $session = session();
+        $session->setFlashdata('success', 'Data Izin Berhasil Dihapus!');
+        return redirect()->to('/admin/izin');
+    }
+
     public function jen_pend()
     {
         $jenjang_pendidikan = $this->jenjangPendidikan->getData();
@@ -323,8 +460,8 @@ class Admin extends BaseController
     {
         $this->db = \Config\Database::connect();
         $sql = $this->db->table('pegawai p')
-                ->select('p.pegawai_id, p.nama, p.gelar_depan, p.gelar_belakang, p.nik, p.tempat_lahir, p.tanggal_lahir, p.jenis_kelamin, p.telepon, p.email, p.gambar, u.user_id, u.username, u.role, u.pegawai_id as id')
-                ->join('users u', 'u.pegawai_id = p.pegawai_id', 'Left')->get();
+            ->select('p.pegawai_id, p.nama, p.gelar_depan, p.gelar_belakang, p.nik, p.tempat_lahir, p.tanggal_lahir, p.jenis_kelamin, p.telepon, p.email, p.gambar, u.user_id, u.username, u.role, u.pegawai_id as id')
+            ->join('users u', 'u.pegawai_id = p.pegawai_id', 'Left')->get();
         $pegawai = $sql->getResultArray();
         // $pegawai = $this->pegawaiModel->getData();
         // dd($pegawai);
@@ -450,19 +587,36 @@ class Admin extends BaseController
         return redirect()->to('/admin/data_pegawai');
     }
 
-    public function ambil_data()
+    public function ajax_kab($id_prov)
     {
         $kabModel = new \App\Models\KabModel();
-        $modul = $this->request->getVar('modul');
-        $prov_id = $this->request->getVar('id');
-        
-        if ($modul == "kabupaten") {
-            echo $this->kabModel->getData($prov_id);
-        }elseif ($modul == "kecamatan") {
-            
-        }elseif ($modul == "kelurahan") {
-            
+        $kab = $this->kabModel->getData($id_prov);
+        $data = "<option value=''>--Pilih Kabupaten--</option>";
+        foreach ($kab as $row) {
+            $data .= "<option value='" . $row['id'] . "'>" . $row['name'] . "</option>";
         }
+        echo $data;
     }
 
+    public function ajax_kec($id_kab)
+    {
+        $kecModel = new \App\Models\KecModel();
+        $kec = $this->kecModel->getData($id_kab);
+        $data = "<option value=''>--Pilih Kecamatan--</option>";
+        foreach ($kec as $row) {
+            $data .= "<option value='" . $row['id'] . "'>" . $row['name'] . "</option>";
+        }
+        echo $data;
+    }
+
+    public function ajax_kel($id_kec)
+    {
+        $kelModel = new \App\Models\KelModel();
+        $kel = $this->kelModel->getData($id_kec);
+        $data = "<option value=''>--Pilih Kelurahan--</option>";
+        foreach ($kel as $row) {
+            $data .= "<option value='" . $row['id'] . "'>" . $row['name'] . "</option>";
+        }
+        echo $data;
+    }
 }

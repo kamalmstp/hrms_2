@@ -210,4 +210,26 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function(){
+        $("#provinsi").change(function (){
+            var url = "/admin/ajax_kab/"+$(this).val();
+            $('#kabupaten').load(url);
+            return false;
+        })
+
+        $("#kabupaten").change(function (){
+            var url = "/admin/ajax_kec/"+$(this).val();
+            $('#kecamatan').load(url);
+            return false;
+        })
+
+        $("#kecamatan").change(function (){
+            var url = "/admin/ajax_kel/"+$(this).val();
+            $('#kelurahan').load(url);
+            return false;
+        })
+    });
+</script>
 <?= $this->endSection(); ?>

@@ -73,6 +73,7 @@
                             <li><a href="/admin/jen_pend">Jenjang Pendidikan</a></li>
                             <li><a href="/admin/jns_pend">Jenis Pendidikan</a></li>
                             <li><a href="#">Data Jabatan</a></li>
+                            <li><a href="/admin/izin">Data Izin</a></li>
                         </ul>
                     </li>
                 </ul>

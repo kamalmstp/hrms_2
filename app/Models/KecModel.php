@@ -16,7 +16,7 @@ class KecModel extends Model
         if ($id === false) {
             return $this->findAll();
         } else {
-            return $this->getWhere(['id' => $id]);
+            return $this->getWhere(['regency_id' => $id]);
         }
     }
 }
