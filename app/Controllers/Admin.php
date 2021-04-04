@@ -10,6 +10,7 @@ use App\Models\PegawaiModel;
 use App\Models\UserModel;
 use App\Models\IzinJenisModel;
 use App\Models\IzinModel;
+use App\Models\IzinPegawaiModel;
 
 class Admin extends BaseController
 {
@@ -21,6 +22,7 @@ class Admin extends BaseController
     protected $userModel;
     protected $izinjenisModel;
     protected $izinModel;
+    protected $izinPegawaiModel;
 
 
     public function __construct()
@@ -33,6 +35,7 @@ class Admin extends BaseController
         $this->userModel = new UserModel();
         $this->izinjenisModel = new IzinJenisModel;
         $this->izinModel = new IzinModel;
+        $this->izinPegawaiModel = new IzinPegawaiModel();
     }
 
     public function index()
@@ -618,5 +621,90 @@ class Admin extends BaseController
             $data .= "<option value='" . $row['id'] . "'>" . $row['name'] . "</option>";
         }
         echo $data;
+    }
+
+    public function kelola_izin()
+    {
+        $this->db = \Config\Database::connect();
+        $sql = $this->db->table('izin_pegawai a')
+            ->select('a.izin_pegawai_id, c.nama as jenis_izin, b.nama as nama_izin, p.nama as nama_pegawai, a.tanggal_awal, a.tanggal_akhir, datediff(a.tanggal_akhir, a.tanggal_awal) as lama, a.file, a.status')
+            ->join('pegawai p', 'p.pegawai_id = a.pegawai_id')
+            ->join('izin b', 'b.izin_id = a.izin_id')
+            ->join('izin_jenis c', 'c.izin_jenis_id = b.izin_jenis_id')->get();
+        $izin_pegawai = $sql->getResultArray();
+        // $izin_pegawai = $this->izinPegawaiModel->getData();
+        // dd($izin_pegawai);
+        $data = [
+            'title' => 'Kelola Izin',
+            'izin_pegawai' => $izin_pegawai,
+        ];
+
+        return view('admin/absensi/kelola_izin', $data);
+    }
+
+    public function add_izin()
+    {
+        $pegawai = $this->pegawaiModel->getData();
+        $jenis_izin = $this->izinjenisModel->getData();
+        $data = [
+            'title' => 'Tambah Izin Pegawai',
+            'page' => 'Kelola Izin',
+            'jenis_izin' => $jenis_izin,
+            'pegawai' => $pegawai,
+        ];
+        return view('admin/absensi/add_izin', $data);
+    }
+
+    public function get_nama_izin()
+    {
+        $this->db = \Config\Database::connect();
+        $id_jenis = $this->request->getVar('izin_jenis_id');
+        $data = $this->db->table('izin')->getWhere(['izin_jenis_id' => $id_jenis])->getResult();
+        // dd($data);
+        echo json_encode($data);
+    }
+
+    public function izin_pegawai_save()
+    {
+        $rules = [
+            'status' => 'required',
+            'tanggal_awal' => 'required',
+            'tanggal_akhir' => 'required',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data['validation'] = $this->validator;
+            $session = session();
+            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $validation = \Config\Services::validation();
+            return redirect()->to('/admin/kelola_izin')->withInput()->with('validation', $validation);
+        } else {
+            $this->izinPegawaiModel->save([
+                'pegawai_id' => $this->request->getVar('pegawai'),
+                'izin_id' => $this->request->getVar('nama_izin'),
+                'tanggal_awal' => $this->request->getVar('tanggal_awal'),
+                'tanggal_akhir' => $this->request->getVar('tanggal_akhir'),
+                'keterangan' => $this->request->getVar('keterangan'),
+                'status' => $this->request->getVar('status'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Izin Berhasil Ditambah!');
+            return redirect()->to('/admin/kelola_izin');
+        }
+    }
+
+    public function kelola_izin_edit($id)
+    {
+        $izin_pegawai = $this->izinPegawaiModel->getData($id)->getRowArray();
+        $pegawai = $this->pegawaiModel->getData();
+        $jenis_izin = $this->izinjenisModel->getData();
+        $data = [
+            'title' => 'Edit Izin Pegawai',
+            'page' => 'Kelola Izin',
+            'jenis_izin' => $jenis_izin,
+            'pegawai' => $pegawai,
+            'izin_pegawai' => $izin_pegawai,
+        ];
+        return view('admin/absensi/edit_izin', $data);
     }
 }

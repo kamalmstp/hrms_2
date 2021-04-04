@@ -43,6 +43,14 @@
     <link type="text/css" href="/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link type="text/css" href="/build/css/custom.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- <script>
+        $(document).ready(function() {
+            $("button").click(function() {
+                alert("jQuery is working perfectly.");
+            });
+        });
+    </script> -->
 </head>
 
 <body class="nav-md">

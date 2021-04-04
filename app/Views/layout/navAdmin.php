@@ -57,7 +57,8 @@
                         <ul class="nav child_menu">
                             <li><a href="#">Absensi Pegawai</a></li>
                             <li><a href="#">Import Absensi</a></li>
-                            <li><a href="#">Kelola Izin</a></li>
+                            <li><a href="#">Konfirmasi Izin</a></li>
+                            <li><a href="/admin/kelola_izin">Kelola Izin</a></li>
                         </ul>
                     </li>
                     <li><a><i class="fa fa-table"></i> Inventaris <span class="fa fa-chevron-down"></span></a>
