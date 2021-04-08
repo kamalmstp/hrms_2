@@ -57,7 +57,7 @@
                         <ul class="nav child_menu">
                             <li><a href="#">Absensi Pegawai</a></li>
                             <li><a href="#">Import Absensi</a></li>
-                            <li><a href="#">Konfirmasi Izin</a></li>
+                            <li><a href="/admin/konfirmasi_izin">Konfirmasi Izin</a></li>
                             <li><a href="/admin/kelola_izin">Kelola Izin</a></li>
                         </ul>
                     </li>

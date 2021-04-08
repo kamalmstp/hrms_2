@@ -30,7 +30,7 @@
                                     <select name="pegawai" class="form-control col-md-7 col-xs-12" required id="pegawai">
                                         <option value="">--Pilih Pegawai--</option>
                                         <?php foreach ($pegawai as $row) : ?>
-                                            <option value="<?= $row['pegawai_id'] ?>" <?php if ($row['pegawai_id'] == $izin_pegawai->pegawai_id) {
+                                            <option value="<?= $row['pegawai_id'] ?>" <?php if ($row['pegawai_id'] == $izin_pegawai['pegawai_id']) {
                                                                                             echo 'selected';
                                                                                         } ?>><?= $row['nama']; ?></option>
                                         <?php endforeach; ?>
@@ -45,7 +45,7 @@
                                     <select name="jenis_izin" id="jenis_izin" class="form-control col-md-7 col-xs-12" required>
                                         <option value="">--Pilih Jenis Izin--</option>
                                         <?php foreach ($jenis_izin as $row) : ?>
-                                            <option value="<?= $row['izin_jenis_id']; ?>" <?php if ($row['izin_jenis_id'] == $izin_pegawai->izin_jenis_id) {
+                                            <option value="<?= $row['izin_jenis_id']; ?>" <?php if ($row['izin_jenis_id'] == $izin_pegawai['izin_jenis_id']) {
                                                                                                 echo 'selected';
                                                                                             } ?>><?= $row['nama']; ?></option>
                                         <?php endforeach; ?>
