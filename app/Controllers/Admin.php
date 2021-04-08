@@ -681,6 +681,7 @@ class Admin extends BaseController
         } else {
             $this->izinPegawaiModel->save([
                 'pegawai_id' => $this->request->getVar('pegawai'),
+                'izin_jenis_id' => $this->request->getVar('jenis_izin'),
                 'izin_id' => $this->request->getVar('nama_izin'),
                 'tanggal_awal' => $this->request->getVar('tanggal_awal'),
                 'tanggal_akhir' => $this->request->getVar('tanggal_akhir'),
@@ -695,9 +696,10 @@ class Admin extends BaseController
 
     public function kelola_izin_edit($id)
     {
-        $izin_pegawai = $this->izinPegawaiModel->getData($id)->getRowArray();
+        $izin_pegawai = $this->izinPegawaiModel->getData($id)->getRow();
         $pegawai = $this->pegawaiModel->getData();
         $jenis_izin = $this->izinjenisModel->getData();
+        // dd($izin_pegawai);
         $data = [
             'title' => 'Edit Izin Pegawai',
             'page' => 'Kelola Izin',
