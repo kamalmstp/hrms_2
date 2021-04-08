@@ -478,6 +478,7 @@ class Admin extends BaseController
 
     public function add_pegawai()
     {
+        session();
         $prov = new \App\Models\ProvinsiModel();
         $provinsi = $prov->getData();
         $jenis_peg = $this->jenisPegawai->getData();
@@ -486,6 +487,7 @@ class Admin extends BaseController
             'page' => 'Pegawai',
             'jenis_peg' => $jenis_peg,
             'provinsi' => $provinsi,
+            'validation' => \Config\Services::validation(),
         ];
         return view('admin/pegawai/add', $data);
     }
@@ -494,7 +496,8 @@ class Admin extends BaseController
     {
         $rules = [
             'nama' => 'required|max_length[50]',
-            'email' => 'required|max_length[30]',
+            'telepon' => 'required|min_length[5]|max_length[15]',
+            'email' => 'required|max_length[30]|is_unique[pegawai.email]',
         ];
 
         if (!$this->validate($rules)) {
@@ -516,12 +519,11 @@ class Admin extends BaseController
                 'telepon' => $this->request->getVar('telepon'),
                 'email' => $this->request->getVar('email'),
                 'provinsi' => $this->request->getVar('provinsi'),
-                'kabupaten' => $this->request->getVar('kota'),
+                'kabupaten' => $this->request->getVar('kabupaten'),
                 'kecamatan' => $this->request->getVar('kecamatan'),
                 'kelurahan' => $this->request->getVar('kelurahan'),
                 'alamat' => $this->request->getVar('alamat'),
                 'jenis_pegawai_id' => $this->request->getVar('jenis_pegawai'),
-                // 'tanggal_masuk' => $this->request->getVar('tanggal_masuk'),
                 'status_pegawai' => $this->request->getVar('status_pegawai'),
                 'rekening' => $this->request->getVar('rekening'),
             ]);
@@ -590,37 +592,31 @@ class Admin extends BaseController
         return redirect()->to('/admin/data_pegawai');
     }
 
-    public function ajax_kab($id_prov)
+    public function ajax_kab()
     {
-        $kabModel = new \App\Models\KabModel();
-        $kab = $this->kabModel->getData($id_prov);
-        $data = "<option value=''>--Pilih Kabupaten--</option>";
-        foreach ($kab as $row) {
-            $data .= "<option value='" . $row['id'] . "'>" . $row['name'] . "</option>";
-        }
-        echo $data;
+        $this->db = \Config\Database::connect();
+        $id = $this->request->getVar('id');
+        $data = $this->db->table('regencies')->getWhere(['province_id' => $id])->getResult();
+        // dd($data);
+        echo json_encode($data);
     }
 
-    public function ajax_kec($id_kab)
+    public function ajax_kec()
     {
-        $kecModel = new \App\Models\KecModel();
-        $kec = $this->kecModel->getData($id_kab);
-        $data = "<option value=''>--Pilih Kecamatan--</option>";
-        foreach ($kec as $row) {
-            $data .= "<option value='" . $row['id'] . "'>" . $row['name'] . "</option>";
-        }
-        echo $data;
+        $this->db = \Config\Database::connect();
+        $id = $this->request->getVar('id');
+        $data = $this->db->table('districts')->getWhere(['regency_id' => $id])->getResult();
+        // dd($data);
+        echo json_encode($data);
     }
 
-    public function ajax_kel($id_kec)
+    public function ajax_kel()
     {
-        $kelModel = new \App\Models\KelModel();
-        $kel = $this->kelModel->getData($id_kec);
-        $data = "<option value=''>--Pilih Kelurahan--</option>";
-        foreach ($kel as $row) {
-            $data .= "<option value='" . $row['id'] . "'>" . $row['name'] . "</option>";
-        }
-        echo $data;
+        $this->db = \Config\Database::connect();
+        $id = $this->request->getVar('id');
+        $data = $this->db->table('villages')->getWhere(['district_id' => $id])->getResult();
+        // dd($data);
+        echo json_encode($data);
     }
 
     public function kelola_izin()
@@ -698,6 +694,7 @@ class Admin extends BaseController
         $izin_pegawai = $this->izinPegawaiModel->getData($id)->getRowArray();
         $pegawai = $this->pegawaiModel->getData();
         $jenis_izin = $this->izinjenisModel->getData();
+        // dd($izin_pegawai);
         $data = [
             'title' => 'Edit Izin Pegawai',
             'page' => 'Kelola Izin',
@@ -706,5 +703,36 @@ class Admin extends BaseController
             'izin_pegawai' => $izin_pegawai,
         ];
         return view('admin/absensi/edit_izin', $data);
+    }
+
+    public function konfirmasi_izin()
+    {
+        $this->db = \Config\Database::connect();
+        $sql = $this->db->table('izin_pegawai a')
+            ->select('a.izin_pegawai_id, c.nama as jenis_izin, b.nama as nama_izin, p.nama as nama_pegawai, a.tanggal_awal, a.tanggal_akhir, datediff(a.tanggal_akhir, a.tanggal_awal) as lama, a.file, a.status')
+            ->join('pegawai p', 'p.pegawai_id = a.pegawai_id')
+            ->join('izin b', 'b.izin_id = a.izin_id')
+            ->join('izin_jenis c', 'c.izin_jenis_id = b.izin_jenis_id')
+            ->where('a.status', 'Menunggu')->get();
+        $izin_pegawai = $sql->getResultArray();
+        // $izin_pegawai = $this->izinPegawaiModel->getData();
+        // dd($izin_pegawai);
+        $data = [
+            'title' => 'Konfirmasi Izin',
+            'izin_pegawai' => $izin_pegawai,
+        ];
+
+        return view('admin/absensi/konfirmasi_izin', $data);
+    }
+
+    public function konfirmasi_izin_approve()
+    {
+        $id = $this->request->getVar('izin_pegawai_id');
+        $this->izinPegawaiModel->update($id, [
+            'status' => 'Diterima',
+        ]);
+        $session = session();
+        $session->setFlashdata('success', 'Izin Berhasil Diterima!');
+        return redirect()->to('/admin/kelola_izin');
     }
 }

@@ -19,7 +19,7 @@
                     </div>
                     <div class="x_content">
                         <br />
-
+                        <?= $validation->listErrors(); ?>
                         <form action="/admin/pegawai_save" id="demo-form" data-parsley-validate method="post">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -105,8 +105,8 @@
                                     <label for="provinsi">Provinsi :</label>
                                     <select name="provinsi" class="form-control" id="provinsi">
                                         <option value="">--Pilih Provinsi--</option>
-                                        <?php foreach($provinsi as $prov): ?>
-                                        <option value="<?=$prov['id']?>"><?=$prov['name']?></option>
+                                        <?php foreach ($provinsi as $prov) : ?>
+                                            <option value="<?= $prov['id'] ?>"><?= $prov['name'] ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -180,12 +180,6 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="username">Username *:</label>
-                                    <input type="text" id="username" class="form-control" name="username" required />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
                                     <label for="gambar">Foto</label>
                                     <input type="file" name="gambar" id="gambar">
                                 </div>
@@ -212,24 +206,72 @@
 </div>
 
 <script>
-    $(document).ready(function(){
-        $("#provinsi").change(function (){
-            var url = "/admin/ajax_kab/"+$(this).val();
-            $('#kabupaten').load(url);
-            return false;
-        })
+    $(document).ready(function() {
+        $("#provinsi").change(function() {
+            var id = $("#provinsi").val();
+            $.ajax({
+                url: "/admin/ajax_kab",
+                method: "POST",
+                data: {
+                    id: id
+                },
+                async: false,
+                dataType: 'json',
+                success: function(data) {
+                    var html = '';
+                    var i;
+                    for (i = 0; i < data.length; i++) {
+                        html += '<option value=' + data[i].id + '>' + data[i].name + '</option>';
+                    }
+                    $('#kabupaten').html(html);
 
-        $("#kabupaten").change(function (){
-            var url = "/admin/ajax_kec/"+$(this).val();
-            $('#kecamatan').load(url);
-            return false;
-        })
+                }
+            });
+        });
 
-        $("#kecamatan").change(function (){
-            var url = "/admin/ajax_kel/"+$(this).val();
-            $('#kelurahan').load(url);
-            return false;
-        })
-    });
+        $("#kabupaten").change(function() {
+            var id = $("#kabupaten").val();
+            $.ajax({
+                url: "/admin/ajax_kec",
+                method: "POST",
+                data: {
+                    id: id
+                },
+                async: false,
+                dataType: 'json',
+                success: function(data) {
+                    var html = '';
+                    var i;
+                    for (i = 0; i < data.length; i++) {
+                        html += '<option value=' + data[i].id + '>' + data[i].name + '</option>';
+                    }
+                    $('#kecamatan').html(html);
+
+                }
+            });
+        });
+
+        $("#kecamatan").change(function() {
+            var id = $("#kecamatan").val();
+            $.ajax({
+                url: "/admin/ajax_kel",
+                method: "POST",
+                data: {
+                    id: id
+                },
+                async: false,
+                dataType: 'json',
+                success: function(data) {
+                    var html = '';
+                    var i;
+                    for (i = 0; i < data.length; i++) {
+                        html += '<option value=' + data[i].id + '>' + data[i].name + '</option>';
+                    }
+                    $('#kelurahan').html(html);
+
+                }
+            });
+        });
+    })
 </script>
 <?= $this->endSection(); ?>
