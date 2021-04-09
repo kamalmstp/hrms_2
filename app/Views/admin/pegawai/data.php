@@ -65,14 +65,18 @@
                                                     <span class="sr-only">Toggle Dropdown</span>
                                                 </button>
                                                 <ul class="dropdown-menu" role="menu">
-                                                    <li><a href="#">Action</a>
+                                                    <li><a href="#"><i class="fa fa-child"></i> Jabatan</a>
                                                     </li>
-                                                    <li><a href="#">Another action</a>
+                                                    <li><a href="#"><i class="fa fa-graduation-cap"></i> Pendidikan</a>
                                                     </li>
-                                                    <li><a href="#">Something else here</a>
+                                                    <li><a href="#"><i class="fa fa-users"></i> Keluarga</a>
+                                                    </li>
+                                                    <li><a href="#"><i class="fa fa-calendar"></i> Absensi</a>
+                                                    </li>
+                                                    <li><a target="_blank" href="/admin/pegawai_izin_view/<?= $row['pegawai_id'] ?>"><i class="fa fa-table"></i> Izin</a>
                                                     </li>
                                                     <li class="divider"></li>
-                                                    <li><a href="#">Separated link</a>
+                                                    <li><a href="#"><i class="fa fa-folder"></i> View</a>
                                                     </li>
                                                 </ul>
                                                 <a href="/admin/edit_pegawai/<?= $row['pegawai_id']; ?>" class="btn btn-warning btn-xs" type="button"><i class="fa fa-pencil"></i> Edit</a>

@@ -869,6 +869,27 @@ class Admin extends BaseController
         return view('admin/absensi/kelola_izin', $data);
     }
 
+    public function pegawai_izin_view($id)
+    {
+        $this->db = \Config\Database::connect();
+        $sql = $this->db->table('izin_pegawai a')
+            ->select('a.izin_pegawai_id, c.nama as jenis_izin, b.nama as nama_izin, a.tanggal_awal, a.tanggal_akhir, datediff(a.tanggal_akhir, a.tanggal_awal) as lama, a.file, a.status')
+            ->join('izin b', 'b.izin_id = a.izin_id')
+            ->join('izin_jenis c', 'c.izin_jenis_id = b.izin_jenis_id')
+            ->where('a.pegawai_id', $id)->get();
+        $izin_pegawai = $sql->getResultArray();
+        $pegawai = $this->pegawaiModel->getData($id)->getRow();
+        // dd($izin_pegawai);
+        $data = [
+            'title' => 'Izin Detail Pegawai',
+            'izin_pegawai' => $izin_pegawai,
+            'page' => 'Pegawai',
+            'pegawai' => $pegawai,
+        ];
+
+        return view('admin/pegawai/izin_view', $data);
+    }
+
     public function add_izin()
     {
         session();
