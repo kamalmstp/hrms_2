@@ -32,8 +32,8 @@
                                     <th>Tanggal Awal</th>
                                     <th>Tanggal Akhir</th>
                                     <th>Lama Izin</th>
-                                    <th>File</th>
                                     <th>Keterangan</th>
+                                    <th>File</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -47,8 +47,14 @@
                                         <td><?= date('d F Y', strtotime($row['tanggal_awal'])); ?></td>
                                         <td><?= date('d F Y', strtotime($row['tanggal_akhir'])); ?></td>
                                         <td><?= $row['lama']; ?> Hari</td>
-                                        <td><?= $row['file']; ?></td>
-                                        <td></td>
+                                        <td><?= $row['keterangan']; ?></td>
+                                        <td>
+                                            <?php if ($row['file'] == '') {
+                                                echo '<i>empty</i>';
+                                            } else { ?>
+                                                <a target="_blank" href="/file/izin/<?= $row['file']; ?>" type="button" class="btn btn-info btn-round"> <i class="fa fa-download"></i> </a>
+                                            <?php } ?>
+                                        </td>
                                         <td>
                                             <button type="button" class="btn btn-success btn-round" data-toggle="modal" data-target=".modal-acc<?= $row['izin_pegawai_id'] ?>"><i class="fa fa-check"></i></button>
                                             <button type="button" class="btn btn-danger btn-round" data-toggle="modal" data-target=".modal-dis<?= $row['izin_pegawai_id'] ?>"><i class="fa fa-close"></i></button>
@@ -95,7 +101,7 @@
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
 
-                <form action="/admin/izin_del" method="post" class="form-horizontal form-label-left">
+                <form action="/admin/konfirmasi_izin_reject" method="post" class="form-horizontal form-label-left">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
                         </button>

@@ -26,6 +26,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Foto</th>
                                     <th>Nama</th>
                                     <th>Jenis Kelamin</th>
                                     <th>Jabatan</th>
@@ -39,6 +40,7 @@
                                 <?php foreach ($pegawai as $row) : ?>
                                     <tr>
                                         <td width="2%"><?= $i++ ?></td>
+                                        <td><img src="/images/user/<?= $row['gambar'] ?>" class="avatar" alt="avatar"></td>
                                         <td><?= $row['gelar_depan'] . ' ' . $row['nama'] . ' ' . $row['gelar_belakang'] ?></td>
                                         <td><?php if ($row['jenis_kelamin'] == 'L') {
                                                 echo "Laki-Laki";
@@ -91,7 +93,7 @@
 
 <?php foreach ($pegawai as $row) : ?>
     <div class="modal fade modal-akun<?= $row['pegawai_id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
 
                 <form action="/admin/pegawai_akun_create" method="post" class="form-horizontal form-label-left">
@@ -106,7 +108,7 @@
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="role">Level Akun<span class="required">*</span>
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
-                                <select class="form-control col-md-7 col-xs-12" name="role" id="role">
+                                <select class="form-control col-md-7 col-xs-12" required name="role" id="role">
                                     <option value="">--Pilih--</option>
                                     <option value="Admin">Admin</option>
                                     <option value="Kepala">Kepala</option>
@@ -142,7 +144,7 @@
     </div>
 
     <div class="modal fade modal-akundel<?= $row['user_id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
 
                 <form action="/admin/pegawai_akun_delete" method="post" class="form-horizontal form-label-left">
@@ -154,7 +156,7 @@
                     <div class="modal-body">
 
                         <p>Apakah anda yakin ingin menghapus akun <strong><?= $row['nama'] ?></strong>?</p>
-                        <input type="text" name="user_id" value="<?= $row['user_id'] ?>">
+                        <input type="hidden" name="user_id" value="<?= $row['user_id'] ?>">
 
                     </div>
                     <div class="modal-footer">

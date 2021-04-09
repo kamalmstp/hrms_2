@@ -9,7 +9,7 @@ class IzinPegawaiModel extends Model
     protected $table = 'izin_pegawai';
     protected $primaryKey = 'izin_pegawai_id';
 
-    protected $allowedFields = ['izin_id', 'pegawai_id', 'tanggal_awal', 'tanggal_akhir', 'keterangan', 'status', 'file', 'created_at'];
+    protected $allowedFields = ['izin_id', 'izin_jenis_id', 'pegawai_id', 'tanggal_awal', 'tanggal_akhir', 'keterangan', 'status', 'file', 'created_at'];
 
     public function getData($id = false)
     {

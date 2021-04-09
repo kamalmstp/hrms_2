@@ -22,20 +22,7 @@
                     <div class="x_content">
                         <br />
                         <?= $validation->listErrors(); ?>
-                        <form action="/admin/izin_pegawai_save" enctype="multipart/form-data" method="POST" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
-
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Pegawai
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select name="pegawai" class="form-control col-md-7 col-xs-12" required id="pegawai">
-                                        <option value="">--Pilih Pegawai--</option>
-                                        <?php foreach ($pegawai as $row) : ?>
-                                            <option value="<?= $row['pegawai_id'] ?>"><?= $row['nama']; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                            </div>
+                        <form action="/pegawai/izin_save" enctype="multipart/form-data" method="POST" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
 
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name">Jenis Izin
@@ -77,17 +64,6 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="status" class="control-label col-md-3 col-sm-3 col-xs-12">Status</label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select name="status" id="status" class="form-control col-md-7 col-xs-12">
-                                        <option value="">--Pilih Status--</option>
-                                        <option value="Menunggu">Menunggu</option>
-                                        <option value="Diterima">Diterima</option>
-                                        <option value="Ditolak">Ditolak</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label for="file" class="control-label col-md-3 col-sm-3 col-xs-12">File <br> <small>(dokumen/surat/bukti)</small> </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input id="file" class="form-control col-md-7 col-xs-12" type="file" name="file">
@@ -114,12 +90,10 @@
     $(document).ready(function() {
         $("#jenis_izin").change(function() {
 
-            // variabel dari nilai combo box kendaraan
             var izin_jenis_id = $("#jenis_izin").val();
 
-            // Menggunakan ajax untuk mengirim dan dan menerima data dari server
             $.ajax({
-                url: "/admin/get_nama_izin",
+                url: "/pegawai/get_nama_izin",
                 method: "POST",
                 data: {
                     izin_jenis_id: izin_jenis_id

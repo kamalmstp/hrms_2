@@ -18,7 +18,7 @@
                     <div class="x_title">
                         <h2><?= $title ?></h2>
                         <div class="nav navbar-right panel_toolbox">
-                            <a href="/admin/add_izin" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Add </a>
+                            <a href="/pegawai/ajukan_izin" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Ajukan Izin </a>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -28,13 +28,11 @@
                                 <tr>
                                     <th width="4%">No</th>
                                     <th>Nama Izin</th>
-                                    <th>Nama Pegawai</th>
                                     <th>Tanggal Awal</th>
                                     <th>Tanggal Akhir</th>
                                     <th>Lama Izin</th>
                                     <th>File</th>
                                     <th>Status</th>
-                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -43,7 +41,6 @@
                                     <tr>
                                         <td><?= $i++; ?></td>
                                         <td><?= $row['jenis_izin'] . " - " . $row['nama_izin']; ?></td>
-                                        <td><?= $row['nama_pegawai']; ?></td>
                                         <td><?= date('d F Y', strtotime($row['tanggal_awal'])); ?></td>
                                         <td><?= date('d F Y', strtotime($row['tanggal_akhir'])); ?></td>
                                         <td><?= $row['lama']; ?> Hari</td>
@@ -62,10 +59,6 @@
                                             <?php } else { ?>
                                                 <button class="btn btn-danger btn-round btn-xs"><?= $row['status']; ?></button>
                                             <?php } ?>
-                                        </td>
-                                        <td>
-                                            <a href="/admin/kelola_izin_edit/<?= $row['izin_pegawai_id']; ?>" class="btn btn-warning btn-xs" type="button"><i class="fa fa-pencil"></i> Edit</a>
-                                            <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target=".modal-del<?= $row['izin_pegawai_id'] ?>"><i class="fa fa-trash-o"></i> Delete </button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

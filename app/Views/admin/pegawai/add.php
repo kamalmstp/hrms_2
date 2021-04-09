@@ -20,7 +20,7 @@
                     <div class="x_content">
                         <br />
                         <?= $validation->listErrors(); ?>
-                        <form action="/admin/pegawai_save" id="demo-form" data-parsley-validate method="post">
+                        <form action="/admin/pegawai_save" enctype="multipart/form-data" id="demo-form" data-parsley-validate method="post">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="nama">Nama Lengkap *:</label>
@@ -78,10 +78,8 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="tanggal_lahir">Tanggal Lahir :</label>
-                                    <div class="col-md-11 xdisplay_inputx form-group has-feedback">
-                                        <input type="text" class="form-control has-feedback-left" id="single_cal3" placeholder="Tanggal Lahir" name="tanggal_lahir">
-                                        <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
-                                    </div>
+                                    <input type="date" class="form-control has-feedback-left" name="tanggal_lahir">
+                                    <!-- <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span> -->
                                 </div>
                             </div>
 
@@ -154,12 +152,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="tanggal_masuk">Tanggal Masuk :</label>
-
-                                    <div class="col-md-11 xdisplay_inputx form-group has-feedback">
-                                        <input type="text" class="form-control has-feedback-left" id="single_cal2" placeholder="Tanggal Masuk">
-                                        <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
-                                        <span id="inputSuccess2Status2" class="sr-only">(success)</span>
-                                    </div>
+                                    <input type="date" class="form-control has-feedback-left" name="tanggal_masuk">
                                 </div>
                             </div>
 

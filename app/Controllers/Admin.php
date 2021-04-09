@@ -11,6 +11,7 @@ use App\Models\UserModel;
 use App\Models\IzinJenisModel;
 use App\Models\IzinModel;
 use App\Models\IzinPegawaiModel;
+use App\Models\PeriodeModel;
 
 class Admin extends BaseController
 {
@@ -23,6 +24,7 @@ class Admin extends BaseController
     protected $izinjenisModel;
     protected $izinModel;
     protected $izinPegawaiModel;
+    protected $periodeModel;
 
 
     public function __construct()
@@ -36,6 +38,7 @@ class Admin extends BaseController
         $this->izinjenisModel = new IzinJenisModel;
         $this->izinModel = new IzinModel;
         $this->izinPegawaiModel = new IzinPegawaiModel();
+        $this->periodeModel = new PeriodeModel();
     }
 
     public function index()
@@ -458,6 +461,80 @@ class Admin extends BaseController
         return redirect()->to('/admin/hub_keluarga');
     }
 
+    public function periode()
+    {
+        $periode = $this->periodeModel->getData();
+        $data = [
+            'title' => 'Data Periode',
+            'page' => 'Master Data',
+            'periode' => $periode,
+        ];
+
+        return view('admin/master/periode', $data);
+    }
+
+    public function periode_save()
+    {
+        $rules = [
+            'kode' => 'required|max_length[10]',
+            'wajib' => 'required|max_length[10]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data['validation'] = $this->validator;
+            $session = session();
+            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $validation = \Config\Services::validation();
+            return redirect()->to('/admin/periode')->withInput()->with('validation', $validation);
+        } else {
+            $this->periodeModel->save([
+                'kode' => $this->request->getVar('kode'),
+                'tanggal_mulai' => $this->request->getVar('tanggal_mulai'),
+                'tanggal_akhir' => $this->request->getVar('tanggal_akhir'),
+                'wajib' => $this->request->getVar('wajib'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Periode Berhasil Disimpan!');
+            return redirect()->to('/admin/periode');
+        }
+    }
+
+    public function periode_update()
+    {
+        $rules = [
+            'kode' => 'required|max_length[10]',
+            'wajib' => 'required|max_length[10]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data['validation'] = $this->validator;
+            $session = session();
+            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $validation = \Config\Services::validation();
+            return redirect()->to('/admin/periode')->withInput()->with('validation', $validation);
+        } else {
+            $id = $this->request->getVar('periode_id');
+            $this->periodeModel->update($id, [
+                'kode' => $this->request->getVar('kode'),
+                'tanggal_mulai' => $this->request->getVar('tanggal_mulai'),
+                'tanggal_akhir' => $this->request->getVar('tanggal_akhir'),
+                'wajib' => $this->request->getVar('wajib'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Periode Berhasil Disimpan!');
+            return redirect()->to('/admin/periode');
+        }
+    }
+
+    public function periode_del()
+    {
+        $id = $this->request->getVar('periode_id');
+        $this->periodeModel->where('periode_id', $id)->delete($id);
+        $session = session();
+        $session->setFlashdata('success', 'Data Berhasil Dihapus!');
+        return redirect()->to('/admin/periode');
+    }
+
     //Pegawai
     public function data_pegawai()
     {
@@ -494,42 +571,95 @@ class Admin extends BaseController
 
     public function pegawai_save()
     {
-        $rules = [
-            'nama' => 'required|max_length[50]',
-            'telepon' => 'required|min_length[5]|max_length[15]',
-            'email' => 'required|max_length[30]|is_unique[pegawai.email]',
-        ];
+        $file = $this->request->getFile('gambar');
 
-        if (!$this->validate($rules)) {
-            $data['validation'] = $this->validator;
-            $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
-            $validation = \Config\Services::validation();
-            return redirect()->to('/admin/add_pegawai')->withInput()->with('validation', $validation);
+        if (!empty($file)) {
+            $rules = [
+                'nama' => 'required|max_length[50]',
+                'telepon' => 'required|min_length[5]|max_length[15]',
+                'email' => 'required|max_length[30]|is_unique[pegawai.email]',
+                'gambar' => 'mime_in[gambar,image/jpg,image/jpeg,image/gif,image/png]|max_size[gambar,2048]',
+            ];
+
+            if (!$this->validate($rules)) {
+                $data['validation'] = $this->validator;
+                $session = session();
+                $session->setFlashdata('error', $this->validator->listErrors());
+                $validation = \Config\Services::validation();
+                return redirect()->to('/admin/add_pegawai')->withInput()->with('validation', $validation);
+            } else {
+                $randomName = $file->getRandomName();
+                if ($file->move(ROOTPATH . 'public/images/user/', $randomName)) {
+                    $this->pegawaiModel->save([
+                        'nama' => $this->request->getVar('nama'),
+                        'nik' => $this->request->getVar('nik'),
+                        'gelar_depan' => $this->request->getVar('gelar_depan'),
+                        'gelar_belakang' => $this->request->getVar('gelar_belakang'),
+                        'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
+                        'status_perkawin' => $this->request->getVar('status_perkawinan'),
+                        'tempat_lahir' => $this->request->getVar('tempat_lahir'),
+                        'tanggal_lahir' => $this->request->getVar('tanggal_lahir'),
+                        'telepon' => $this->request->getVar('telepon'),
+                        'email' => $this->request->getVar('email'),
+                        'provinsi' => $this->request->getVar('provinsi'),
+                        'kota' => $this->request->getVar('kabupaten'),
+                        'kecamatan' => $this->request->getVar('kecamatan'),
+                        'kelurahan' => $this->request->getVar('kelurahan'),
+                        'alamat' => $this->request->getVar('alamat'),
+                        'jenis_pegawai_id' => $this->request->getVar('jenis_pegawai'),
+                        'status_pegawai' => $this->request->getVar('status_pegawai'),
+                        'tanggal_masuk' => $this->request->getVar('tanggal_masuk'),
+                        'rekening' => $this->request->getVar('rekening'),
+                        'gambar' => $randomName,
+                    ]);
+                    $session = session();
+                    $session->setFlashdata('success', 'Data Pegawai Berhasil Disimpan!');
+                    return redirect()->to('/admin/data_pegawai');
+                } else {
+                    $session = session();
+                    $session->setFlashdata('error', 'Gambar Gagal di Upload!');
+                }
+            }
         } else {
-            $this->pegawaiModel->save([
-                'nama' => $this->request->getVar('nama'),
-                'nik' => $this->request->getVar('nik'),
-                'gelar_depan' => $this->request->getVar('gelar_depan'),
-                'gelar_belakang' => $this->request->getVar('gelar_belakang'),
-                'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
-                'status_perkawin' => $this->request->getVar('status_perkawinan'),
-                'tempat_lahir' => $this->request->getVar('tempat_lahir'),
-                'tanggal_lahir' => $this->request->getVar('tanggal_lahir'),
-                'telepon' => $this->request->getVar('telepon'),
-                'email' => $this->request->getVar('email'),
-                'provinsi' => $this->request->getVar('provinsi'),
-                'kabupaten' => $this->request->getVar('kabupaten'),
-                'kecamatan' => $this->request->getVar('kecamatan'),
-                'kelurahan' => $this->request->getVar('kelurahan'),
-                'alamat' => $this->request->getVar('alamat'),
-                'jenis_pegawai_id' => $this->request->getVar('jenis_pegawai'),
-                'status_pegawai' => $this->request->getVar('status_pegawai'),
-                'rekening' => $this->request->getVar('rekening'),
-            ]);
-            $session = session();
-            $session->setFlashdata('success', 'Data Pegawai Berhasil Disimpan!');
-            return redirect()->to('/admin/data_pegawai');
+
+            $rules = [
+                'nama' => 'required|max_length[50]',
+                'telepon' => 'required|min_length[5]|max_length[15]',
+                'email' => 'required|max_length[30]|is_unique[pegawai.email]',
+            ];
+
+            if (!$this->validate($rules)) {
+                $data['validation'] = $this->validator;
+                $session = session();
+                $session->setFlashdata('error', 'Data Gagal Disimpan');
+                $validation = \Config\Services::validation();
+                return redirect()->to('/admin/add_pegawai')->withInput()->with('validation', $validation);
+            } else {
+                $this->pegawaiModel->save([
+                    'nama' => $this->request->getVar('nama'),
+                    'nik' => $this->request->getVar('nik'),
+                    'gelar_depan' => $this->request->getVar('gelar_depan'),
+                    'gelar_belakang' => $this->request->getVar('gelar_belakang'),
+                    'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
+                    'status_perkawin' => $this->request->getVar('status_perkawinan'),
+                    'tempat_lahir' => $this->request->getVar('tempat_lahir'),
+                    'tanggal_lahir' => $this->request->getVar('tanggal_lahir'),
+                    'telepon' => $this->request->getVar('telepon'),
+                    'email' => $this->request->getVar('email'),
+                    'provinsi' => $this->request->getVar('provinsi'),
+                    'kabupaten' => $this->request->getVar('kabupaten'),
+                    'kecamatan' => $this->request->getVar('kecamatan'),
+                    'kelurahan' => $this->request->getVar('kelurahan'),
+                    'alamat' => $this->request->getVar('alamat'),
+                    'jenis_pegawai_id' => $this->request->getVar('jenis_pegawai'),
+                    'status_pegawai' => $this->request->getVar('status_pegawai'),
+                    'tanggal_masuk' => $this->request->getVar('tanggal_masuk'),
+                    'rekening' => $this->request->getVar('rekening'),
+                ]);
+                $session = session();
+                $session->setFlashdata('success', 'Data Pegawai Berhasil Disimpan!');
+                return redirect()->to('/admin/data_pegawai');
+            }
         }
     }
 
@@ -537,6 +667,7 @@ class Admin extends BaseController
     {
         $id = $this->request->getVar('pegawai_id');
         $this->pegawaiModel->where('pegawai_id', $id)->delete($id);
+        // $this->userModel->getData();
         $session = session();
         $session->setFlashdata('success', 'Data Berhasil Dihapus!');
         return redirect()->to('/admin/data_pegawai');
@@ -545,14 +676,114 @@ class Admin extends BaseController
     public function edit_pegawai($id)
     {
         $jenis_peg = $this->jenisPegawai->getData();
+        $prov = new \App\Models\ProvinsiModel();
+
+        $provinsi = $prov->getData();
         $pegawai = $this->pegawaiModel->getData($id)->getRowArray();
         $data = [
             'title' => 'Edit Pegawai',
             'page' => 'Pegawai',
             'jenis_peg' => $jenis_peg,
             'pegawai' => $pegawai,
+            'provinsi' => $provinsi,
         ];
         return view('admin/pegawai/edit', $data);
+    }
+
+    public function pegawai_update()
+    {
+        $file = $this->request->getFile('gambar');
+
+        if (!empty($file)) {
+            $rules = [
+                'nama' => 'required|max_length[50]',
+                'telepon' => 'required|min_length[5]|max_length[15]',
+                'email' => 'required|max_length[30]',
+                'gambar' => 'mime_in[gambar,image/jpg,image/jpeg,image/gif,image/png]|max_size[gambar,2048]',
+            ];
+
+            if (!$this->validate($rules)) {
+                $data['validation'] = $this->validator;
+                $session = session();
+                $session->setFlashdata('error', $this->validator->listErrors());
+                $validation = \Config\Services::validation();
+                return redirect()->to('/admin/edit_pegawai')->withInput()->with('validation', $validation);
+            } else {
+                $id = $this->request->getVar('pegawai_id');
+                $randomName = $file->getRandomName();
+                if ($file->move(ROOTPATH . 'public/images/user/', $randomName)) {
+                    $this->pegawaiModel->update($id, [
+                        'nama' => $this->request->getVar('nama'),
+                        'nik' => $this->request->getVar('nik'),
+                        'gelar_depan' => $this->request->getVar('gelar_depan'),
+                        'gelar_belakang' => $this->request->getVar('gelar_belakang'),
+                        'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
+                        'status_perkawin' => $this->request->getVar('status_perkawinan'),
+                        'tempat_lahir' => $this->request->getVar('tempat_lahir'),
+                        'tanggal_lahir' => $this->request->getVar('tanggal_lahir'),
+                        'telepon' => $this->request->getVar('telepon'),
+                        'email' => $this->request->getVar('email'),
+                        'provinsi' => $this->request->getVar('provinsi'),
+                        'kota' => $this->request->getVar('kabupaten'),
+                        'kecamatan' => $this->request->getVar('kecamatan'),
+                        'kelurahan' => $this->request->getVar('kelurahan'),
+                        'alamat' => $this->request->getVar('alamat'),
+                        'jenis_pegawai_id' => $this->request->getVar('jenis_pegawai'),
+                        'status_pegawai' => $this->request->getVar('status_pegawai'),
+                        'tanggal_masuk' => $this->request->getVar('tanggal_masuk'),
+                        'rekening' => $this->request->getVar('rekening'),
+                        'gambar' => $randomName,
+                    ]);
+                    $session = session();
+                    $session->setFlashdata('success', 'Data Pegawai Berhasil Diupdate!');
+                    return redirect()->to('/admin/data_pegawai');
+                } else {
+                    $session = session();
+                    $session->setFlashdata('error', 'Gambar Gagal di Upload!');
+                }
+            }
+        } else {
+
+            $rules = [
+                'nama' => 'required|max_length[50]',
+                'telepon' => 'required|min_length[5]|max_length[15]',
+                'email' => 'required|max_length[30]',
+            ];
+
+            if (!$this->validate($rules)) {
+                $data['validation'] = $this->validator;
+                $session = session();
+                $session->setFlashdata('error', 'Data Gagal Disimpan');
+                $validation = \Config\Services::validation();
+                return redirect()->to('/admin/edit_pegawai')->withInput()->with('validation', $validation);
+            } else {
+                $id = $this->request->getVar('pegawai_id');
+                $this->pegawaiModel->update($id, [
+                    'nama' => $this->request->getVar('nama'),
+                    'nik' => $this->request->getVar('nik'),
+                    'gelar_depan' => $this->request->getVar('gelar_depan'),
+                    'gelar_belakang' => $this->request->getVar('gelar_belakang'),
+                    'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
+                    'status_perkawin' => $this->request->getVar('status_perkawinan'),
+                    'tempat_lahir' => $this->request->getVar('tempat_lahir'),
+                    'tanggal_lahir' => $this->request->getVar('tanggal_lahir'),
+                    'telepon' => $this->request->getVar('telepon'),
+                    'email' => $this->request->getVar('email'),
+                    'provinsi' => $this->request->getVar('provinsi'),
+                    'kabupaten' => $this->request->getVar('kabupaten'),
+                    'kecamatan' => $this->request->getVar('kecamatan'),
+                    'kelurahan' => $this->request->getVar('kelurahan'),
+                    'alamat' => $this->request->getVar('alamat'),
+                    'jenis_pegawai_id' => $this->request->getVar('jenis_pegawai'),
+                    'status_pegawai' => $this->request->getVar('status_pegawai'),
+                    'tanggal_masuk' => $this->request->getVar('tanggal_masuk'),
+                    'rekening' => $this->request->getVar('rekening'),
+                ]);
+                $session = session();
+                $session->setFlashdata('success', 'Data Pegawai Berhasil Diupdate!');
+                return redirect()->to('/admin/data_pegawai');
+            }
+        }
     }
 
     public function pegawai_akun_create()
@@ -640,6 +871,7 @@ class Admin extends BaseController
 
     public function add_izin()
     {
+        session();
         $pegawai = $this->pegawaiModel->getData();
         $jenis_izin = $this->izinjenisModel->getData();
         $data = [
@@ -647,6 +879,7 @@ class Admin extends BaseController
             'page' => 'Kelola Izin',
             'jenis_izin' => $jenis_izin,
             'pegawai' => $pegawai,
+            'validation' => \Config\Services::validation(),
         ];
         return view('admin/absensi/add_izin', $data);
     }
@@ -662,32 +895,74 @@ class Admin extends BaseController
 
     public function izin_pegawai_save()
     {
-        $rules = [
-            'status' => 'required',
-            'tanggal_awal' => 'required',
-            'tanggal_akhir' => 'required',
-        ];
+        $file = $this->request->getFile('file');
+        // dd($file);
+        if (!empty($file)) {
+            $rules = [
+                'status' => 'required',
+                'tanggal_awal' => 'required',
+                'tanggal_akhir' => 'required',
+                'file' => 'mime_in[file,image/jpg,image/jpeg,image/png,image/gif]|max_size[file,2048]',
+            ];
 
-        if (!$this->validate($rules)) {
-            $data['validation'] = $this->validator;
-            $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
-            $validation = \Config\Services::validation();
-            return redirect()->to('/admin/kelola_izin')->withInput()->with('validation', $validation);
+            if (!$this->validate($rules)) {
+                $data['validation'] = $this->validator;
+                $session = session();
+                $session->setFlashdata('error', 'Data Gagal Disimpan');
+                $validation = \Config\Services::validation();
+                return redirect()->to('/admin/add_izin')->withInput()->with('validation', $validation);
+            } else {
+                $randomName = $file->getRandomName();
+                if ($file->move(ROOTPATH . 'public/file/izin/', $randomName)) {
+                    $this->izinPegawaiModel->save([
+                        'pegawai_id' => $this->request->getVar('pegawai'),
+                        'izin_jenis_id' => $this->request->getVar('jenis_izin'),
+                        'izin_id' => $this->request->getVar('nama_izin'),
+                        'tanggal_awal' => $this->request->getVar('tanggal_awal'),
+                        'tanggal_akhir' => $this->request->getVar('tanggal_akhir'),
+                        'keterangan' => $this->request->getVar('keterangan'),
+                        'status' => $this->request->getVar('status'),
+                        'file' => $randomName,
+                    ]);
+                    $session = session();
+                    $session->setFlashdata('success', 'Data Izin Berhasil Ditambah!');
+                    return redirect()->to('/admin/kelola_izin');
+                }
+            }
         } else {
-            $this->izinPegawaiModel->save([
-                'pegawai_id' => $this->request->getVar('pegawai'),
-                'izin_jenis_id' => $this->request->getVar('jenis_izin'),
-                'izin_id' => $this->request->getVar('nama_izin'),
-                'tanggal_awal' => $this->request->getVar('tanggal_awal'),
-                'tanggal_akhir' => $this->request->getVar('tanggal_akhir'),
-                'keterangan' => $this->request->getVar('keterangan'),
-                'status' => $this->request->getVar('status'),
-            ]);
-            $session = session();
-            $session->setFlashdata('success', 'Data Izin Berhasil Ditambah!');
-            return redirect()->to('/admin/kelola_izin');
+            $rules = [
+                'status' => 'required',
+                'tanggal_awal' => 'required',
+                'tanggal_akhir' => 'required',
+            ];
+
+            if (!$this->validate($rules)) {
+                $data['validation'] = $this->validator;
+                $session = session();
+                $session->setFlashdata('error', 'Data Gagal Disimpan');
+                $validation = \Config\Services::validation();
+                return redirect()->to('/admin/add_izin')->withInput()->with('validation', $validation);
+            } else {
+                $this->izinPegawaiModel->save([
+                    'pegawai_id' => $this->request->getVar('pegawai'),
+                    'izin_jenis_id' => $this->request->getVar('jenis_izin'),
+                    'izin_id' => $this->request->getVar('nama_izin'),
+                    'tanggal_awal' => $this->request->getVar('tanggal_awal'),
+                    'tanggal_akhir' => $this->request->getVar('tanggal_akhir'),
+                    'keterangan' => $this->request->getVar('keterangan'),
+                    'status' => $this->request->getVar('status'),
+                ]);
+                $session = session();
+                $session->setFlashdata('success', 'Data Izin Berhasil Ditambah!');
+                return redirect()->to('/admin/kelola_izin');
+            }
         }
+    }
+
+    public function file_izin_download($id)
+    {
+        $file = $this->izinPegawaiModel->getData($id)->getRow();
+        return $this->response->download('file/izin/' . $file->file, null);
     }
 
     public function kelola_izin_edit($id)
@@ -710,7 +985,7 @@ class Admin extends BaseController
     {
         $this->db = \Config\Database::connect();
         $sql = $this->db->table('izin_pegawai a')
-            ->select('a.izin_pegawai_id, c.nama as jenis_izin, b.nama as nama_izin, p.nama as nama_pegawai, a.tanggal_awal, a.tanggal_akhir, datediff(a.tanggal_akhir, a.tanggal_awal) as lama, a.file, a.status')
+            ->select('a.izin_pegawai_id, a.keterangan, c.nama as jenis_izin, b.nama as nama_izin, p.nama as nama_pegawai, a.tanggal_awal, a.tanggal_akhir, datediff(a.tanggal_akhir, a.tanggal_awal) as lama, a.file, a.status')
             ->join('pegawai p', 'p.pegawai_id = a.pegawai_id')
             ->join('izin b', 'b.izin_id = a.izin_id')
             ->join('izin_jenis c', 'c.izin_jenis_id = b.izin_jenis_id')
@@ -734,6 +1009,17 @@ class Admin extends BaseController
         ]);
         $session = session();
         $session->setFlashdata('success', 'Izin Berhasil Diterima!');
+        return redirect()->to('/admin/kelola_izin');
+    }
+
+    public function konfirmasi_izin_reject()
+    {
+        $id = $this->request->getVar('izin_pegawai_id');
+        $this->izinPegawaiModel->update($id, [
+            'status' => 'Ditolak',
+        ]);
+        $session = session();
+        $session->setFlashdata('success', 'Izin Pegawai Ditolak!');
         return redirect()->to('/admin/kelola_izin');
     }
 }

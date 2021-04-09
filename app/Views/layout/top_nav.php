@@ -26,7 +26,7 @@
                     <li class="">
                         <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                             <?php if (!empty($user->gambar)) { ?>
-                                <img src="/images/<?= $user->gambar ?>" alt="">
+                                <img src="/images/user/<?= $user->gambar ?>" alt="">
                             <?php } else { ?>
                                 <img src="/images/user.png" alt="">
                             <?php } ?>

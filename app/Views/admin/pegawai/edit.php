@@ -20,10 +20,11 @@
                     <div class="x_content">
                         <br />
 
-                        <form action="/admin/pegawai_update" id="demo-form" data-parsley-validate method="post">
+                        <form action="/admin/pegawai_update" enctype="multipart/form-data" id="demo-form" data-parsley-validate method="post">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="nama">Nama Lengkap *:</label>
+                                    <input type="hidden" name="pegaawi_id" value="<?= $pegawai['pegawai_id'] ?>">
                                     <input type="text" id="nama" class="form-control" value="<?= $pegawai['nama'] ?>" name="nama" required />
                                 </div>
                             </div>
@@ -102,10 +103,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="tanggal_lahir">Tanggal Lahir :</label>
-                                    <div class="col-md-11 xdisplay_inputx form-group has-feedback">
-                                        <input type="text" class="form-control has-feedback-left" id="single_cal3" placeholder="Tanggal Lahir" value="<?= $pegawai['tanggal_lahir'] ?>" name="tanggal_lahir">
-                                        <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
-                                    </div>
+                                    <input type="date" class="form-control has-feedback-left" value="<?= $pegawai['tanggal_lahir'] ?>" name="tanggal_lahir">
                                 </div>
                             </div>
 
@@ -127,11 +125,20 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="provinsi">Provinsi :</label>
-                                    <input type="text" id="provinsi" class="form-control" name="provinsi" />
+                                    <select name="provinsi" class="form-control" id="provinsi">
+                                        <option value="">--Pilih Provinsi--</option>
+                                        <?php foreach ($provinsi as $prov) : ?>
+                                            <option value="<?= $prov['id'] ?>" <?php if ($prov['id'] == $pegawai['provinsi']) {
+                                                                                    echo 'selected';
+                                                                                } ?>><?= $prov['name'] ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="kabupaten">Kabupaten :</label>
-                                    <input type="text" id="kabupaten" class="form-control" name="kabupaten" />
+                                    <label for="kabupaten">Kabupaten/Kota :</label>
+                                    <select name="kabupaten" id="kabupaten" class="form-control">
+                                        <option value="">--Pilih Kabupaten--</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -144,13 +151,17 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="kecamatan">Kecamatan :</label>
-                                    <input type="text" id="kecamatan" class="form-control" name="kecamatan" />
+                                    <select name="kecamatan" id="kecamatan" class="form-control">
+                                        <option value="">--Pilih Kecamatan--</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="kelurahan">Kelurahan :</label>
-                                    <input type="text" id="kelurahan" class="form-control" name="kelurahan" />
+                                    <label for="kelurahan">Kelurahan/Desa :</label>
+                                    <select name="kelurahan" id="kelurahan" class="form-control">
+                                        <option value="">--Pilih Kelurahan--</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -170,12 +181,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="tanggal_masuk">Tanggal Masuk :</label>
-
-                                    <div class="col-md-11 xdisplay_inputx form-group has-feedback">
-                                        <input type="text" class="form-control has-feedback-left" id="single_cal2" name="tanggal_masuk" value="" placeholder="Tanggal Masuk">
-                                        <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true"></span>
-                                        <span id="inputSuccess2Status2" class="sr-only">(success)</span>
-                                    </div>
+                                    <input type="date" class="form-control has-feedback-left" name="tanggal_masuk" value="<?= $pegawai['tanggal_masuk'] ?>">
                                 </div>
                             </div>
 
@@ -196,12 +202,6 @@
                                 <div class="form-group">
                                     <label for="rekening">Nomor Bank Kalsel :</label>
                                     <input type="number" id="rekening" class="form-control" value="<?= $pegawai['rekening'] ?>" name="rekening" />
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="username">Username *:</label>
-                                    <input type="text" id="username" class="form-control" name="username" required />
                                 </div>
                             </div>
                             <div class="col-md-6">

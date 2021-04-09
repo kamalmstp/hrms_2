@@ -69,6 +69,7 @@
                     </li>
                     <li><a><i class="fa fa-gears"></i> Data Master <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
+                            <li><a href="/admin/periode">Data Periode</a></li>
                             <li><a href="/admin/jns_pegawai">Jenis Pegawai</a></li>
                             <li><a href="/admin/hub_keluarga">Hubungan Keluarga</a></li>
                             <li><a href="/admin/jen_pend">Jenjang Pendidikan</a></li>
