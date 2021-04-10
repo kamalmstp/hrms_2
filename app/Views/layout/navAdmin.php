@@ -50,7 +50,9 @@
                         <ul class="nav child_menu">
                             <li><a href="/admin/data_pegawai">Data Pegawai</a></li>
                             <li><a href="/admin/add_pegawai">Tambah Pegawai</a></li>
-                            <li><a href="#">Jabatan Pegawai</a></li>
+                            <li><a href="/admin/keluarga_pegawai">Keluarga Pegawai</a></li>
+                            <li><a href="/admin/pendidikan_pegawai">Pendidikan Pegawai</a></li>
+                            <li><a href="/admin/jabatan_pegawai">Jabatan Pegawai</a></li>
                         </ul>
                     </li>
                     <li><a><i class="fa fa-calendar"></i> Absensi <span class="fa fa-chevron-down"></span></a>

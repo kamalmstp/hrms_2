@@ -823,6 +823,80 @@ class Admin extends BaseController
         return redirect()->to('/admin/data_pegawai');
     }
 
+    public function jabatan_pegawai()
+    {
+        $pegawai = $this->pegawaiModel->getData();
+        $data = [
+            'title' => 'Jabatan Pegawai',
+            'page' => 'Pegawai',
+            'pegawai' => $pegawai,
+        ];
+        return view('admin/pegawai/jabatan_pegawai', $data);
+    }
+
+    public function kelola_jabatan($id)
+    {
+        $pegawai = $this->pegawaiModel->getData($id)->getRow();
+        $jenjang_pendidikan = $this->jenjangPendidikan->getData();
+        $data = [
+            'title' => 'Kelola Jabatan Pegawai',
+            'page' => 'Pegawai',
+            'pegawai' => $pegawai,
+            'jenjang_pendidikan' => $jenjang_pendidikan,
+        ];
+        return view('admin/pegawai/kelola_jabatan', $data);
+    }
+
+    public function pendidikan_pegawai()
+    {
+        $pegawai = $this->pegawaiModel->getData();
+        $data = [
+            'title' => 'Pendidikan Pegawai',
+            'page' => 'Pegawai',
+            'pegawai' => $pegawai,
+        ];
+        return view('admin/pegawai/pendidikan_pegawai', $data);
+    }
+
+    public function kelola_pendidikan($id)
+    {
+        $pegawai = $this->pegawaiModel->getData($id)->getRow();
+        $jenis_pendidikan = $this->jenisPendidikan->getData();
+        $jenjang_pendidikan = $this->jenjangPendidikan->getData();
+        $data = [
+            'title' => 'Kelola Pendidikan Pegawai',
+            'page' => 'Pegawai',
+            'pegawai' => $pegawai,
+            'jenis_pendidikan' => $jenis_pendidikan,
+            'jenjang_pendidikan' => $jenjang_pendidikan,
+        ];
+        return view('admin/pegawai/kelola_pendidikan', $data);
+    }
+
+    public function keluarga_pegawai()
+    {
+        $pegawai = $this->pegawaiModel->getData();
+        $data = [
+            'title' => 'Keluarga Pegawai',
+            'page' => 'Pegawai',
+            'pegawai' => $pegawai,
+        ];
+        return view('admin/pegawai/keluarga_pegawai', $data);
+    }
+
+    public function kelola_keluarga($id)
+    {
+        $pegawai = $this->pegawaiModel->getData($id)->getRow();
+        $jenjang_pendidikan = $this->jenjangPendidikan->getData();
+        $data = [
+            'title' => 'Kelola Keluarga Pegawai',
+            'page' => 'Pegawai',
+            'pegawai' => $pegawai,
+            'jenjang_pendidikan' => $jenjang_pendidikan,
+        ];
+        return view('admin/pegawai/kelola_keluarga', $data);
+    }
+
     public function ajax_kab()
     {
         $this->db = \Config\Database::connect();
