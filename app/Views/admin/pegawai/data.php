@@ -65,11 +65,11 @@
                                                     <span class="sr-only">Toggle Dropdown</span>
                                                 </button>
                                                 <ul class="dropdown-menu" role="menu">
-                                                    <li><a href="#"><i class="fa fa-child"></i> Jabatan</a>
+                                                    <li><a target="_blank" href="/admin/kelola_jabatan/<?= $row['pegawai_id'] ?>"><i class="fa fa-child"></i> Jabatan</a>
                                                     </li>
-                                                    <li><a href="#"><i class="fa fa-graduation-cap"></i> Pendidikan</a>
+                                                    <li><a target="_blank" href="/admin/kelola_pendidikan/<?= $row['pegawai_id'] ?>"><i class="fa fa-graduation-cap"></i> Pendidikan</a>
                                                     </li>
-                                                    <li><a href="#"><i class="fa fa-users"></i> Keluarga</a>
+                                                    <li><a target="_blank" href="/admin/kelola_keluarga/<?= $row['pegawai_id'] ?>"><i class="fa fa-users"></i> Keluarga</a>
                                                     </li>
                                                     <li><a href="#"><i class="fa fa-calendar"></i> Absensi</a>
                                                     </li>

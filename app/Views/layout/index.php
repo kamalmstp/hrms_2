@@ -147,13 +147,19 @@
 
     <!-- Custom Theme Scripts -->
     <script type="text/javascript" src="/build/js/custom.min.js"></script>
-    <?php if (empty($session->getFlashdata('success'))) { ?>
+    <?php
+    $success = $session->getFlashdata('success');
+    $error = $session->getFlashdata('error');
+    $warning = $session->getFlashdata('warning');
+    $info = $session->getFlashdata('info');
+
+    if (empty($session->getFlashdata())) { ?>
         <script type="text/javascript">
             $(document).ready(function() {
                 $('.ui-pnotify').remove();
             });
         </script>
-    <?php } elseif (!empty($session->getFlashdata('success'))) { ?>
+    <?php } elseif (!empty($success)) { ?>
         <script>
             $(document).ready(function() {
                 $('.ui-pnotify').remove();
@@ -163,7 +169,7 @@
                     animate_out = $("#animate_out").val();
                 new PNotify({
                     title: "Berhasil !",
-                    text: "<?= $session->getFlashdata('success') ?>",
+                    text: "<?= $success ?>",
                     type: "success",
                     styling: "bootstrap3",
                     animate: {
@@ -174,7 +180,7 @@
                 });
             });
         </script>
-    <?php } elseif (!empty($session->getFlashdata('error'))) { ?>
+    <?php } elseif (!empty($error)) { ?>
         <script>
             $(document).ready(function() {
                 $('.ui-pnotify').remove();
@@ -184,7 +190,7 @@
                     animate_out = $("#animate_out").val();
                 new PNotify({
                     title: "Gagal !",
-                    text: "<?= $session->getFlashdata('error') ?>",
+                    text: "<?= $error ?>",
                     type: "error",
                     styling: "bootstrap3",
                     animate: {
@@ -195,7 +201,7 @@
                 });
             });
         </script>
-    <?php } elseif (!empty($session->getFlashdata('warning'))) { ?>
+    <?php } elseif (!empty($warning)) { ?>
         <script>
             $(document).ready(function() {
                 $('.ui-pnotify').remove();
@@ -205,7 +211,7 @@
                     animate_out = $("#animate_out").val();
                 new PNotify({
                     title: "Peringatan !",
-                    text: "<?= $session->getFlashdata('warning') ?>",
+                    text: "<?= $warning ?>",
                     type: "warning",
                     styling: "bootstrap3",
                     animate: {
@@ -216,7 +222,7 @@
                 });
             });
         </script>
-    <?php } elseif (!empty($session->getFlashdata('info'))) { ?>
+    <?php } elseif (!empty($info)) { ?>
         <script>
             $(document).ready(function() {
                 $('.ui-pnotify').remove();
@@ -226,7 +232,7 @@
                     animate_out = $("#animate_out").val();
                 new PNotify({
                     title: "Peringatan !",
-                    text: "<?= $session->getFlashdata('info') ?>",
+                    text: "<?= esc($info) ?>",
                     type: "info",
                     styling: "bootstrap3",
                     animate: {

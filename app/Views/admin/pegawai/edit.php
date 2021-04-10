@@ -24,7 +24,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="nama">Nama Lengkap *:</label>
-                                    <input type="hidden" name="pegaawi_id" value="<?= $pegawai['pegawai_id'] ?>">
+                                    <input type="hidden" name="pegawai_id" value="<?= $pegawai['pegawai_id'] ?>">
                                     <input type="text" id="nama" class="form-control" value="<?= $pegawai['nama'] ?>" name="nama" required />
                                 </div>
                             </div>
@@ -137,7 +137,7 @@
                                 <div class="form-group">
                                     <label for="kabupaten">Kabupaten/Kota :</label>
                                     <select name="kabupaten" id="kabupaten" class="form-control">
-                                        <option value="">--Pilih Kabupaten--</option>
+                                        <option value="<?= $kabupaten['id'] ?>"><?= $kabupaten['name'] ?></option>
                                     </select>
                                 </div>
                             </div>
@@ -152,7 +152,7 @@
                                 <div class="form-group">
                                     <label for="kecamatan">Kecamatan :</label>
                                     <select name="kecamatan" id="kecamatan" class="form-control">
-                                        <option value="">--Pilih Kecamatan--</option>
+                                        <option value="<?= $kecamatan['id'] ?>"><?= $kecamatan['name'] ?></option>
                                     </select>
                                 </div>
                             </div>
@@ -160,7 +160,7 @@
                                 <div class="form-group">
                                     <label for="kelurahan">Kelurahan/Desa :</label>
                                     <select name="kelurahan" id="kelurahan" class="form-control">
-                                        <option value="">--Pilih Kelurahan--</option>
+                                        <option value="<?= $kelurahan['id'] ?>"><?= $kelurahan['name'] ?></option>
                                     </select>
                                 </div>
                             </div>
