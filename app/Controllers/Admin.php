@@ -13,6 +13,7 @@ use App\Models\IzinModel;
 use App\Models\IzinPegawaiModel;
 use App\Models\PeriodeModel;
 use App\Models\PendidikanPegModel;
+use App\Models\KeluargaPegModel;
 
 class Admin extends BaseController
 {
@@ -27,6 +28,7 @@ class Admin extends BaseController
     protected $izinPegawaiModel;
     protected $periodeModel;
     protected $pendidikanPegawai;
+    protected $keluargaPegawai;
 
 
     public function __construct()
@@ -42,6 +44,8 @@ class Admin extends BaseController
         $this->izinPegawaiModel = new IzinPegawaiModel();
         $this->periodeModel = new PeriodeModel();
         $this->pendidikanPegawai = new PendidikanPegModel();
+        $this->keluargaPegawai = new KeluargaPegModel();
+        $this->validation = \Config\Services::validation();
     }
 
     public function index()
@@ -584,7 +588,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data = $this->validator->listErrors();
             $session = session();
-            $session->setFlashdata('info', $this->validator->listErrors());
+            $session->setFlashdata('info', $this->validator->getErrors());
             // dd($data);
             return redirect()->to('/admin/add_pegawai');
         } else {
@@ -786,7 +790,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data['validation'] = $this->validator;
             $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $session->setFlashdata('info', $this->validator->getErrors());
             $validation = \Config\Services::validation();
             return redirect()->to('/admin/data_pegawai')->withInput()->with('validation', $validation);
         } else {
@@ -849,26 +853,29 @@ class Admin extends BaseController
 
     public function pendidikan_pegawai_save()
     {
-        $file = $this->request->getFile('gambar');
         $id = $this->request->getVar('pegawai_id');
 
-        if (!empty($file)) {
-            $rules = [
-                'nama_pendidikan' => 'required|max_length[50]',
-                'penyelenggara' => 'required|max_length[50]',
-                'nomor_ijazah' => 'required|max_length[50]',
-                'gambar' => 'mime_in[gambar,image/jpg,image/jpeg,image/gif,image/png]|max_size[gambar,2048]'
-            ];
+        $rules = [
+            'nama_pendidikan' => 'required|max_length[50]',
+            'penyelenggara' => 'required|max_length[50]',
+            'nomor_ijazah' => 'required|max_length[50]',
+        ];
 
-            if (!$this->validate($rules)) {
-                $data['validation'] = $this->validator;
-                $session = session();
-                $session->setFlashdata('error', $this->validator->listErrors());
-                $validation = \Config\Services::validation();
-                return redirect()->to('/admin/kelola_pendidikan/' . $id)->withInput()->with('validation', $validation);
-            } else {
-                $randomName = $file->getRandomName();
-                if ($file->move(ROOTPATH . 'public/images/ijazah/', $randomName)) {
+        if (!$this->validate($rules)) {
+            $data = $this->validator->listErrors();
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            // dd($data);
+            return redirect()->to('/admin/kelola_pendidikan/' . $id);
+        } else {
+            $file = $this->request->getFile('gambar');
+            if ($file->isValid() && !$file->hasMoved()) {
+                $file_type = $file->getClientMimeType();
+                $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif');
+                if (in_array($file_type, $valid_type)) {
+                    $randomName = $file->getRandomName();
+                    $file->move(ROOTPATH . 'public/images/ijazah/', $randomName);
+
                     $this->pendidikanPegawai->save([
                         'nama_pendidikan' => $this->request->getVar('nama_pendidikan'),
                         'penyelenggara' => $this->request->getVar('penyelenggara'),
@@ -886,23 +893,9 @@ class Admin extends BaseController
                     return redirect()->to('/admin/kelola_pendidikan/' . $id);
                 } else {
                     $session = session();
-                    $session->setFlashdata('error', 'Gambar Gagal di Upload!');
+                    $session->setFlashdata('warning', 'Tipe gambar yang dipilih tidak sesuai');
+                    return redirect()->to('/admin/kelola_pendidikan/' . $id);
                 }
-            }
-        } else {
-
-            $rules = [
-                'nama_pendidikan' => 'required|max_length[50]',
-                'penyelenggara' => 'required|max_length[50]',
-                'nomor_ijazah' => 'required|max_length[50]',
-            ];
-
-            if (!$this->validate($rules)) {
-                $data['validation'] = $this->validator;
-                $session = session();
-                $session->setFlashdata('error', 'Data Gagal Disimpan');
-                $validation = \Config\Services::validation();
-                return redirect()->to('/admin/kelola_pendidikan/' . $id)->withInput()->with('validation', $validation);
             } else {
                 $this->pendidikanPegawai->save([
                     'nama_pendidikan' => $this->request->getVar('nama_pendidikan'),
@@ -924,28 +917,30 @@ class Admin extends BaseController
 
     public function pendidikan_pegawai_update()
     {
-        $file = $this->request->getFile('gambar1');
-        // dd($file);
         $id_pegawai = $this->request->getVar('pegawai_id');
         $id = $this->request->getVar('id');
 
-        if (!empty($file)) {
-            $rules = [
-                'nama_pendidikan' => 'required|max_length[50]',
-                'penyelenggara' => 'required|max_length[50]',
-                'nomor_ijazah' => 'required|max_length[50]',
-                'gambar' => 'mime_in[gambar,image/jpg,image/jpeg,image/gif,image/png]|max_size[gambar,2048]'
-            ];
+        $rules = [
+            'nama_pendidikan' => 'required|max_length[50]',
+            'penyelenggara' => 'required|max_length[50]',
+            'nomor_ijazah' => 'required|max_length[50]',
+        ];
 
-            if (!$this->validate($rules)) {
-                $data['validation'] = $this->validator;
-                $session = session();
-                $session->setFlashdata('error', $this->validator->listErrors());
-                $validation = \Config\Services::validation();
-                return redirect()->to('/admin/kelola_pendidikan/' . $id_pegawai)->withInput()->with('validation', $validation);
-            } else {
-                $randomName = $file->getRandomName();
-                if ($file->move(ROOTPATH . 'public/images/ijazah/', $randomName)) {
+        if (!$this->validate($rules)) {
+            $data = $this->validator->listErrors();
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            // dd($data);
+            return redirect()->to('/admin/kelola_pendidikan/' . $id_pegawai);
+        } else {
+            $file = $this->request->getFile('gambar1');
+            if ($file->isValid() && !$file->hasMoved()) {
+                $file_type = $file->getClientMimeType();
+                $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif');
+                if (in_array($file_type, $valid_type)) {
+                    $randomName = $file->getRandomName();
+                    $file->move(ROOTPATH . 'public/images/ijazah/', $randomName);
+
                     $this->pendidikanPegawai->update($id, [
                         'nama_pendidikan' => $this->request->getVar('nama_pendidikan'),
                         'penyelenggara' => $this->request->getVar('penyelenggara'),
@@ -958,27 +953,13 @@ class Admin extends BaseController
                         'file' => $randomName,
                     ]);
                     $session = session();
-                    $session->setFlashdata('success', 'Data Pendidikan Pegawai Berhasil Dirubah!');
+                    $session->setFlashdata('success', 'Data Pendidikan Pegawai Berhasil Disimpan!');
                     return redirect()->to('/admin/kelola_pendidikan/' . $id_pegawai);
                 } else {
                     $session = session();
-                    $session->setFlashdata('error', 'Gambar Gagal di Upload!');
+                    $session->setFlashdata('warning', 'Tipe gambar yang dipilih tidak sesuai');
+                    return redirect()->to('/admin/kelola_pendidikan/' . $id_pegawai);
                 }
-            }
-        } else {
-
-            $rules = [
-                'nama_pendidikan' => 'required|max_length[50]',
-                'penyelenggara' => 'required|max_length[50]',
-                'nomor_ijazah' => 'required|max_length[50]',
-            ];
-
-            if (!$this->validate($rules)) {
-                $data['validation'] = $this->validator;
-                $session = session();
-                $session->setFlashdata('error', 'Data Gagal Disimpan');
-                $validation = \Config\Services::validation();
-                return redirect()->to('/admin/kelola_pendidikan/' . $id_pegawai)->withInput()->with('validation', $validation);
             } else {
                 $this->pendidikanPegawai->update($id, [
                     'nama_pendidikan' => $this->request->getVar('nama_pendidikan'),
@@ -991,7 +972,7 @@ class Admin extends BaseController
                     'keterangan' => $this->request->getVar('keterangan'),
                 ]);
                 $session = session();
-                $session->setFlashdata('success', 'Data Pendidikan Pegawai Berhasil Dirubah!');
+                $session->setFlashdata('success', 'Data Pendidikan Pegawai Berhasil Disimpan!');
                 return redirect()->to('/admin/kelola_pendidikan/' . $id_pegawai);
             }
         }
@@ -1007,13 +988,111 @@ class Admin extends BaseController
         return redirect()->to('/admin/kelola_pendidikan/' . $pegawai_id);
     }
 
+    public function keluarga_pegawai()
+    {
+        $pegawai = $this->pegawaiModel->getData();
+        $data = [
+            'title' => 'Keluarga Pegawai',
+            'page' => 'Pegawai',
+            'pegawai' => $pegawai,
+        ];
+        return view('admin/pegawai/keluarga_pegawai', $data);
+    }
+
+    public function keluarga_pegawai_save()
+    {
+        $id = $this->request->getVar('pegawai_id');
+
+        $rules = [
+            'nama' => 'required|max_length[50]',
+            'nomor_telepon' => 'required|max_length[15]|min_length[5]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data = $this->validator->listErrors();
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            // dd($data);
+            return redirect()->to('/admin/kelola_keluarga/' . $id);
+        } else {
+            $this->keluargaPegawai->save([
+                'pegawai_id' => $id,
+                'hubkel_id' => $this->request->getVar('hubkel'),
+                'jenj_pend_id' => $this->request->getVar('jenjang_pendidikan'),
+                'nama' => $this->request->getVar('nama'),
+                'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
+                'tempat_lahir' => $this->request->getVar('tempat_lahir'),
+                'tanggal_lahir' => $this->request->getVar('tanggal_lahir'),
+                'telepon' => $this->request->getVar('nomor_telepon'),
+                'email' => $this->request->getVar('email'),
+                'alamat' => $this->request->getVar('alamat'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Keluarga Pegawai Berhasil Disimpan!');
+            return redirect()->to('/admin/kelola_keluarga/' . $id);
+        }
+    }
+
+    public function keluarga_pegawai_update()
+    {
+        $id_pegawai = $this->request->getVar('pegawai_id');
+        $id = $this->request->getVar('id');
+
+        $rules = [
+            'nama' => 'required|max_length[50]',
+            'nomor_telepon' => 'required|max_length[50]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data = $this->validator->listErrors();
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            // dd($data);
+            return redirect()->to('/admin/kelola_keluarga/' . $id_pegawai);
+        } else {
+            $this->keluargaPegawai->update($id, [
+                'hubkel_id' => $this->request->getVar('hubkel'),
+                'jenj_pend_id' => $this->request->getVar('jenjang_pendidikan'),
+                'nama' => $this->request->getVar('nama'),
+                'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
+                'tempat_lahir' => $this->request->getVar('tempat_lahir'),
+                'tanggal_lahir' => $this->request->getVar('tanggal_lahir'),
+                'telepon' => $this->request->getVar('nomor_telepon'),
+                'email' => $this->request->getVar('email'),
+                'alamat' => $this->request->getVar('alamat'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Keluarga Pegawai Berhasil Diupdate!');
+            return redirect()->to('/admin/kelola_keluarga/' . $id_pegawai);
+        }
+    }
+
+    public function keluarga_pegawai_del()
+    {
+        $id = $this->request->getVar('id');
+        $pegawai_id = $this->request->getVar('pegawai_id');
+        $this->keluargaPegawai->where('kel_peg_id', $id)->delete($id);
+        $session = session();
+        $session->setFlashdata('success', 'Data Berhasil Dihapus!');
+        return redirect()->to('/admin/kelola_keluarga/' . $pegawai_id);
+    }
+
     public function kelola_pendidikan($id)
     {
         session();
+        $this->db = \Config\Database::connect();
+        $sql = $this->db->table('pendidikan_pegawai pp')
+            ->select('*')
+            ->join('jenis_pendidikan jenis', 'jenis.jenis_pend_id = pp.jenis_pend_id')
+            ->join('jenjang_pendidikan jenj', 'jenj.jenj_pend_id = pp.jenj_pend_id')
+            ->where('pp.pegawai_id', $id)->get();
+        $pendidikan_pegawai = $sql->getResultArray();
+
         $pegawai = $this->pegawaiModel->getData($id)->getRow();
         $jenis_pendidikan = $this->jenisPendidikan->getData();
         $jenjang_pendidikan = $this->jenjangPendidikan->getData();
-        $pendidikan_pegawai = $this->pendidikanPegawai->getData();
+        // $pendidikan_pegawai = $this->pendidikanPegawai->getData();
+        // dd($pendidikan_pegawai);
         $data = [
             'title' => 'Kelola Pendidikan Pegawai',
             'page' => 'Pegawai',
@@ -1026,26 +1105,20 @@ class Admin extends BaseController
         return view('admin/pegawai/kelola_pendidikan', $data);
     }
 
-    public function keluarga_pegawai()
-    {
-        $pegawai = $this->pegawaiModel->getData();
-        $data = [
-            'title' => 'Keluarga Pegawai',
-            'page' => 'Pegawai',
-            'pegawai' => $pegawai,
-        ];
-        return view('admin/pegawai/keluarga_pegawai', $data);
-    }
-
     public function kelola_keluarga($id)
     {
+        $keluarga_pegawai = $this->keluargaPegawai->getData();
+        // dd($keluarga_pegawai);
         $pegawai = $this->pegawaiModel->getData($id)->getRow();
         $jenjang_pendidikan = $this->jenjangPendidikan->getData();
+        $hubkel = $this->hubunganKeluarga->getData();
         $data = [
             'title' => 'Kelola Keluarga Pegawai',
             'page' => 'Pegawai',
             'pegawai' => $pegawai,
             'jenjang_pendidikan' => $jenjang_pendidikan,
+            'hubkel' => $hubkel,
+            'keluarga_pegawai' => $keluarga_pegawai,
         ];
         return view('admin/pegawai/kelola_keluarga', $data);
     }

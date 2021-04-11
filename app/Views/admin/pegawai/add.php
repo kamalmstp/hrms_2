@@ -19,8 +19,8 @@
                     </div>
                     <div class="x_content">
                         <br />
-                        <?= $validation->listErrors(); ?>
-                        <form action="/admin/pegawai_save" enctype="multipart/form-data" id="demo-form" data-parsley-validate method="post">
+
+                        <form action="/admin/pegawai_save" enctype="multipart/form-data" id="demo-form" method="post">
                             <?= csrf_field(); ?>
                             <div class="col-md-6">
                                 <div class="form-group">

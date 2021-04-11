@@ -26,7 +26,6 @@
                                 </h1>
                                 <hr>
                             </div>
-                            <?= $validation->listErrors(); ?>
                             <!-- /.col -->
                         </div>
                         <!-- start project list -->
@@ -56,9 +55,9 @@
                                             <?php } ?>
                                         </td>
                                         <td><?= $row['nama_pendidikan'] ?></td>
-                                        <td><?= $row['jenis_pend_id'] ?></td>
+                                        <td><?= $row['jenis_pendidikan'] ?></td>
                                         <td>
-                                            <?= $row['jenj_pend_id'] ?>
+                                            <?= $row['jenjang_pendidikan'] ?>
                                         </td>
                                         <td><?= $row['penyelenggara'] ?></td>
                                         <td><?= $row['tahun_lulus'] ?></td>

@@ -227,21 +227,23 @@
             $(document).ready(function() {
                 $('.ui-pnotify').remove();
             });
-            $(function() {
-                var animate_in = $("#animate_in").val(),
-                    animate_out = $("#animate_out").val();
-                new PNotify({
-                    title: "Peringatan !",
-                    text: "<?= esc($info) ?>",
-                    type: "info",
-                    styling: "bootstrap3",
-                    animate: {
-                        animate: true,
-                        in_class: "bounceInLeft",
-                        out_class: "slideOutUp"
-                    }
+            <?php foreach ($info as $i) : ?>
+                $(function() {
+                    var animate_in = $("#animate_in").val(),
+                        animate_out = $("#animate_out").val();
+                    new PNotify({
+                        title: "Peringatan !",
+                        text: "<?= esc($i) ?>",
+                        type: "info",
+                        styling: "bootstrap3",
+                        animate: {
+                            animate: true,
+                            in_class: "bounceInLeft",
+                            out_class: "slideOutUp"
+                        }
+                    });
                 });
-            });
+            <?php endforeach; ?>
         </script>
     <?php }; ?>
 </body>
