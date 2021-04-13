@@ -71,7 +71,7 @@
                                                     </li>
                                                     <li><a target="_blank" href="/admin/kelola_keluarga/<?= $row['pegawai_id'] ?>"><i class="fa fa-users"></i> Keluarga</a>
                                                     </li>
-                                                    <li><a href="#"><i class="fa fa-calendar"></i> Absensi</a>
+                                                    <li><a href="/admin/absensi_detail/<?= $row['pegawai_id'] ?>"><i class="fa fa-calendar"></i> Absensi</a>
                                                     </li>
                                                     <li><a target="_blank" href="/admin/pegawai_izin_view/<?= $row['pegawai_id'] ?>"><i class="fa fa-table"></i> Izin</a>
                                                     </li>

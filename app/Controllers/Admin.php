@@ -14,6 +14,7 @@ use App\Models\IzinPegawaiModel;
 use App\Models\PeriodeModel;
 use App\Models\PendidikanPegModel;
 use App\Models\KeluargaPegModel;
+use App\Models\FingerprintModel;
 
 class Admin extends BaseController
 {
@@ -29,6 +30,7 @@ class Admin extends BaseController
     protected $periodeModel;
     protected $pendidikanPegawai;
     protected $keluargaPegawai;
+    protected $fingerprintModel;
 
 
     public function __construct()
@@ -45,6 +47,7 @@ class Admin extends BaseController
         $this->periodeModel = new PeriodeModel();
         $this->pendidikanPegawai = new PendidikanPegModel();
         $this->keluargaPegawai = new KeluargaPegModel();
+        $this->fingerprintModel = new FingerprintModel();
         $this->validation = \Config\Services::validation();
     }
 
@@ -1348,5 +1351,111 @@ class Admin extends BaseController
         $session = session();
         $session->setFlashdata('success', 'Izin Pegawai Ditolak!');
         return redirect()->to('/admin/kelola_izin');
+    }
+
+
+    //ABSENSI
+    public function data_fingerprint()
+    {
+        $finger = $this->fingerprintModel->findAll();
+
+        $data = [
+            'title' => 'Data Fingerprint',
+            'page' => 'Absensi',
+            'fingerprint' => $finger,
+        ];
+
+        return view('admin/absensi/fingerprint', $data);
+    }
+
+    public function import_fingerprint()
+    {
+        $rules = [
+            'fingerprint' => 'uploaded[fingerprint]|ext_in[fingerprint,xls,xlsx]|max_size[fingerprint,2048]',
+        ];
+
+        $file = $this->request->getFile('fingerprint');
+
+        if (!$this->validate($rules)) {
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            return redirect()->to('/admin/data_fingerprint/');
+        } else {
+            $extension = $file->getClientExtension();
+
+            if ($extension == 'xls') {
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+            } else {
+                $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            }
+            $spreadsheet = $reader->load($file);
+            $data = $spreadsheet->getActiveSheet()->toArray();
+
+            foreach ($data as $key => $row) {
+                if ($key == 0) {
+                    continue;
+                }
+
+                $sidik_id = $row[0];
+                $date = date('Y-m-d', strtotime($row[1]));
+                $time = $row[2];
+                $state = $row[3];
+
+                // dd($date);
+
+                $this->fingerprintModel->save([
+                    'sidik_id' => $sidik_id,
+                    'date' => $date,
+                    'time' => $time,
+                    'state' => $state,
+                ]);
+            }
+
+
+            $session = session();
+            $session->setFlashdata('success', 'Data Absensi Pegawai Berhasil Diimport!');
+            return redirect()->to('/admin/data_fingerprint/');
+        }
+    }
+
+    public function absensi_pegawai()
+    {
+        $finger = $this->fingerprintModel->findAll();
+
+        $data = [
+            'title' => 'Data Fingerprint',
+            'page' => 'Absensi',
+            'fingerprint' => $finger,
+        ];
+
+        return view('admin/absensi/fingerprint', $data);
+    }
+
+    public function absensi_detail($id)
+    {
+        $bulan = date('m');
+        $tahun = date('Y');
+        $tanggal_akhir = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
+        $pegawai = $this->pegawaiModel->getData($id)->getRow();
+        $fingerprint = $this->fingerprintModel->getData($pegawai->sidik_id)->getResultArray();
+        $data = [
+            'title' => 'Absensi Detail',
+            'page' => 'Absensi',
+            'pegawai' => $pegawai,
+            'bulan' => $bulan,
+            'tahun' => $tahun,
+            'tanggal_ahir' => $tanggal_akhir,
+            'fingerprint' => $fingerprint,
+        ];
+
+        return view('admin/absensi/absensi_detail', $data);
+    }
+
+    public function isi_detail()
+    {
+        $this->db = \Config\Database::connect();
+        $data = $this->db->table('fingerprint')->getResult();
+
+        echo json_encode($data);
     }
 }

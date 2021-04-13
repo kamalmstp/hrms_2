@@ -58,7 +58,7 @@
                     <li><a><i class="fa fa-calendar"></i> Absensi <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <li><a href="#">Absensi Pegawai</a></li>
-                            <li><a href="#">Import Absensi</a></li>
+                            <li><a href="/admin/data_fingerprint">Data Fingerprint</a></li>
                             <li><a href="/admin/konfirmasi_izin">Konfirmasi Izin</a></li>
                             <li><a href="/admin/kelola_izin">Kelola Izin</a></li>
                         </ul>
