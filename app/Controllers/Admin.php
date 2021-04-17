@@ -15,6 +15,9 @@ use App\Models\PeriodeModel;
 use App\Models\PendidikanPegModel;
 use App\Models\KeluargaPegModel;
 use App\Models\FingerprintModel;
+use App\Models\InventarisModel;
+use App\Models\PeminjamanModel;
+use DateTime;
 
 class Admin extends BaseController
 {
@@ -31,6 +34,8 @@ class Admin extends BaseController
     protected $pendidikanPegawai;
     protected $keluargaPegawai;
     protected $fingerprintModel;
+    protected $inventarisModel;
+    protected $peminjamanModel;
 
 
     public function __construct()
@@ -48,6 +53,8 @@ class Admin extends BaseController
         $this->pendidikanPegawai = new PendidikanPegModel();
         $this->keluargaPegawai = new KeluargaPegModel();
         $this->fingerprintModel = new FingerprintModel();
+        $this->inventarisModel = new InventarisModel();
+        $this->peminjamanModel = new PeminjamanModel();
         $this->validation = \Config\Services::validation();
     }
 
@@ -1457,5 +1464,180 @@ class Admin extends BaseController
         $data = $this->db->table('fingerprint')->getResult();
 
         echo json_encode($data);
+    }
+
+    public function data_inventaris()
+    {
+        $inventaris = $this->inventarisModel->getData();
+        $data = [
+            'title' => 'Data Inventaris',
+            'page' => 'Inventaris',
+            'inventaris' => $inventaris,
+        ];
+
+        return view('admin/inventaris/data', $data);
+    }
+
+    public function inventaris_save()
+    {
+        $rules = [
+            'nama_barang' => 'required|max_length[50]',
+            'nomor_seri' => 'required|max_length[20]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data = $this->validator->listErrors();
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            // dd($data);
+            return redirect()->to('/admin/data_inventaris/');
+        } else {
+            $date = new DateTime();
+            $this->inventarisModel->save([
+                'nama_barang' => $this->request->getVar('nama_barang'),
+                'nomor_seri' => $this->request->getVar('nomor_seri'),
+                'merk' => $this->request->getVar('merk'),
+                'unit' => $this->request->getVar('unit'),
+                'lokasi' => $this->request->getVar('lokasi'),
+                'jumlah' => $this->request->getVar('jumlah'),
+                'keterangan' => $this->request->getVar('keterangan'),
+                'created_at' => $date->format('d-m-Y H:i:s'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Inventaris Berhasil Disimpan!');
+            return redirect()->to('/admin/data_inventaris/');
+        }
+    }
+
+    public function inventaris_update()
+    {
+        $rules = [
+            'nama_barang' => 'required|max_length[50]',
+            'nomor_seri' => 'required|max_length[20]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data = $this->validator->listErrors();
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            // dd($data);
+            return redirect()->to('/admin/data_inventaris/');
+        } else {
+            $date = new DateTime();
+            $id = $this->request->getVar('inventaris_id');
+            $this->inventarisModel->update($id, [
+                'nama_barang' => $this->request->getVar('nama_barang'),
+                'nomor_seri' => $this->request->getVar('nomor_seri'),
+                'merk' => $this->request->getVar('merk'),
+                'unit' => $this->request->getVar('unit'),
+                'lokasi' => $this->request->getVar('lokasi'),
+                'jumlah' => $this->request->getVar('jumlah'),
+                'keterangan' => $this->request->getVar('keterangan'),
+                'created_at' => $date->format('d-m-Y H:i:s'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Inventaris Berhasil Dirubah!');
+            return redirect()->to('/admin/data_inventaris/');
+        }
+    }
+
+    public function inventaris_del()
+    {
+        $id = $this->request->getVar('inventaris_id');
+        $this->inventarisModel->where('inventaris_id', $id)->delete($id);
+        // $this->userModel->getData();
+        $session = session();
+        $session->setFlashdata('success', 'Data Berhasil Dihapus!');
+        return redirect()->to('/admin/data_inventaris');
+    }
+
+    public function riwayat_peminjaman()
+    {
+        $inventaris = $this->inventarisModel->getData();
+        $data = [
+            'title' => 'Riwayat Peminjaman',
+            'page' => 'Inventaris',
+            'inventaris' => $inventaris,
+        ];
+
+        return view('admin/inventaris/peminjaman', $data);
+    }
+
+    public function add_peminjaman()
+    {
+        $inventaris = $this->inventarisModel->getData();
+        $pegawai = $this->pegawaiModel->getData();
+        $data = [
+            'title' => 'Data Inventaris',
+            'page' => 'Inventaris',
+            'inventaris' => $inventaris,
+            'pegawai' => $pegawai,
+            'validation' => \Config\Services::validation(),
+        ];
+
+        return view('admin/inventaris/add_peminjaman', $data);
+    }
+
+    public function peminjaman_save()
+    {
+        $rules = [
+            'pegawai' => 'required',
+            'inventaris' => 'required',
+            'tanggal_pinjam' => 'required',
+            'keperluan' => 'required',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data = $this->validator->listErrors();
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            // dd($data);
+            return redirect()->to('/admin/add_peminjaman/');
+        } else {
+            $file = $this->request->getFile('file');
+            if ($file->isValid() && !$file->hasMoved()) {
+                $file_type = $file->getClientMimeType();
+                $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif');
+                if (in_array($file_type, $valid_type)) {
+                    $randomName = $file->getRandomName();
+                    $file->move(ROOTPATH . 'public/images/peminjaman/', $randomName);
+
+                    $date = new DateTime();
+                    $this->peminjamanModel->save([
+                        'inventaris_id' => $this->request->getVar('inventaris'),
+                        'pegawai_id' => $this->request->getVar('pegawau'),
+                        'tanggal_pinjam' => $this->request->getVar('tanggal_pinjam'),
+                        'lokasi_pinjam' => $this->request->getVar('lokasi_pinjam'),
+                        'keperluan' => $this->request->getVar('keperluan'),
+                        'jumlah' => $this->request->getVar('jumlah'),
+                        'status' => 'Dipinjam',
+                        'foto' => $randomName,
+                        'created_at' => $date->format('Y-m-d H:i:s'),
+                    ]);
+                    $session = session();
+                    $session->setFlashdata('success', 'Data Inventaris Berhasil Disimpan!');
+                    return redirect()->to('/admin/data_inventaris/');
+                } else {
+                    $session = session();
+                    $session->setFlashdata('info', 'Tipe Gambar Tidak Sesuai');
+                    return redirect()->to('/admin/data_inventaris/');
+                }
+            } else {
+                $date = new DateTime();
+                $this->peminjamanModel->save([
+                    'inventaris_id' => $this->request->getVar('inventaris'),
+                    'pegawai_id' => $this->request->getVar('pegawau'),
+                    'tanggal_pinjam' => $this->request->getVar('tanggal_pinjam'),
+                    'lokasi_pinjam' => $this->request->getVar('lokasi_pinjam'),
+                    'keperluan' => $this->request->getVar('keperluan'),
+                    'jumlah' => $this->request->getVar('jumlah'),
+                    'status' => 'Dipinjam',
+                    'created_at' => $date->format('Y-m-d H:i:s'),
+                ]);
+                $session = session();
+                $session->setFlashdata('success', 'Data Inventaris Berhasil Disimpan!');
+                return redirect()->to('/admin/data_inventaris/');
+            }
+        }
     }
 }

@@ -50,11 +50,11 @@ class Login extends BaseController
 					return redirect()->to('/pegawai');
 				}
 			} else {
-				$session->setFlashdata('msg', 'Password Salah!');
+				$session->setFlashdata('msg', 'Password Salah, Harap Periksa Ulang!');
 				return redirect()->to('/login');
 			}
 		} else {
-			$session->setFlashdata('msg', 'Email Salah/Tidak Tersedia!');
+			$session->setFlashdata('msg', 'Email/Password Salah/Tidak Tersedia!');
 			return redirect()->to('/login');
 		}
 	}

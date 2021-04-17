@@ -65,8 +65,10 @@
                     </li>
                     <li><a><i class="fa fa-table"></i> Inventaris <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            <li><a href="#">Inventaris Pegawai</a></li>
-                            <li><a href="#">Data Inventaris</a></li>
+                            <li><a href="/admin/data_inventaris">Data Inventaris</a></li>
+                            <li><a href="/admin/add_peminjaman">Add Peminjaman</a></li>
+                            <li><a href="/admin/riwayat_peminjaman">Riwayat Peminjaman</a></li>
+                            <li><a href="/admin/konfirmasi_peminjaman">Konfirmasi Peminjaman</a></li>
                         </ul>
                     </li>
                     <li><a><i class="fa fa-gears"></i> Data Master <span class="fa fa-chevron-down"></span></a>
