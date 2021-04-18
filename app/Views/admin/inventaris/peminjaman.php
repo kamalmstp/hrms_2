@@ -47,7 +47,11 @@
                                         <td><?= $row['nama_pegawai'] ?></td>
                                         <td><?= $row['nama_barang'] ?></td>
                                         <td><?= date('l, d-m-Y', strtotime($row['tanggal_pinjam'])) ?></td>
-                                        <td><?= date('l, d-m-Y', strtotime($row['tanggal_kembali'])) ?></td>
+                                        <td><?php if ($row['tanggal_kembali'] == NULL) {
+                                                echo '';
+                                            } else {
+                                                echo date('l, d-m-Y', strtotime($row['tanggal_kembali']));
+                                            } ?></td>
                                         <td><?= $row['lokasi_pinjam'] ?></td>
                                         <td><?= $row['keperluan'] ?></td>
                                         <td><?php if ($row['foto'] == '') {
