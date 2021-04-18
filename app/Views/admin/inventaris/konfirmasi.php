@@ -31,11 +31,9 @@
                                     <th>Nama Peminjam</th>
                                     <th>Nama Barang</th>
                                     <th>Tanggal Pinjam</th>
-                                    <th>Tanggal Selesai</th>
                                     <th>Lokasi Peminjaman</th>
                                     <th>Keperluan</th>
                                     <th>Bukti</th>
-                                    <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -46,8 +44,7 @@
                                         <td><?= $no++ ?></td>
                                         <td><?= $row['nama_pegawai'] ?></td>
                                         <td><?= $row['nama_barang'] ?></td>
-                                        <td><?= date('l, d-m-Y', strtotime($row['tanggal_pinjam'])) ?></td>
-                                        <td><?= date('l, d-m-Y', strtotime($row['tanggal_kembali'])) ?></td>
+                                        <td><?= $row['tanggal_pinjam'] ?></td>
                                         <td><?= $row['lokasi_pinjam'] ?></td>
                                         <td><?= $row['keperluan'] ?></td>
                                         <td><?php if ($row['foto'] == '') {
@@ -56,20 +53,9 @@
                                                 <a target="_blank" href="/images/peminjaman/<?= $row['foto']; ?>" type="button" class="btn btn-info btn-round"> <i class="fa fa-download"></i> </a>
                                             <?php } ?>
                                         </td>
-                                        <td><?php if ($row['status'] == 'Diterima') {
-                                                echo '<span class="label label-info">Diterima</span><hr>
-                                                <button type="button" class="btn btn-success btn-xs" data-toggle="modal" data-target=".modal-return' . $row['peminjaman_id'] . '">Pengembalian </button>';
-                                            } elseif ($row['status'] == 'Ditolak') {
-                                                echo '<span class="label label-danger">Ditolak</span>';
-                                            } elseif ($row['status'] == 'Menunggu') {
-                                                echo '<span class="label label-warning">Menunggu</span>';
-                                            } else {
-                                                echo '<span class="label label-success">Selesai</span>';
-                                            } ?>
-                                        </td>
                                         <td>
-                                            <a href="/admin/edit_peminjaman/<?= $row['peminjaman_id']; ?>" class="btn btn-warning btn-xs" type="button"><i class="fa fa-pencil"></i> Edit</a>
-                                            <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target=".modal-del<?= $row['peminjaman_id'] ?>"><i class="fa fa-trash-o"></i> Delete </button>
+                                            <button type="button" class="btn btn-success btn-round" data-toggle="modal" data-target=".modal-acc<?= $row['peminjaman_id'] ?>"><i class="fa fa-check"></i></button>
+                                            <button type="button" class="btn btn-danger btn-round" data-toggle="modal" data-target=".modal-dis<?= $row['peminjaman_id'] ?>"><i class="fa fa-close"></i></button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -85,25 +71,25 @@
 </div>
 
 <?php foreach ($peminjaman as $row) : ?>
-    <div class="modal fade modal-del<?= $row['peminjaman_id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade modal-acc<?= $row['peminjaman_id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
 
-                <form action="/admin/peminjaman_del" method="post" class="form-horizontal form-label-left">
+                <form action="/admin/peminjaman_approve" method="post" class="form-horizontal form-label-left">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
                         </button>
-                        <h4 class="modal-title" id="myModalLabel">Delete Data</h4>
+                        <h4 class="modal-title" id="myModalLabel">Terima Peminjaman</h4>
                     </div>
                     <div class="modal-body">
 
-                        <p>Apakah anda yakin ingin menghapus Data ?</p>
+                        <p>Terima Peminjaman dari <strong><?= $row['nama_pegawai'] ?></strong> ?</p>
                         <input type="hidden" name="peminjaman_id" value="<?= $row['peminjaman_id'] ?>">
 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Delete</button>
+                        <button type="submit" class="btn btn-primary">Terima</button>
                     </div>
                 </form>
 
@@ -111,36 +97,31 @@
         </div>
     </div>
 
-    <div class="modal fade modal-return<?= $row['peminjaman_id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-md">
+    <div class="modal fade modal-dis<?= $row['peminjaman_id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
             <div class="modal-content">
 
-                <form action="/admin/peminjaman_return" method="post" class="form-horizontal form-label-left">
+                <form action="/admin/peminjaman_reject" method="post" class="form-horizontal form-label-left">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
                         </button>
-                        <h4 class="modal-title" id="myModalLabel">Pengembalian</h4>
+                        <h4 class="modal-title" id="myModalLabel">Tolak Peminjaman</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tanggal_kembali">Tanggal Pengembalian
-                            </label>
-                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                <input type="hidden" name="peminjaman_id" value="<?= $row['peminjaman_id'] ?>">
-                                <input type="date" id="tanggal_kembali" name="tanggal_kembali" class="form-control col-md-7 col-xs-12">
-                            </div>
-                        </div>
 
+                        <p>Tolak Peminjaman dari <strong><?= $row['nama_pegawai'] ?></strong> ?</p>
+                        <input type="hidden" name="peminjaman_id" value="<?= $row['peminjaman_id'] ?>">
 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Delete</button>
+                        <button type="submit" class="btn btn-primary">Tolak</button>
                     </div>
                 </form>
 
             </div>
         </div>
     </div>
+
 <?php endforeach; ?>
 <?= $this->endSection(); ?>

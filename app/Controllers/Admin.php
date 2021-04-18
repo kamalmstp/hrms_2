@@ -89,7 +89,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data['validation'] = $this->validator;
             $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $session->setFlashdata('info', $this->validator->getErrors());
             $validation = \Config\Services::validation();
             return redirect()->to('/admin/jns_pegawai')->withInput()->with('validation', $validation);
         } else {
@@ -113,7 +113,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data['validation'] = $this->validator;
             $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $session->setFlashdata('info', $this->validator->getErrors());
             $validation = \Config\Services::validation();
             return redirect()->to('/admin/jns_pegawai')->withInput()->with('validation', $validation);
         } else {
@@ -159,7 +159,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data['validation'] = $this->validator;
             $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $session->setFlashdata('info', $this->validator->getErrors());
             $validation = \Config\Services::validation();
             return redirect()->to('/admin/jns_pend')->withInput()->with('validation', $validation);
         } else {
@@ -183,7 +183,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data['validation'] = $this->validator;
             $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $session->setFlashdata('info', $this->validator->getErrors());
             $validation = \Config\Services::validation();
             return redirect()->to('/admin/jns_pend')->withInput()->with('validation', $validation);
         } else {
@@ -235,7 +235,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data['validation'] = $this->validator;
             $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $session->setFlashdata('info', $this->validator->getErrors());
             $validation = \Config\Services::validation();
             return redirect()->to('/admin/izin')->withInput()->with('validation', $validation);
         } else {
@@ -257,7 +257,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data['validation'] = $this->validator;
             $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $session->setFlashdata('info', $this->validator->getErrors());
             $validation = \Config\Services::validation();
             return redirect()->to('/admin/izin')->withInput()->with('validation', $validation);
         } else {
@@ -290,7 +290,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data['validation'] = $this->validator;
             $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $session->setFlashdata('info', $this->validator->getErrors());
             $validation = \Config\Services::validation();
             return redirect()->to('/admin/izin')->withInput()->with('validation', $validation);
         } else {
@@ -314,7 +314,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data['validation'] = $this->validator;
             $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $session->setFlashdata('info', $this->validator->getErrors());
             $validation = \Config\Services::validation();
             return redirect()->to('/admin/izin')->withInput()->with('validation', $validation);
         } else {
@@ -360,7 +360,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data['validation'] = $this->validator;
             $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $session->setFlashdata('info', $this->validator->getErrors());
             $validation = \Config\Services::validation();
             return redirect()->to('/admin/jen_pend')->withInput()->with('validation', $validation);
         } else {
@@ -384,7 +384,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data['validation'] = $this->validator;
             $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $session->setFlashdata('info', $this->validator->getErrors());
             $validation = \Config\Services::validation();
             return redirect()->to('/admin/jen_pend')->withInput()->with('validation', $validation);
         } else {
@@ -430,7 +430,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data['validation'] = $this->validator;
             $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $session->setFlashdata('info', $this->validator->getErrors());
             $validation = \Config\Services::validation();
             return redirect()->to('/admin/hub_keluarga')->withInput()->with('validation', $validation);
         } else {
@@ -454,7 +454,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data['validation'] = $this->validator;
             $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $session->setFlashdata('info', $this->validator->getErrors());
             $validation = \Config\Services::validation();
             return redirect()->to('/admin/hub_keluarga')->withInput()->with('validation', $validation);
         } else {
@@ -500,7 +500,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data['validation'] = $this->validator;
             $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $session->setFlashdata('info', $this->validator->getErrors());
             $validation = \Config\Services::validation();
             return redirect()->to('/admin/periode')->withInput()->with('validation', $validation);
         } else {
@@ -526,7 +526,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data['validation'] = $this->validator;
             $session = session();
-            $session->setFlashdata('error', 'Data Gagal Disimpan');
+            $session->setFlashdata('info', $this->validator->getErrors());
             $validation = \Config\Services::validation();
             return redirect()->to('/admin/periode')->withInput()->with('validation', $validation);
         } else {
@@ -718,7 +718,7 @@ class Admin extends BaseController
         if (!$this->validate($rules)) {
             $data = $this->validator->listErrors();
             $session = session();
-            $session->setFlashdata('info', $this->validator->listErrors());
+            $session->setFlashdata('info', $this->validator->getErrors());
             // dd($data);
             return redirect()->to('/admin/add_pegawai');
         } else {
@@ -1226,25 +1226,26 @@ class Admin extends BaseController
 
     public function izin_pegawai_save()
     {
-        $file = $this->request->getFile('file');
-        // dd($file);
-        if (!empty($file)) {
-            $rules = [
-                'status' => 'required',
-                'tanggal_awal' => 'required',
-                'tanggal_akhir' => 'required',
-                'file' => 'mime_in[file,image/jpg,image/jpeg,image/png,image/gif]|max_size[file,2048]',
-            ];
+        $rules = [
+            'status' => 'required',
+            'tanggal_awal' => 'required',
+            'tanggal_akhir' => 'required',
+        ];
 
-            if (!$this->validate($rules)) {
-                $data['validation'] = $this->validator;
-                $session = session();
-                $session->setFlashdata('error', 'Data Gagal Disimpan');
-                $validation = \Config\Services::validation();
-                return redirect()->to('/admin/add_izin')->withInput()->with('validation', $validation);
-            } else {
-                $randomName = $file->getRandomName();
-                if ($file->move(ROOTPATH . 'public/file/izin/', $randomName)) {
+        if (!$this->validate($rules)) {
+            $data['validation'] = $this->validator;
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            $validation = \Config\Services::validation();
+            return redirect()->to('/admin/add_izin')->withInput()->with('validation', $validation);
+        } else {
+            $file = $this->request->getFile('file');
+            if ($file->isValid() && !$file->hasMoved()) {
+                $file_type = $file->getClientMimeType();
+                $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'application/pdf', 'application/doc', 'application/docx');
+                if (in_array($file_type, $valid_type)) {
+                    $randomName = $file->getRandomName();
+                    $file->move(ROOTPATH . 'public/file/izin/', $randomName);
                     $this->izinPegawaiModel->save([
                         'pegawai_id' => $this->request->getVar('pegawai'),
                         'izin_jenis_id' => $this->request->getVar('jenis_izin'),
@@ -1258,21 +1259,11 @@ class Admin extends BaseController
                     $session = session();
                     $session->setFlashdata('success', 'Data Izin Berhasil Ditambah!');
                     return redirect()->to('/admin/kelola_izin');
+                } else {
+                    $session = session();
+                    $session->setFlashdata('warning', 'Tipe Gambar Tidak Sesuai');
+                    return redirect()->to('/admin/add_izin');
                 }
-            }
-        } else {
-            $rules = [
-                'status' => 'required',
-                'tanggal_awal' => 'required',
-                'tanggal_akhir' => 'required',
-            ];
-
-            if (!$this->validate($rules)) {
-                $data['validation'] = $this->validator;
-                $session = session();
-                $session->setFlashdata('error', 'Data Gagal Disimpan');
-                $validation = \Config\Services::validation();
-                return redirect()->to('/admin/add_izin')->withInput()->with('validation', $validation);
             } else {
                 $this->izinPegawaiModel->save([
                     'pegawai_id' => $this->request->getVar('pegawai'),
@@ -1553,11 +1544,16 @@ class Admin extends BaseController
 
     public function riwayat_peminjaman()
     {
-        $inventaris = $this->inventarisModel->getData();
+        $this->db = \Config\Database::connect();
+        $sql = $this->db->table('peminjaman_inventaris a')
+            ->select('p.nama as nama_pegawai, a.pegawai_id, a.inventaris_id, i.nama_barang, a.tanggal_kembali, a.status, a.tanggal_pinjam, a.lokasi_pinjam, a.keperluan, a.foto, a.peminjaman_id')
+            ->join('pegawai p', 'p.pegawai_id = a.pegawai_id')
+            ->join('inventaris i', 'i.inventaris_id = a.inventaris_id')->get();
+        $peminjaman = $sql->getResultArray();
         $data = [
             'title' => 'Riwayat Peminjaman',
             'page' => 'Inventaris',
-            'inventaris' => $inventaris,
+            'peminjaman' => $peminjaman,
         ];
 
         return view('admin/inventaris/peminjaman', $data);
@@ -1576,6 +1572,23 @@ class Admin extends BaseController
         ];
 
         return view('admin/inventaris/add_peminjaman', $data);
+    }
+
+    public function edit_peminjaman($id)
+    {
+        $peminjaman = $this->peminjamanModel->getData($id)->getRow();
+        $inventaris = $this->inventarisModel->getData();
+        $pegawai = $this->pegawaiModel->getData();
+        $data = [
+            'title' => 'Data Inventaris',
+            'page' => 'Inventaris',
+            'inventaris' => $inventaris,
+            'pegawai' => $pegawai,
+            'peminjaman' => $peminjaman,
+            'validation' => \Config\Services::validation(),
+        ];
+
+        return view('admin/inventaris/edit_peminjaman', $data);
     }
 
     public function peminjaman_save()
@@ -1605,39 +1618,178 @@ class Admin extends BaseController
                     $date = new DateTime();
                     $this->peminjamanModel->save([
                         'inventaris_id' => $this->request->getVar('inventaris'),
-                        'pegawai_id' => $this->request->getVar('pegawau'),
+                        'pegawai_id' => $this->request->getVar('pegawai'),
                         'tanggal_pinjam' => $this->request->getVar('tanggal_pinjam'),
                         'lokasi_pinjam' => $this->request->getVar('lokasi_pinjam'),
                         'keperluan' => $this->request->getVar('keperluan'),
                         'jumlah' => $this->request->getVar('jumlah'),
-                        'status' => 'Dipinjam',
+                        'status' => $this->request->getVar('status'),
                         'foto' => $randomName,
                         'created_at' => $date->format('Y-m-d H:i:s'),
                     ]);
                     $session = session();
                     $session->setFlashdata('success', 'Data Inventaris Berhasil Disimpan!');
-                    return redirect()->to('/admin/data_inventaris/');
+                    return redirect()->to('/admin/riwayat_peminjaman');
                 } else {
                     $session = session();
                     $session->setFlashdata('info', 'Tipe Gambar Tidak Sesuai');
-                    return redirect()->to('/admin/data_inventaris/');
+                    return redirect()->to('/admin/add_peminjaman/');
                 }
             } else {
                 $date = new DateTime();
                 $this->peminjamanModel->save([
                     'inventaris_id' => $this->request->getVar('inventaris'),
-                    'pegawai_id' => $this->request->getVar('pegawau'),
+                    'pegawai_id' => $this->request->getVar('pegawai'),
                     'tanggal_pinjam' => $this->request->getVar('tanggal_pinjam'),
                     'lokasi_pinjam' => $this->request->getVar('lokasi_pinjam'),
                     'keperluan' => $this->request->getVar('keperluan'),
                     'jumlah' => $this->request->getVar('jumlah'),
-                    'status' => 'Dipinjam',
+                    'status' => $this->request->getVar('status'),
                     'created_at' => $date->format('Y-m-d H:i:s'),
                 ]);
                 $session = session();
                 $session->setFlashdata('success', 'Data Inventaris Berhasil Disimpan!');
-                return redirect()->to('/admin/data_inventaris/');
+                return redirect()->to('/admin/riwayat_peminjaman/');
             }
+        }
+    }
+
+    public function peminjaman_update()
+    {
+        $rules = [
+            'pegawai' => 'required',
+            'inventaris' => 'required',
+            'tanggal_pinjam' => 'required',
+            'keperluan' => 'required',
+        ];
+
+        $id = $this->request->getVar('peminjaman_id');
+
+        if (!$this->validate($rules)) {
+            $data = $this->validator->listErrors();
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            // dd($data);
+            return redirect()->to('/admin/edit_peminjaman/' . $id);
+        } else {
+            $file = $this->request->getFile('file');
+            if ($file->isValid() && !$file->hasMoved()) {
+                $file_type = $file->getClientMimeType();
+                $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif');
+                if (in_array($file_type, $valid_type)) {
+                    $randomName = $file->getRandomName();
+                    $file->move(ROOTPATH . 'public/images/peminjaman/', $randomName);
+
+                    $date = new DateTime();
+                    $this->peminjamanModel->update($id, [
+                        'inventaris_id' => $this->request->getVar('inventaris'),
+                        'pegawai_id' => $this->request->getVar('pegawai'),
+                        'tanggal_pinjam' => $this->request->getVar('tanggal_pinjam'),
+                        'lokasi_pinjam' => $this->request->getVar('lokasi_pinjam'),
+                        'keperluan' => $this->request->getVar('keperluan'),
+                        'jumlah' => $this->request->getVar('jumlah'),
+                        'foto' => $randomName,
+                        'created_at' => $date->format('Y-m-d H:i:s'),
+                    ]);
+                    $session = session();
+                    $session->setFlashdata('success', 'Data Inventaris Berhasil Disimpan!');
+                    return redirect()->to('/admin/riwayat_peminjaman/');
+                } else {
+                    $session = session();
+                    $session->setFlashdata('info', 'Tipe Gambar Tidak Sesuai');
+                    return redirect()->to('/admin/edit_peminjaman/');
+                }
+            } else {
+                $date = new DateTime();
+                $this->peminjamanModel->update($id, [
+                    'inventaris_id' => $this->request->getVar('inventaris'),
+                    'pegawai_id' => $this->request->getVar('pegawai'),
+                    'tanggal_pinjam' => $this->request->getVar('tanggal_pinjam'),
+                    'lokasi_pinjam' => $this->request->getVar('lokasi_pinjam'),
+                    'keperluan' => $this->request->getVar('keperluan'),
+                    'jumlah' => $this->request->getVar('jumlah'),
+                    'created_at' => $date->format('Y-m-d H:i:s'),
+                ]);
+                $session = session();
+                $session->setFlashdata('success', 'Data Inventaris Berhasil Disimpan!');
+                return redirect()->to('/admin/riwayat_peminjaman/');
+            }
+        }
+    }
+
+    public function peminjaman_del()
+    {
+        $id = $this->request->getVar('peminjaman_id');
+        $this->peminjamanModel->where('peminjaman_id', $id)->delete($id);
+        $session = session();
+        $session->setFlashdata('success', 'Data Berhasil Dihapus!');
+        return redirect()->to('/admin/riwayat_peminjaman');
+    }
+
+    public function konfirmasi_peminjaman()
+    {
+        $this->db = \Config\Database::connect();
+        $sql = $this->db->table('peminjaman_inventaris a')
+            ->select('p.nama as nama_pegawai, a.pegawai_id, a.inventaris_id, i.nama_barang, a.tanggal_pinjam, a.lokasi_pinjam, a.keperluan, a.foto, a.peminjaman_id')
+            ->join('pegawai p', 'p.pegawai_id = a.pegawai_id')
+            ->join('inventaris i', 'i.inventaris_id = a.inventaris_id')
+            ->where('a.status', 'Menunggu')->get();
+        $peminjaman = $sql->getResultArray();
+        // dd($peminjaman);
+        $data = [
+            'title' => 'Konfirmasi Peminjaman',
+            'page' => 'Inventaris',
+            'peminjaman' => $peminjaman,
+        ];
+
+        return view('admin/inventaris/konfirmasi', $data);
+    }
+
+    public function peminjaman_approve()
+    {
+        $id = $this->request->getVar('peminjaman_id');
+        $this->peminjamanModel->update($id, [
+            'status' => 'Diterima',
+        ]);
+        $session = session();
+        $session->setFlashdata('success', 'Peminjaman Diterima!');
+        return redirect()->to('/admin/konfirmasi_peminjaman');
+    }
+
+    public function peminjaman_reject()
+    {
+        $id = $this->request->getVar('peminjaman_id');
+        $this->peminjamanModel->update($id, [
+            'status' => 'Ditolak',
+        ]);
+        $session = session();
+        $session->setFlashdata('success', 'Peminjaman Ditolak!');
+        return redirect()->to('/admin/konfirmasi_peminjaman');
+    }
+
+    public function peminjaman_return()
+    {
+        $rules = [
+            'tanggal_kembali' => 'required',
+        ];
+
+        $id = $this->request->getVar('peminjaman_id');
+
+        if (!$this->validate($rules)) {
+            $data = $this->validator->listErrors();
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            // dd($data);
+            return redirect()->to('/admin/riwayat_peminjaman');
+        } else {
+            $date = new DateTime();
+            $this->peminjamanModel->update($id, [
+                'tanggal_kembali' => $this->request->getVar('tanggal_kembali'),
+                'status' => 'Selesai',
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Inventaris Berhasil Dikembalikan!');
+            return redirect()->to('/admin/riwayat_peminjaman');
         }
     }
 }
