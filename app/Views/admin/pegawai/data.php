@@ -155,17 +155,17 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
                         </button>
-                        <h4 class="modal-title" id="myModalLabel">Hapus Akun</h4>
+                        <h4 class="modal-title" id="myModalLabel">Non-Aktifkan Akun</h4>
                     </div>
                     <div class="modal-body">
 
-                        <p>Apakah anda yakin ingin menghapus akun <strong><?= $row['nama'] ?></strong>?</p>
+                        <p>Apakah anda yakin ingin menon-aktifkan akun <strong><?= $row['nama'] ?></strong>?</p>
                         <input type="hidden" name="user_id" value="<?= $row['user_id'] ?>">
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Delete</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Tidak</button>
+                        <button type="submit" class="btn btn-primary">Ya</button>
                     </div>
                 </form>
 

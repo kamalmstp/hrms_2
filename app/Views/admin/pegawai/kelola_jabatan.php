@@ -21,7 +21,7 @@
                                 <h1>
                                     <?= $pegawai->nama; ?>
                                     <div class="pull-right">
-                                        <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target=".modal-add"><i class="fa fa-plus"></i> Add Pendidikan</button>
+                                        <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target=".modal-add"><i class="fa fa-plus"></i> Add Jabatan</button>
                                     </div>
                                 </h1>
                                 <hr>

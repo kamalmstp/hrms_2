@@ -178,6 +178,12 @@
                                     <input type="file" name="gambar" id="gambar">
                                 </div>
                             </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="sidik_id">Sidik Jari id</label>
+                                    <input type="number" id="sidik_id" class="form-control" name="sidik_id" />
+                                </div>
+                            </div>
                             <div class="col-md-12">
                                 <div class="ln_solid"></div>
                                 <div class="form-group">

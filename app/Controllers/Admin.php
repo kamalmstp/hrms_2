@@ -709,6 +709,7 @@ class Admin extends BaseController
                         'tanggal_masuk' => $this->request->getVar('tanggal_masuk'),
                         'rekening' => $this->request->getVar('rekening'),
                         'gambar' => $randomName,
+                        'sidik_id' => $this->request->getVar('sidik_id'),
                     ]);
                     $session = session();
                     $session->setFlashdata('success', 'Data Pegawai Berhasil Disimpan!');
@@ -739,6 +740,7 @@ class Admin extends BaseController
                     'status_pegawai' => $this->request->getVar('status_pegawai'),
                     'tanggal_masuk' => $this->request->getVar('tanggal_masuk'),
                     'rekening' => $this->request->getVar('rekening'),
+                    'sidik_id' => $this->request->getVar('sidik_id'),
                 ]);
                 $session = session();
                 $session->setFlashdata('success', 'Data Pegawai Berhasil Disimpan!');
@@ -829,6 +831,7 @@ class Admin extends BaseController
                         'tanggal_masuk' => $this->request->getVar('tanggal_masuk'),
                         'rekening' => $this->request->getVar('rekening'),
                         'gambar' => $randomName,
+                        'sidik_id' => $this->request->getVar('sidik_id'),
                     ]);
                     $session = session();
                     $session->setFlashdata('success', 'Data Pegawai Berhasil Disimpan!');
@@ -859,6 +862,7 @@ class Admin extends BaseController
                     'status_pegawai' => $this->request->getVar('status_pegawai'),
                     'tanggal_masuk' => $this->request->getVar('tanggal_masuk'),
                     'rekening' => $this->request->getVar('rekening'),
+                    'sidik_id' => $this->request->getVar('sidik_id'),
                 ]);
                 $session = session();
                 $session->setFlashdata('success', 'Data Pegawai Berhasil Disimpan!');

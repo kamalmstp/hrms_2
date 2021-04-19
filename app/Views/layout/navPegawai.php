@@ -56,6 +56,13 @@
                             <li><a href="/pegawai/ajukan_izin">Ajukan Izin</a></li>
                         </ul>
                     </li>
+                    <li><a><i class="fa fa-table"></i> Inventaris <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="/pegawai/data_inventaris">Data Inventaris</a></li>
+                            <li><a href="/pegawai/add_peminjaman">Add Peminjaman</a></li>
+                            <li><a href="/pegawai/riwayat_peminjaman">Riwayat Peminjaman</a></li>
+                        </ul>
+                    </li>
                     <!-- <li><a><i class="fa fa-table"></i> Inventaris <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <li><a href="#">Inventaris Pegawai</a></li>
