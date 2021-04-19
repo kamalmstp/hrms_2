@@ -29,7 +29,7 @@
                                 </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input type="text" name="nama_pegawai" value="<?= $pegawai->nama ?>" class="form-control col-md-7 col-xs-12" disabled>
-                                    <input type="hidden" name="pegawai" value="<?= $pegawai->pegawai_id ?>" class="form-control col-md-7 col-xs-12" disabled>
+                                    <input type="hidden" name="pegawai" value="<?= $pegawai->pegawai_id ?>" class="form-control col-md-7 col-xs-12">
                                 </div>
                             </div>
 

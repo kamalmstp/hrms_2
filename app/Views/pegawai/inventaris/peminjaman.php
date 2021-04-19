@@ -28,7 +28,6 @@
                             <thead>
                                 <tr>
                                     <th style="width: 5%">No</th>
-                                    <th>Nama Peminjam</th>
                                     <th>Nama Barang</th>
                                     <th>Tanggal Pinjam</th>
                                     <th>Tanggal Selesai</th>
@@ -44,7 +43,6 @@
                                 <?php foreach ($peminjaman as $row) : ?>
                                     <tr>
                                         <td><?= $no++ ?></td>
-                                        <td><?= $row['nama_pegawai'] ?></td>
                                         <td><?= $row['nama_barang'] ?></td>
                                         <td><?= date('l, d-m-Y', strtotime($row['tanggal_pinjam'])) ?></td>
                                         <td><?php if ($row['tanggal_kembali'] == NULL) {

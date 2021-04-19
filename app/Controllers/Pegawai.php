@@ -15,6 +15,8 @@ use App\Models\PeriodeModel;
 use App\Models\PendidikanPegModel;
 use App\Models\KeluargaPegModel;
 use App\Models\InventarisModel;
+use App\Models\PeminjamanModel;
+use DateTime;
 
 class Pegawai extends BaseController
 {
@@ -31,6 +33,7 @@ class Pegawai extends BaseController
     protected $pendidikanPegawai;
     protected $keluargaPegawai;
     protected $inventarisModel;
+    protected $peminjamanModel;
 
 
     public function __construct()
@@ -48,6 +51,7 @@ class Pegawai extends BaseController
         $this->pendidikanPegawai = new PendidikanPegModel();
         $this->keluargaPegawai = new KeluargaPegModel();
         $this->inventarisModel = new InventarisModel();
+        $this->peminjamanModel = new PeminjamanModel();
     }
 
     public function index()
@@ -443,11 +447,12 @@ class Pegawai extends BaseController
 
     public function riwayat_peminjaman()
     {
+        $session = session();
         $this->db = \Config\Database::connect();
         $sql = $this->db->table('peminjaman_inventaris a')
-            ->select('p.nama as nama_pegawai, a.pegawai_id, a.inventaris_id, i.nama_barang, a.tanggal_kembali, a.status, a.tanggal_pinjam, a.lokasi_pinjam, a.keperluan, a.foto, a.peminjaman_id')
-            ->join('pegawai p', 'p.pegawai_id = a.pegawai_id')
-            ->join('inventaris i', 'i.inventaris_id = a.inventaris_id')->get();
+            ->select('a.pegawai_id, a.inventaris_id, i.nama_barang, a.tanggal_kembali, a.status, a.tanggal_pinjam, a.lokasi_pinjam, a.keperluan, a.foto, a.peminjaman_id')
+            ->join('inventaris i', 'i.inventaris_id = a.inventaris_id')
+            ->where('a.pegawai_id', $session->get('pegawai_id'))->get();
         $peminjaman = $sql->getResultArray();
         $data = [
             'title' => 'Riwayat Peminjaman',
