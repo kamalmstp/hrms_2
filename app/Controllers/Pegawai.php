@@ -12,6 +12,8 @@ use App\Models\IzinJenisModel;
 use App\Models\IzinModel;
 use App\Models\IzinPegawaiModel;
 use App\Models\PeriodeModel;
+use App\Models\PendidikanPegModel;
+use App\Models\KeluargaPegModel;
 
 class Pegawai extends BaseController
 {
@@ -25,6 +27,8 @@ class Pegawai extends BaseController
     protected $izinModel;
     protected $izinPegawaiModel;
     protected $periodeModel;
+    protected $pendidikanPegawai;
+    protected $keluargaPegawai;
 
 
     public function __construct()
@@ -39,6 +43,8 @@ class Pegawai extends BaseController
         $this->izinModel = new IzinModel;
         $this->izinPegawaiModel = new IzinPegawaiModel();
         $this->periodeModel = new PeriodeModel();
+        $this->pendidikanPegawai = new PendidikanPegModel();
+        $this->keluargaPegawai = new KeluargaPegModel();
     }
     public function index()
     {
@@ -48,6 +54,7 @@ class Pegawai extends BaseController
         return view('pegawai/dashboard', $data);
     }
 
+    //Izin
     public function daftar_izin()
     {
         $session = session();
@@ -155,5 +162,265 @@ class Pegawai extends BaseController
                 return redirect()->to('/pegawai/daftar_izin');
             }
         }
+    }
+
+    //Pendidikan
+    public function pendidikan()
+    {
+        $session = session();
+        $this->db = \Config\Database::connect();
+        $sql = $this->db->table('pendidikan_pegawai pp')
+            ->select('*')
+            ->join('jenis_pendidikan jenis', 'jenis.jenis_pend_id = pp.jenis_pend_id')
+            ->join('jenjang_pendidikan jenj', 'jenj.jenj_pend_id = pp.jenj_pend_id')
+            ->where('pp.pegawai_id', $session->get('pegawai_id'))->get();
+        $pendidikan_pegawai = $sql->getResultArray();
+
+        $pegawai = $this->pegawaiModel->getData($session->get('pegawai_id'))->getRow();
+        $jenis_pendidikan = $this->jenisPendidikan->getData();
+        $jenjang_pendidikan = $this->jenjangPendidikan->getData();
+        // $pendidikan_pegawai = $this->pendidikanPegawai->getData();
+        // dd($pendidikan_pegawai);
+        $data = [
+            'title' => 'Kelola Pendidikan Pegawai',
+            'page' => 'Pegawai',
+            'pegawai' => $pegawai,
+            'jenis_pendidikan' => $jenis_pendidikan,
+            'jenjang_pendidikan' => $jenjang_pendidikan,
+            'pendidikan_pegawai' => $pendidikan_pegawai,
+            'validation' => \Config\Services::validation(),
+        ];
+        return view('pegawai/pendidikan', $data);
+    }
+
+    public function pendidikan_save()
+    {
+        $session = session();
+        $id = $session->get('pegawai_id');
+
+        $rules = [
+            'nama_pendidikan' => 'required|max_length[50]',
+            'penyelenggara' => 'required|max_length[50]',
+            'nomor_ijazah' => 'required|max_length[50]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data = $this->validator->listErrors();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            // dd($data);
+            return redirect()->to('/pegawai/pendidikan');
+        } else {
+            $file = $this->request->getFile('gambar');
+            if ($file->isValid() && !$file->hasMoved()) {
+                $file_type = $file->getClientMimeType();
+                $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif');
+                if (in_array($file_type, $valid_type)) {
+                    $randomName = $file->getRandomName();
+                    $file->move(ROOTPATH . 'public/images/ijazah/', $randomName);
+
+                    $this->pendidikanPegawai->save([
+                        'nama_pendidikan' => $this->request->getVar('nama_pendidikan'),
+                        'penyelenggara' => $this->request->getVar('penyelenggara'),
+                        'jenis_pend_id' => $this->request->getVar('jenis_pendidikan'),
+                        'jenj_pend_id' => $this->request->getVar('jenjang_pendidikan'),
+                        'tanggal_ijazah' => $this->request->getVar('tanggal_ijazah'),
+                        'nomor_ijazah' => $this->request->getVar('nomor_ijazah'),
+                        'tahun_lulus' => $this->request->getVar('tahun_lulus'),
+                        'keterangan' => $this->request->getVar('keterangan'),
+                        'pegawai_id' => $id,
+                        'file' => $randomName,
+                    ]);
+                    $session = session();
+                    $session->setFlashdata('success', 'Data Pendidikan Pegawai Berhasil Disimpan!');
+                    return redirect()->to('/pegawai/pendidikan');
+                } else {
+                    $session = session();
+                    $session->setFlashdata('warning', 'Tipe gambar yang dipilih tidak sesuai');
+                    return redirect()->to('/pegawai/pendidikan');
+                }
+            } else {
+                $this->pendidikanPegawai->save([
+                    'nama_pendidikan' => $this->request->getVar('nama_pendidikan'),
+                    'penyelenggara' => $this->request->getVar('penyelenggara'),
+                    'jenis_pend_id' => $this->request->getVar('jenis_pendidikan'),
+                    'jenj_pend_id' => $this->request->getVar('jenjang_pendidikan'),
+                    'tanggal_ijazah' => $this->request->getVar('tanggal_ijazah'),
+                    'nomor_ijazah' => $this->request->getVar('nomor_ijazah'),
+                    'tahun_lulus' => $this->request->getVar('tahun_lulus'),
+                    'keterangan' => $this->request->getVar('keterangan'),
+                    'pegawai_id' => $id,
+                ]);
+                $session = session();
+                $session->setFlashdata('success', 'Data Pendidikan Pegawai Berhasil Disimpan!');
+                return redirect()->to('/pegawai/pendidikan');
+            }
+        }
+    }
+
+    public function pendidikan_update()
+    {
+        $session = session();
+        $id_pegawai = $session->get('pegawai_id');
+        $id = $this->request->getVar('id');
+
+        $rules = [
+            'nama_pendidikan' => 'required|max_length[50]',
+            'penyelenggara' => 'required|max_length[50]',
+            'nomor_ijazah' => 'required|max_length[50]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data = $this->validator->listErrors();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            // dd($data);
+            return redirect()->to('/pegawai/pendidikan');
+        } else {
+            $file = $this->request->getFile('gambar1');
+            if ($file->isValid() && !$file->hasMoved()) {
+                $file_type = $file->getClientMimeType();
+                $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif');
+                if (in_array($file_type, $valid_type)) {
+                    $randomName = $file->getRandomName();
+                    $file->move(ROOTPATH . 'public/images/ijazah/', $randomName);
+
+                    $this->pendidikanPegawai->update($id, [
+                        'nama_pendidikan' => $this->request->getVar('nama_pendidikan'),
+                        'penyelenggara' => $this->request->getVar('penyelenggara'),
+                        'jenis_pend_id' => $this->request->getVar('jenis_pendidikan'),
+                        'jenj_pend_id' => $this->request->getVar('jenjang_pendidikan'),
+                        'tanggal_ijazah' => $this->request->getVar('tanggal_ijazah'),
+                        'nomor_ijazah' => $this->request->getVar('nomor_ijazah'),
+                        'tahun_lulus' => $this->request->getVar('tahun_lulus'),
+                        'keterangan' => $this->request->getVar('keterangan'),
+                        'file' => $randomName,
+                    ]);
+                    $session = session();
+                    $session->setFlashdata('success', 'Data Pendidikan Pegawai Berhasil Disimpan!');
+                    return redirect()->to('/pegawai/pendidikan');
+                } else {
+                    $session = session();
+                    $session->setFlashdata('warning', 'Tipe gambar yang dipilih tidak sesuai');
+                    return redirect()->to('/pegawai/pendidikan');
+                }
+            } else {
+                $this->pendidikanPegawai->update($id, [
+                    'nama_pendidikan' => $this->request->getVar('nama_pendidikan'),
+                    'penyelenggara' => $this->request->getVar('penyelenggara'),
+                    'jenis_pend_id' => $this->request->getVar('jenis_pendidikan'),
+                    'jenj_pend_id' => $this->request->getVar('jenjang_pendidikan'),
+                    'tanggal_ijazah' => $this->request->getVar('tanggal_ijazah'),
+                    'nomor_ijazah' => $this->request->getVar('nomor_ijazah'),
+                    'tahun_lulus' => $this->request->getVar('tahun_lulus'),
+                    'keterangan' => $this->request->getVar('keterangan'),
+                ]);
+                $session = session();
+                $session->setFlashdata('success', 'Data Pendidikan Pegawai Berhasil Disimpan!');
+                return redirect()->to('/pegawai/pendidikan');
+            }
+        }
+    }
+
+    public function pendidikan_del()
+    {
+        $session = session();
+        $id = $this->request->getVar('id');
+        $pegawai_id = $session->get('pegawai_id');
+        $this->pendidikanPegawai->where('pend_peg_id', $id)->delete($id);
+        $session->setFlashdata('success', 'Data Berhasil Dihapus!');
+        return redirect()->to('/pegawai/pendidikan');
+    }
+
+    //Keluarga
+    public function keluarga()
+    {
+        $session = session();
+        $id = $session->get('pegawai_id');
+        $keluarga_pegawai = $this->keluargaPegawai->getData();
+        $pegawai = $this->pegawaiModel->getData($id)->getRow();
+        $jenjang_pendidikan = $this->jenjangPendidikan->getData();
+        $hubkel = $this->hubunganKeluarga->getData();
+        $data = [
+            'title' => 'Kelola Keluarga Pegawai',
+            'page' => 'Pegawai',
+            'pegawai' => $pegawai,
+            'jenjang_pendidikan' => $jenjang_pendidikan,
+            'hubkel' => $hubkel,
+            'keluarga_pegawai' => $keluarga_pegawai,
+        ];
+        return view('pegawai/keluarga', $data);
+    }
+
+    public function keluarga_save()
+    {
+        $session = session();
+        $id = $session->get('pegawai_id');
+
+        $rules = [
+            'nama' => 'required|max_length[50]',
+            'nomor_telepon' => 'required|max_length[15]|min_length[5]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $session->setFlashdata('info', $this->validator->getErrors());
+            return redirect()->to('/pegawai/keluarga');
+        } else {
+            $this->keluargaPegawai->save([
+                'pegawai_id' => $id,
+                'hubkel_id' => $this->request->getVar('hubkel'),
+                'jenj_pend_id' => $this->request->getVar('jenjang_pendidikan'),
+                'nama' => $this->request->getVar('nama'),
+                'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
+                'tempat_lahir' => $this->request->getVar('tempat_lahir'),
+                'tanggal_lahir' => $this->request->getVar('tanggal_lahir'),
+                'telepon' => $this->request->getVar('nomor_telepon'),
+                'email' => $this->request->getVar('email'),
+                'alamat' => $this->request->getVar('alamat'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Keluarga Pegawai Berhasil Disimpan!');
+            return redirect()->to('/pegawai/keluarga');
+        }
+    }
+
+    public function keluarga_update()
+    {
+        $session = session();
+        $id_pegawai = $session->get('pegawai_id');
+        $id = $this->request->getVar('id');
+
+        $rules = [
+            'nama' => 'required|max_length[50]',
+            'nomor_telepon' => 'required|max_length[50]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $session->setFlashdata('info', $this->validator->getErrors());
+            // dd($data);
+            return redirect()->to('/pegawai/keluarga');
+        } else {
+            $this->keluargaPegawai->update($id, [
+                'hubkel_id' => $this->request->getVar('hubkel'),
+                'jenj_pend_id' => $this->request->getVar('jenjang_pendidikan'),
+                'nama' => $this->request->getVar('nama'),
+                'jenis_kelamin' => $this->request->getVar('jenis_kelamin'),
+                'tempat_lahir' => $this->request->getVar('tempat_lahir'),
+                'tanggal_lahir' => $this->request->getVar('tanggal_lahir'),
+                'telepon' => $this->request->getVar('nomor_telepon'),
+                'email' => $this->request->getVar('email'),
+                'alamat' => $this->request->getVar('alamat'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Keluarga Pegawai Berhasil Diupdate!');
+            return redirect()->to('/pegawai/keluarga');
+        }
+    }
+
+    public function keluarga_del()
+    {
+        $id = $this->request->getVar('id');
+        $this->keluargaPegawai->where('kel_peg_id', $id)->delete($id);
+        $session = session();
+        $session->setFlashdata('success', 'Data Berhasil Dihapus!');
+        return redirect()->to('/pegawai/keluarga');
     }
 }

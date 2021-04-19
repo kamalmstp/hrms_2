@@ -48,8 +48,8 @@
                     </li>
                     <li><a href="/"><i class="fa fa-user"></i> Profile </a>
                     </li>
-                    <!-- <li><a href="/"><i class="fa fa-graduation-cap"></i> Pendidikan</a></li>
-                    <li><a href="/"><i class="fa fa-group"></i> Keluarga</a></li> -->
+                    <li><a href="/pegawai/pendidikan/"><i class="fa fa-graduation-cap"></i> Pendidikan</a></li>
+                    <li><a href="/pegawai/keluarga/"><i class="fa fa-group"></i> Keluarga</a></li>
                     <li><a><i class="fa fa-archive"></i> Izin <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <li><a href="/pegawai/daftar_izin">Daftar Izin</a></li>

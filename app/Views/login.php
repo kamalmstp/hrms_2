@@ -34,11 +34,12 @@
                     <form action="/login/login" method="POST">
                         <h1><img src="/images/logo-xs.png" alt=""> HRMS Al-Mazaya</h1>
                         <h1>Login </h1>
-                        <?php if (!empty($session->getFlashdata('msg'))) : ?>
+                        <?php if (!empty($session->getFlashdata('msg'))) { ?>
                             <div class="alert alert-danger" role="alert">
                                 <?= $session->getFlashdata('msg') ?>
                             </div>
-                        <?php endif; ?>
+                        <?php } else {
+                        } ?>
                         <div>
                             <input type="text" class="form-control" placeholder="Username" name="username" required="" />
                         </div>

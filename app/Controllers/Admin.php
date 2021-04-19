@@ -1674,6 +1674,8 @@ class Admin extends BaseController
         return $data_table->getDatatable();
     }
 
+
+    //INVENTARIS
     public function data_inventaris()
     {
         $inventaris = $this->inventarisModel->getData();
