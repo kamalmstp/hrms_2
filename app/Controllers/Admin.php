@@ -17,7 +17,10 @@ use App\Models\KeluargaPegModel;
 use App\Models\FingerprintModel;
 use App\Models\InventarisModel;
 use App\Models\PeminjamanModel;
+use App\Models\SatkerModel;
+use App\Models\JabatanPegModel;
 use DateTime;
+use monken\TablesIgniter;
 
 class Admin extends BaseController
 {
@@ -36,6 +39,8 @@ class Admin extends BaseController
     protected $fingerprintModel;
     protected $inventarisModel;
     protected $peminjamanModel;
+    protected $satkerModel;
+    protected $jabatanpegModel;
 
 
     public function __construct()
@@ -55,6 +60,8 @@ class Admin extends BaseController
         $this->fingerprintModel = new FingerprintModel();
         $this->inventarisModel = new InventarisModel();
         $this->peminjamanModel = new PeminjamanModel();
+        $this->satkerModel = new SatkerModel();
+        $this->jabatanpegModel = new JabatanPegModel();
         $this->validation = \Config\Services::validation();
     }
 
@@ -478,6 +485,76 @@ class Admin extends BaseController
         return redirect()->to('/admin/hub_keluarga');
     }
 
+    public function satker()
+    {
+        $satker = $this->satkerModel->getData();
+        $data = [
+            'title' => 'Unit Kerja',
+            'page' => 'Master Data',
+            'satker' => $satker,
+        ];
+
+        return view('admin/master/satker', $data);
+    }
+
+    public function satker_save()
+    {
+        $rules = [
+            'nama' => 'required|max_length[50]',
+            'keterangan' => 'max_length[100]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data['validation'] = $this->validator;
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            $validation = \Config\Services::validation();
+            return redirect()->to('/admin/satker')->withInput()->with('validation', $validation);
+        } else {
+            $this->satkerModel->save([
+                'nama' => $this->request->getVar('nama'),
+                'keterangan' => $this->request->getVar('keterangan'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Unit Kerja Berhasil Disimpan!');
+            return redirect()->to('/admin/satker');
+        }
+    }
+
+    public function satker_update()
+    {
+        $rules = [
+            'nama' => 'required|max_length[50]',
+            'keterangan' => 'max_length[100]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data['validation'] = $this->validator;
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            $validation = \Config\Services::validation();
+            return redirect()->to('/admin/satker')->withInput()->with('validation', $validation);
+        } else {
+            $id = $this->request->getVar('satker_id');
+            $this->satkerModel->update($id, [
+                'nama' => $this->request->getVar('nama'),
+                'keterangan' => $this->request->getVar('keterangan'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Unit Kerja Berhasil Disimpan!');
+            return redirect()->to('/admin/satker');
+        }
+    }
+
+    public function satker_del()
+    {
+        $id = $this->request->getVar('satker_id');
+        $this->satkerModel->where('satker_id', $id)->delete($id);
+        $session = session();
+        $session->setFlashdata('success', 'Data Berhasil Dihapus!');
+        return redirect()->to('/admin/satker');
+    }
+
     public function periode()
     {
         $periode = $this->periodeModel->getData();
@@ -557,8 +634,9 @@ class Admin extends BaseController
     {
         $this->db = \Config\Database::connect();
         $sql = $this->db->table('pegawai p')
-            ->select('p.pegawai_id, p.nama, p.gelar_depan, p.gelar_belakang, p.nik, p.tempat_lahir, p.tanggal_lahir, p.jenis_kelamin, p.telepon, p.email, p.gambar, u.user_id, u.username, u.role, u.pegawai_id as id')
-            ->join('users u', 'u.pegawai_id = p.pegawai_id', 'Left')->get();
+            ->select('p.pegawai_id, p.nama, j.nama_jabatan, p.gelar_depan, p.gelar_belakang, p.nik, p.tempat_lahir, p.tanggal_lahir, p.jenis_kelamin, p.telepon, p.email, p.gambar, u.user_id, u.username, u.role, u.pegawai_id as id')
+            ->join('users u', 'u.pegawai_id = p.pegawai_id', 'Left')
+            ->join('jabatan_pegawai j', 'j.pegawai_id = p.pegawai_id', 'Left')->get();
         $pegawai = $sql->getResultArray();
         // $pegawai = $this->pegawaiModel->getData();
         // dd($pegawai);
@@ -840,14 +918,151 @@ class Admin extends BaseController
     public function kelola_jabatan($id)
     {
         $pegawai = $this->pegawaiModel->getData($id)->getRow();
-        $jenjang_pendidikan = $this->jenjangPendidikan->getData();
+        $jabatan = $this->jabatanpegModel->getWhere(array('pegawai_id' => $id))->getResultArray();
+        $satker = $this->satkerModel->getData();
         $data = [
             'title' => 'Kelola Jabatan Pegawai',
             'page' => 'Pegawai',
             'pegawai' => $pegawai,
-            'jenjang_pendidikan' => $jenjang_pendidikan,
+            'satker' => $satker,
+            'jabatan' => $jabatan,
         ];
         return view('admin/pegawai/kelola_jabatan', $data);
+    }
+
+    public function jab_pegawai_save()
+    {
+        $id = $this->request->getVar('pegawai_id');
+
+        $rules = [
+            'jabatan' => 'required|max_length[50]',
+            'tmt_jabatan' => 'required',
+            'tanggal_sk' => 'required',
+            'nomor_sk' => 'required',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data = $this->validator->listErrors();
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            // dd($data);
+            return redirect()->to('/admin/kelola_jabatan/' . $id);
+        } else {
+            $file = $this->request->getFile('file');
+            if ($file->isValid() && !$file->hasMoved()) {
+                $file_type = $file->getClientMimeType();
+                $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif');
+                if (in_array($file_type, $valid_type)) {
+                    $randomName = $file->getRandomName();
+                    $file->move(ROOTPATH . 'public/file/jabatan/', $randomName);
+
+                    $this->jabatanpegModel->save([
+                        'nama_jabatan' => $this->request->getVar('jabatan'),
+                        'tmt_jabatan' => $this->request->getVar('tmt_jabatan'),
+                        'tanggal_sk' => $this->request->getVar('tanggal_sk'),
+                        'nomor_sk' => $this->request->getVar('nomor_sk'),
+                        'satker_id' => $this->request->getVar('satker'),
+                        'keterangan' => $this->request->getVar('keterangan'),
+                        'status' => $this->request->getVar('status'),
+                        'pegawai_id' => $id,
+                        'file' => $randomName,
+                    ]);
+                    $session = session();
+                    $session->setFlashdata('success', 'Data Jabatan Pegawai Berhasil Disimpan!');
+                    return redirect()->to('/admin/kelola_jabatan/' . $id);
+                } else {
+                    $session = session();
+                    $session->setFlashdata('warning', 'Tipe file yang dipilih tidak sesuai');
+                    return redirect()->to('/admin/kelola_jabatan/' . $id);
+                }
+            } else {
+                $this->jabatanpegModel->save([
+                    'nama_jabatan' => $this->request->getVar('jabatan'),
+                    'tmt_jabatan' => $this->request->getVar('tmt_jabatan'),
+                    'tanggal_sk' => $this->request->getVar('tanggal_sk'),
+                    'nomor_sk' => $this->request->getVar('nomor_sk'),
+                    'satker_id' => $this->request->getVar('satker'),
+                    'keterangan' => $this->request->getVar('keterangan'),
+                    'status' => $this->request->getVar('status'),
+                    'pegawai_id' => $id,
+                ]);
+                $session = session();
+                $session->setFlashdata('success', 'Data Jabatan Pegawai Berhasil Disimpan!');
+                return redirect()->to('/admin/kelola_jabatan/' . $id);
+            }
+        }
+    }
+
+    public function jab_pegawai_update()
+    {
+        $id_pegawai = $this->request->getVar('pegawai_id');
+        $id = $this->request->getVar('id');
+
+        $rules = [
+            'jabatan' => 'required|max_length[50]',
+            'tmt_jabatan' => 'required',
+            'tanggal_sk' => 'required',
+            'nomor_sk' => 'required',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data = $this->validator->listErrors();
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            // dd($data);
+            return redirect()->to('/admin/kelola_jabatan/' . $id_pegawai);
+        } else {
+            $file = $this->request->getFile('file');
+            if ($file->isValid() && !$file->hasMoved()) {
+                $file_type = $file->getClientMimeType();
+                $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif');
+                if (in_array($file_type, $valid_type)) {
+                    $randomName = $file->getRandomName();
+                    $file->move(ROOTPATH . 'public/file/jabatan/', $randomName);
+
+                    $this->jabatanpegModel->update($id, [
+                        'nama_jabatan' => $this->request->getVar('jabatan'),
+                        'tmt_jabatan' => $this->request->getVar('tmt_jabatan'),
+                        'tanggal_sk' => $this->request->getVar('tanggal_sk'),
+                        'nomor_sk' => $this->request->getVar('nomor_sk'),
+                        'satker_id' => $this->request->getVar('satker'),
+                        'keterangan' => $this->request->getVar('keterangan'),
+                        'status' => $this->request->getVar('status'),
+                        'file' => $randomName,
+                    ]);
+                    $session = session();
+                    $session->setFlashdata('success', 'Data Jabtan Pegawai Berhasil Disimpan!');
+                    return redirect()->to('/admin/kelola_jabatan/' . $id_pegawai);
+                } else {
+                    $session = session();
+                    $session->setFlashdata('warning', 'Tipe gambar yang dipilih tidak sesuai');
+                    return redirect()->to('/admin/kelola_jabatan/' . $id_pegawai);
+                }
+            } else {
+                $this->jabatanpegModel->update($id, [
+                    'nama_jabatan' => $this->request->getVar('jabatan'),
+                    'tmt_jabatan' => $this->request->getVar('tmt_jabatan'),
+                    'tanggal_sk' => $this->request->getVar('tanggal_sk'),
+                    'nomor_sk' => $this->request->getVar('nomor_sk'),
+                    'satker_id' => $this->request->getVar('satker'),
+                    'keterangan' => $this->request->getVar('keterangan'),
+                    'status' => $this->request->getVar('status'),
+                ]);
+                $session = session();
+                $session->setFlashdata('success', 'Data Jabatan Pegawai Berhasil Disimpan!');
+                return redirect()->to('/admin/kelola_jabatan/' . $id_pegawai);
+            }
+        }
+    }
+
+    public function jab_pegawai_del()
+    {
+        $id = $this->request->getVar('id');
+        $pegawai_id = $this->request->getVar('pegawai_id');
+        $this->jabatanpegModel->where('jab_peg_id', $id)->delete($id);
+        $session = session();
+        $session->setFlashdata('success', 'Data Berhasil Dihapus!');
+        return redirect()->to('/admin/kelola_jabatan/' . $pegawai_id);
     }
 
     public function pendidikan_pegawai()
@@ -1449,12 +1664,14 @@ class Admin extends BaseController
         return view('admin/absensi/absensi_detail', $data);
     }
 
-    public function isi_detail()
+    public function isi_detail($id)
     {
-        $this->db = \Config\Database::connect();
-        $data = $this->db->table('fingerprint')->getResult();
+        $data_table = new TablesIgniter();
 
-        echo json_encode($data);
+        $data_table->setTable($this->fingerprintModel->fingerprint_pegawai($id))
+            ->setOutput(["id", "sidik_id", "date", "time", "state"]);
+
+        return $data_table->getDatatable();
     }
 
     public function data_inventaris()

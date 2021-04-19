@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b1b8a408197506aa765ac2fcbea56ab1",
+    "content-hash": "e0b3fb318ba7c8a6273f1bd2b9ea8216",
     "packages": [
         {
             "name": "codeigniter4/framework",
@@ -532,6 +532,47 @@
                 "vector"
             ],
             "time": "2021-01-23T16:37:31+00:00"
+        },
+        {
+            "name": "monken/tablesigniter",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/monkenWu/TablesIgniter.git",
+                "reference": "701e9ad7205160df618d4c4833762726dd474095"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/monkenWu/TablesIgniter/zipball/701e9ad7205160df618d4c4833762726dd474095",
+                "reference": "701e9ad7205160df618d4c4833762726dd474095",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "monken\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "monkenWu",
+                    "email": "610877102@mail.nknu.edu.tw"
+                }
+            ],
+            "description": "This library will help you use jQuery Datatables based on CodeIgniter4.",
+            "keywords": [
+                "codeigniter",
+                "codeigniter4",
+                "datatables"
+            ],
+            "time": "2021-02-25T14:49:35+00:00"
         },
         {
             "name": "myclabs/php-enum",

@@ -48,7 +48,7 @@
                                                 echo "Perempuan";
                                             } ?>
                                         </td>
-                                        <td></td>
+                                        <td><?= $row['nama_jabatan'] ?></td>
                                         <td><?= $row['tempat_lahir'] . ', ' . $row['tanggal_lahir'] ?></td>
                                         <td>
                                             <?php if ($row['id'] == NULL) { ?>

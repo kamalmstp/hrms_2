@@ -19,4 +19,19 @@ class FingerprintModel extends Model
             return $this->getWhere(['sidik_id' => $id]);
         }
     }
+
+    public function noticeFunction()
+    {
+        $builder = $this->db->table('fingerprint');
+
+        return $builder;
+    }
+
+    public function fingerprint_pegawai($id)
+    {
+        $builder = $this->db->table('fingerprint');
+        $builder->where('sidik_id', $id);
+
+        return $builder;
+    }
 }

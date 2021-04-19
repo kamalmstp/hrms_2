@@ -7,7 +7,8 @@
 	"require": {
 		"php": ">=7.2",
 		"codeigniter4/framework": "^4",
-		"phpoffice/phpspreadsheet": "^1.17"
+		"phpoffice/phpspreadsheet": "^1.17",
+		"monken/tablesigniter": "^1.2"
 	},
 	"require-dev": {
 		"fzaninotto/faker": "^1.9@dev",

@@ -20,28 +20,6 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <!-- <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
-                            <div class="profile_img">
-                                <div id="crop-avatar">
-                                    <img class="img-responsive avatar-view" src="images/picture.jpg" alt="Avatar" title="Change the avatar">
-                                </div>
-                            </div>
-                            <h3>Samuel Doe</h3>
-
-                            <ul class="list-unstyled user_data">
-                                <li><i class="fa fa-map-marker user-profile-icon"></i> San Francisco, California, USA
-                                </li>
-
-                                <li>
-                                    <i class="fa fa-briefcase user-profile-icon"></i> Software Engineer
-                                </li>
-
-                                <li class="m-top-xs">
-                                    <i class="fa fa-external-link user-profile-icon"></i>
-                                    <a href="http://www.kimlabs.com/profile/" target="_blank">www.kimlabs.com</a>
-                                </li>
-                            </ul>
-                        </div> -->
                         <div class="col-md-12 col-sm-9 col-xs-12">
                             <div class="profile_title">
                                 <div class="col-md-6">
@@ -92,18 +70,16 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <table id="datatable-buttons" class="table table-striped table-bordered">
+                        <table id="fingerprint_table" class="table table-striped table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Waktu Masuk</th>
-                                    <th>Status Masuk</th>
-                                    <th>Waktu Pulang</th>
-                                    <th>Status Pulang</th>
+                                    <th>id</th>
+                                    <th>sidik_id</th>
+                                    <th>date</th>
+                                    <th>time</th>
+                                    <th>state</th>
                                 </tr>
                             </thead>
-                            <tbody id="show_data">
-
-                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -115,29 +91,14 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        tampil_data_tentor();
-
-        function tampil_data_tentor() {
-            $.ajax({
-                url: '/admin/isi_detail',
-                method: 'GET',
-                async: false,
-                dataType: 'json',
-                success: function(data) {
-                    var html = '';
-                    var i;
-                    for (i = 0; i < data.length; i++) {
-                        html += '<tr>' +
-                            '<td>' + data[i].sidik_id + '</td>' +
-                            '<td>' + data[i].date + '</td>' +
-                            '<td>' + data[i].time + '</td>' +
-                            '<td>' + data[i].state + '</td>' +
-                            '</tr>';
-                    }
-                    $('#show_data').html(html);
-                }
-            });
-        }
+        $('#fingerprint_table').DataTable({
+            "order": [],
+            "serverSide": true,
+            "ajax": {
+                url: "/admin/isi_detail/<?= $pegawai->sidik_id ?>",
+                type: "POST"
+            }
+        });
     });
 </script>
 <?= $this->endSection(); ?>
