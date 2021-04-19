@@ -46,7 +46,7 @@
                 <ul class="nav side-menu">
                     <li><a href="/"><i class="fa fa-home"></i> Home </a>
                     </li>
-                    <li><a href="/"><i class="fa fa-user"></i> Profile </a>
+                    <li><a href="/pegawai/profile"><i class="fa fa-user"></i> Profile </a>
                     </li>
                     <li><a href="/pegawai/pendidikan/"><i class="fa fa-graduation-cap"></i> Pendidikan</a></li>
                     <li><a href="/pegawai/keluarga/"><i class="fa fa-group"></i> Keluarga</a></li>

@@ -95,7 +95,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nama_pendidikan">Nama Pendidikan
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="text" id="nama_pendidikan" name="nama_pendidikan" class="form-control col-md-7 col-xs-12">
+                            <input type="text" id="nama_pendidikan" name="nama_pendidikan" class="form-control col-md-7 col-xs-12" required>
                             <input type="hidden" name="pegawai_id" value="<?= $pegawai->pegawai_id ?>">
                         </div>
                     </div>
@@ -141,7 +141,7 @@
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="tahun_lulus">Tahun Lulus
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                            <input type="number" id="tahun_lulus" name="tahun_lulus" class="form-control col-md-7 col-xs-12">
+                            <input type="number" id="tahun_lulus" name="tahun_lulus" class="form-control col-md-7 col-xs-12" required>
                         </div>
                     </div>
                     <div class="form-group">

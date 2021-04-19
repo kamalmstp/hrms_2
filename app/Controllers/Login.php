@@ -54,7 +54,6 @@ class Login extends BaseController
 				return redirect()->to('/login');
 			}
 		} else {
-			$session->setFlashdata('msg', 'Email/Password Salah/Tidak Tersedia!');
 			return redirect()->to('/login');
 		}
 	}

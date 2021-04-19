@@ -110,24 +110,25 @@ class Pegawai extends BaseController
     public function izin_save()
     {
         $session = session();
-        $file = $this->request->getFile('file');
-        // dd($file);
-        if (!empty($file)) {
-            $rules = [
-                'tanggal_awal' => 'required',
-                'tanggal_akhir' => 'required',
-                'file' => 'mime_in[file,image/jpg,image/jpeg,image/png,image/gif]|max_size[file,2048]',
-            ];
+        $rules = [
+            'tanggal_awal' => 'required',
+            'tanggal_akhir' => 'required',
+        ];
 
-            if (!$this->validate($rules)) {
-                $data['validation'] = $this->validator;
-                $session = session();
-                $session->setFlashdata('error', 'Data Gagal Disimpan');
-                $validation = \Config\Services::validation();
-                return redirect()->to('/pegawai/ajukan_izin')->withInput()->with('validation', $validation);
-            } else {
-                $randomName = $file->getRandomName();
-                if ($file->move(ROOTPATH . 'public/file/izin/', $randomName)) {
+        if (!$this->validate($rules)) {
+            $data['validation'] = $this->validator;
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            $validation = \Config\Services::validation();
+            return redirect()->to('/pegawai/ajukan_izin')->withInput()->with('validation', $validation);
+        } else {
+            $file = $this->request->getFile('file');
+            if ($file->isValid() && !$file->hasMoved()) {
+                $file_type = $file->getClientMimeType();
+                $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'application/pdf', 'application/doc', 'application/docx');
+                if (in_array($file_type, $valid_type)) {
+                    $randomName = $file->getRandomName();
+                    $file->move(ROOTPATH . 'public/file/izin/', $randomName);
                     $this->izinPegawaiModel->save([
                         'pegawai_id' => $session->get('pegawai_id'),
                         'izin_jenis_id' => $this->request->getVar('jenis_izin'),
@@ -141,20 +142,11 @@ class Pegawai extends BaseController
                     $session = session();
                     $session->setFlashdata('success', 'Data Izin Berhasil Ditambah!');
                     return redirect()->to('/pegawai/daftar_izin');
+                } else {
+                    $session = session();
+                    $session->setFlashdata('warning', 'Tipe Gambar Tidak Sesuai');
+                    return redirect()->to('/pegawai/ajukan_izin');
                 }
-            }
-        } else {
-            $rules = [
-                'tanggal_awal' => 'required',
-                'tanggal_akhir' => 'required',
-            ];
-
-            if (!$this->validate($rules)) {
-                $data['validation'] = $this->validator;
-                $session = session();
-                $session->setFlashdata('error', 'Data Gagal Disimpan');
-                $validation = \Config\Services::validation();
-                return redirect()->to('/pegawai/ajukan_izin')->withInput()->with('validation', $validation);
             } else {
                 $this->izinPegawaiModel->save([
                     'pegawai_id' => $session->get('pegawai_id'),
@@ -626,5 +618,21 @@ class Pegawai extends BaseController
         $session = session();
         $session->setFlashdata('success', 'Data Berhasil Dihapus!');
         return redirect()->to('/pegawai/riwayat_peminjaman');
+    }
+
+    public function profile()
+    {
+        $session = session();
+        $id = $session->get('id_pegawai');
+
+        $pegawai = $this->pegawaiModel->getData($id)->getRow();
+
+        $data = [
+            'title' => 'Profile Saya',
+            'page' => 'Profile',
+            'pegawai' => $pegawai,
+        ];
+
+        return view('pegawai/profile', $data);
     }
 }
