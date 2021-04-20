@@ -35,7 +35,7 @@
                                     <th style="width: 5%">No</th>
                                     <th>File</th>
                                     <th>Nama</th>
-                                    <th>Jenis</th>
+                                    <!-- <th>Jenis</th> -->
                                     <th>Jenjang</th>
                                     <th>Institusi</th>
                                     <th>Tahun Lulus</th>
@@ -55,7 +55,7 @@
                                             <?php } ?>
                                         </td>
                                         <td><?= $row['nama_pendidikan'] ?></td>
-                                        <td><?= $row['jenis_pendidikan'] ?></td>
+
                                         <td>
                                             <?= $row['jenjang_pendidikan'] ?>
                                         </td>
@@ -106,7 +106,7 @@
                             <input type="text" id="penyelenggara" name="penyelenggara" class="form-control col-md-7 col-xs-12">
                         </div>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jenis_pendidikan">Jenis Pendidikan
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -117,7 +117,7 @@
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jenjang_pendidikan">Jenjang Pendidikan
                         </label>
@@ -206,7 +206,7 @@
                                 <input type="text" id="penyelenggara" value="<?= $row['penyelenggara'] ?>" name="penyelenggara" class="form-control col-md-7 col-xs-12">
                             </div>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jenis_pendidikan">Jenis Pendidikan
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
@@ -219,7 +219,7 @@
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="jenjang_pendidikan">Jenjang Pendidikan
                             </label>

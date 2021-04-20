@@ -9,7 +9,7 @@ class PeriodeModel extends Model
     protected $table = 'periode';
     protected $primaryKey = 'periode_id';
 
-    protected $allowedFields = ['kode', 'tanggal_mulai', 'tanggal_akhir', 'wajib'];
+    protected $allowedFields = ['kode', 'tanggal_mulai', 'tanggal_akhir', 'wajib', 'status'];
 
     public function getData($id = false)
     {
@@ -18,5 +18,10 @@ class PeriodeModel extends Model
         } else {
             return $this->getWhere(['periode_id' => $id]);
         }
+    }
+
+    public function aktif()
+    {
+        return $this->getWhere(['status' => '1']);
     }
 }

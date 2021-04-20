@@ -19,8 +19,10 @@ use App\Models\InventarisModel;
 use App\Models\PeminjamanModel;
 use App\Models\SatkerModel;
 use App\Models\JabatanPegModel;
+use App\Models\LiburModel;
 use DateTime;
 use monken\TablesIgniter;
+use phpDocumentor\Reflection\Types\This;
 
 class Admin extends BaseController
 {
@@ -41,6 +43,7 @@ class Admin extends BaseController
     protected $peminjamanModel;
     protected $satkerModel;
     protected $jabatanpegModel;
+    protected $liburModel;
 
 
     public function __construct()
@@ -62,6 +65,7 @@ class Admin extends BaseController
         $this->peminjamanModel = new PeminjamanModel();
         $this->satkerModel = new SatkerModel();
         $this->jabatanpegModel = new JabatanPegModel();
+        $this->liburModel = new LiburModel();
         $this->validation = \Config\Services::validation();
     }
 
@@ -586,6 +590,7 @@ class Admin extends BaseController
                 'tanggal_mulai' => $this->request->getVar('tanggal_mulai'),
                 'tanggal_akhir' => $this->request->getVar('tanggal_akhir'),
                 'wajib' => $this->request->getVar('wajib'),
+                'status' => $this->request->getVar('status'),
             ]);
             $session = session();
             $session->setFlashdata('success', 'Data Periode Berhasil Disimpan!');
@@ -613,6 +618,7 @@ class Admin extends BaseController
                 'tanggal_mulai' => $this->request->getVar('tanggal_mulai'),
                 'tanggal_akhir' => $this->request->getVar('tanggal_akhir'),
                 'wajib' => $this->request->getVar('wajib'),
+                'status' => $this->request->getVar('status'),
             ]);
             $session = session();
             $session->setFlashdata('success', 'Data Periode Berhasil Disimpan!');
@@ -627,6 +633,74 @@ class Admin extends BaseController
         $session = session();
         $session->setFlashdata('success', 'Data Berhasil Dihapus!');
         return redirect()->to('/admin/periode');
+    }
+
+    public function libur()
+    {
+        $libur = $this->liburModel->getData();
+        $data = [
+            'title' => 'Data Hari Libur',
+            'page' => 'Master Data',
+            'libur' => $libur,
+        ];
+
+        return view('admin/master/hari_libur', $data);
+    }
+
+    public function libur_save()
+    {
+        $rules = [
+            'tgl_libur' => 'required|max_length[10]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data['validation'] = $this->validator;
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            $validation = \Config\Services::validation();
+            return redirect()->to('/admin/libur')->withInput()->with('validation', $validation);
+        } else {
+            $this->liburModel->save([
+                'tgl_libur' => $this->request->getVar('tgl_libur'),
+                'keterangan' => $this->request->getVar('keterangan'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Hari Libur Berhasil Disimpan!');
+            return redirect()->to('/admin/libur');
+        }
+    }
+
+    public function libur_update()
+    {
+        $rules = [
+            'tgl_libur' => 'required|max_length[10]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data['validation'] = $this->validator;
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            $validation = \Config\Services::validation();
+            return redirect()->to('/admin/libur')->withInput()->with('validation', $validation);
+        } else {
+            $id = $this->request->getVar('libur_id');
+            $this->liburModel->update($id, [
+                'tgl_libur' => $this->request->getVar('tgl_libur'),
+                'keterangan' => $this->request->getVar('keterangan'),
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Data Hari Libur Berhasil Disimpan!');
+            return redirect()->to('/admin/libur');
+        }
+    }
+
+    public function libur_del()
+    {
+        $id = $this->request->getVar('libur_id');
+        $this->liburModel->where('libur_id', $id)->delete($id);
+        $session = session();
+        $session->setFlashdata('success', 'Data Berhasil Dihapus!');
+        return redirect()->to('/admin/libur');
     }
 
     //Pegawai
@@ -1650,19 +1724,34 @@ class Admin extends BaseController
 
     public function absensi_detail($id)
     {
-        $bulan = date('m');
-        $tahun = date('Y');
-        $tanggal_akhir = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
+        $periode = $this->periodeModel->aktif()->getRow();
+        $periode_all = $this->periodeModel->getData();
         $pegawai = $this->pegawaiModel->getData($id)->getRow();
         $fingerprint = $this->fingerprintModel->getData($pegawai->sidik_id)->getResultArray();
+
+        $mulai = $periode->tanggal_mulai;
+        $akhir = $periode->tanggal_akhir;
+
+        $tgl1 = date_create($mulai);
+        $tgl2 = date_create($akhir);
+        $diff  = date_diff($tgl1, $tgl2);
+        $range =  $diff->format("%R%a days");
+
+        $todayDate = $mulai;
+        $now = strtotime($todayDate);
+
+        for ($i = 0; $i <= $range; $i++) {
+            $nilai[] = date('Y-m-d', strtotime('+' . $i . 'days', $now));
+        }
+
         $data = [
             'title' => 'Absensi Detail',
             'page' => 'Absensi',
             'pegawai' => $pegawai,
-            'bulan' => $bulan,
-            'tahun' => $tahun,
-            'tanggal_ahir' => $tanggal_akhir,
             'fingerprint' => $fingerprint,
+            'list' => $nilai,
+            'periode' => $periode_all,
+            'aktif' => $periode,
         ];
 
         return view('admin/absensi/absensi_detail', $data);

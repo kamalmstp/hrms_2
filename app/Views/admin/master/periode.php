@@ -32,6 +32,7 @@
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Akhir</th>
                                     <th>Wajib Hadir</th>
+                                    <th>Status</th>
                                     <th style="width: 20%">Aksi</th>
                                 </tr>
                             </thead>
@@ -50,6 +51,9 @@
                                             <?= date('d F Y', strtotime($row['tanggal_akhir'])) ?>
                                         </td>
                                         <td><?= $row['wajib']; ?></td>
+                                        <td><?php if ($row['status'] == 1) {
+                                                echo 'Aktif';
+                                            } ?></td>
                                         <td>
                                             <!-- <a href="#" class="btn btn-primary btn-xs"><i class="fa fa-folder"></i> View </a> -->
                                             <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target=".modal-edit<?= $row['periode_id'] ?>"><i class="fa fa-pencil"></i> Edit </button>
@@ -109,6 +113,17 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="wajib">Status
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select name="status" id="" class="form-control col-md-7 col-xs-12" required>
+                                <option value="1">Aktif</option>
+                                <option value="0">Tidak Aktif</option>
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -160,6 +175,20 @@
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <input type="number" id="wajib" value="<?= $row['wajib'] ?>" name="wajib" class="form-control col-md-7 col-xs-12" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="wajib">Status
+                            </label>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                <select name="status" id="" class="form-control col-md-7 col-xs-12" required>
+                                    <option value="1" <?php if ($row['status'] == 1) {
+                                                            echo 'selected';
+                                                        } ?>>Aktif</option>
+                                    <option value="0" <?php if ($row['status'] == 0) {
+                                                            echo 'selected';
+                                                        } ?>>Tidak Aktif</option>
+                                </select>
                             </div>
                         </div>
 

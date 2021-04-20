@@ -23,30 +23,16 @@
                         <div class="col-md-12 col-sm-9 col-xs-12">
                             <div class="profile_title">
                                 <div class="col-md-6">
-                                    <form action="/admin/jns_pegawai_save" method="post" class="form-horizontal form-label-left">
+                                    <form action="#" method="post" class="form-horizontal form-label-left">
 
                                         <div class="form-group">
-                                            <div class="col-md-3 col-sm-3">
+                                            <div class="col-md-6 col-sm-6">
                                                 <select class="form-control" name="bulan" id="bulan">
-                                                    <option value="">Januari</option>
-                                                    <option value="">Februari</option>
-                                                    <option value="">Maret</option>
-                                                    <option value="">April</option>
-                                                    <option value="">Mei</option>
-                                                    <option value="">Juni</option>
-                                                    <option value="">Juli</option>
-                                                    <option value="">Agustus</option>
-                                                    <option value="">September</option>
-                                                    <option value="">Oktober</option>
-                                                    <option value="">November</option>
-                                                    <option value="">Desember</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-3 col-sm-3">
-                                                <select class="form-control" name="tahun" id="tahun">
-                                                    <?php for ($i = 2010; $i < 2030; $i++) {
-                                                        echo '<option value="">' . $i . '</option>';
-                                                    } ?>
+                                                    <?php foreach ($periode as $row) : ?>
+                                                        <option value="<?= $row['kode'] ?>" <?php if ($aktif->kode == $row['kode']) {
+                                                                                                echo 'selected';
+                                                                                            } ?>><?= $row['tanggal_mulai']; ?> - <?= $row['tanggal_akhir']; ?></option>
+                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -66,20 +52,75 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Daftar Absensi Pada Bulan <strong><?= $bulan; ?> - <?= $tahun; ?></strong></h2>
+                        <h2>Daftar Absensi Pada Periode <strong><?= $aktif->kode; ?> - (<?= $aktif->tanggal_mulai; ?> s/d <?= $aktif->tanggal_akhir; ?>)</strong></h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <table id="fingerprint_table" class="table table-striped table-bordered">
+                        <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>id</th>
-                                    <th>sidik_id</th>
-                                    <th>date</th>
-                                    <th>time</th>
-                                    <th>state</th>
+                                    <th>No</th>
+                                    <th>Tanggal</th>
+                                    <th>Jam Masuk</th>
+                                    <th>Jam Pulang</th>
+                                    <th>Status</th>
+                                    <th>Keterangan</th>
                                 </tr>
                             </thead>
+
+                            <tbody>
+                                <?php
+                                $libur = new \App\Models\LiburModel();
+                                $finger = new \App\Models\FingerprintModel();
+                                $setting = new \App\Models\AbsenSettingModel();
+                                ?>
+                                <?php $no = 1; ?>
+                                <?php
+                                for ($i = 0; $i < count($list); $i++) {
+                                    if (count($libur->cek_libur($list[$i])->getResultArray()) !== 1) {
+                                        $masuk = $finger->masuk($pegawai->sidik_id, date('Y-m-d', strtotime($list[$i])))->getRow();
+                                        // dd($masuk);
+                                        $id_set = 1;
+                                        $pulang = $finger->pulang($pegawai->sidik_id, date('Y-m-d', strtotime($list[$i])))->getRow();
+                                        $mesin = $setting->getWhere(array('setting_id' => 1))->getRow();
+                                ?>
+                                        <tr>
+                                            <td><?= $no++; ?></td>
+                                            <td><?= $list[$i]; ?></td>
+                                            <td><?php if (empty($masuk)) {
+                                                    echo '-';
+                                                } else {
+                                                    echo $masuk->time;
+                                                } ?>
+                                            </td>
+                                            <td><?php if (empty($pulang)) {
+                                                    echo '-';
+                                                } else {
+                                                    echo $pulang->time;
+                                                } ?></td>
+                                            <td>
+                                                <?php if (!empty($masuk->time) && !empty($pulang->time)) {
+                                                    echo 'Absen';
+                                                } else {
+                                                    echo 'Tidak Absen';
+                                                } ?>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    <?php
+                                    } else { ?>
+                                        <tr bgcolor="#ff9999">
+                                            <td><?= $no++; ?></td>
+                                            <td><?= $list[$i]; ?></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Libur</td>
+                                            <td></td>
+                                        </tr>
+                                <?php    }
+                                }
+                                ?>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -89,7 +130,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
+<!-- <script type="text/javascript">
     $(document).ready(function() {
         $('#fingerprint_table').DataTable({
             "order": [],
@@ -100,5 +141,5 @@
             }
         });
     });
-</script>
+</script> -->
 <?= $this->endSection(); ?>

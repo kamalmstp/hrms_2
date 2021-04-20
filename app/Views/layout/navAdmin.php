@@ -59,6 +59,8 @@
                         <ul class="nav child_menu">
                             <li><a href="#">Absensi Pegawai</a></li>
                             <li><a href="/admin/data_fingerprint">Data Fingerprint</a></li>
+                            <li><a href="/admin/periode">Periode</a></li>
+                            <li><a href="/admin/libur">Hari Libur</a></li>
                             <li><a href="/admin/konfirmasi_izin">Konfirmasi Izin</a></li>
                             <li><a href="/admin/kelola_izin">Kelola Izin</a></li>
                         </ul>
@@ -77,7 +79,7 @@
                             <li><a href="/admin/jns_pegawai">Jenis Pegawai</a></li>
                             <li><a href="/admin/hub_keluarga">Hubungan Keluarga</a></li>
                             <li><a href="/admin/jen_pend">Jenjang Pendidikan</a></li>
-                            <li><a href="/admin/jns_pend">Jenis Pendidikan</a></li>
+                            <!-- <li><a href="/admin/jns_pend">Jenis Pendidikan</a></li> -->
                             <li><a href="/admin/izin">Data Izin</a></li>
                         </ul>
                     </li>
