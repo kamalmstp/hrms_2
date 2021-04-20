@@ -1730,7 +1730,6 @@ class Admin extends BaseController
             $session->setFlashdata('warning', 'Sidik Jari Pegawai Belum Di Atur, Harap Masukkan Nomor Sidik Jari');
             return redirect()->to('/admin/data_pegawai');
         } else {
-
             $periode = $this->periodeModel->aktif()->getRow();
             $periode_all = $this->periodeModel->getData();
             $fingerprint = $this->fingerprintModel->getData($pegawai->sidik_id)->getResultArray();

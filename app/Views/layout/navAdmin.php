@@ -57,7 +57,7 @@
                     </li>
                     <li><a><i class="fa fa-calendar"></i> Absensi <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            <li><a href="#">Absensi Pegawai</a></li>
+                            <!-- <li><a href="#">Absensi Pegawai</a></li> -->
                             <li><a href="/admin/data_fingerprint">Data Fingerprint</a></li>
                             <li><a href="/admin/periode">Periode</a></li>
                             <li><a href="/admin/libur">Hari Libur</a></li>
