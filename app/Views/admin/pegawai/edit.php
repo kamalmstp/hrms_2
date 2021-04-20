@@ -213,7 +213,7 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="sidik_id">Sidik Jari id</label>
-                                    <input type="number" id="sidik_id" class="form-control" name="sidik_id" />
+                                    <input type="number" value="<?= $pegawai['sidik_id'] ?>" id="sidik_id" class="form-control" name="sidik_id" />
                                 </div>
                             </div>
                             <div class="col-md-12">
