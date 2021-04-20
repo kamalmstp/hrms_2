@@ -1,4 +1,4 @@
-<?php $session = session(); ?>
+<?php $session = session() ?>
 <div class="col-md-3 left_col">
     <div class="left_col scroll-view">
         <div class="navbar nav_title" style="border: 0;">
@@ -49,21 +49,39 @@
                     <li><a><i class="fa fa-users"></i> Pegawai <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <li><a href="/kepala/data_pegawai">Data Pegawai</a></li>
-                            <li><a href="/kepala/add_pegawai">Tambah Pegawai</a></li>
+                            <!-- <li><a href="/kepala/add_pegawai">Tambah Pegawai</a></li> -->
+                            <li><a href="/kepala/keluarga_pegawai">Keluarga Pegawai</a></li>
+                            <li><a href="/kepala/pendidikan_pegawai">Pendidikan Pegawai</a></li>
+                            <li><a href="/kepala/jabatan_pegawai">Jabatan Pegawai</a></li>
                         </ul>
                     </li>
-                    <li><a><i class="fa fa-calendar"></i> Absensi <span class="fa fa-chevron-down"></span></a>
+                    <li><a><i class="fa fa-calendar"></i> Izin <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            <li><a href="#">Absensi Pegawai</a></li>
+                            <!-- <li><a href="#">Absensi Pegawai</a></li> -->
+                            <!-- <li><a href="/kepala/data_fingerprint">Data Fingerprint</a></li> -->
+                            <!-- <li><a href="/kepala/periode">Periode</a></li>
+                            <li><a href="/kepala/libur">Hari Libur</a></li> -->
                             <li><a href="/kepala/konfirmasi_izin">Konfirmasi Izin</a></li>
+                            <li><a href="/kepala/kelola_izin">Kelola Izin</a></li>
                         </ul>
                     </li>
                     <li><a><i class="fa fa-table"></i> Inventaris <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            <li><a href="#">Inventaris Pegawai</a></li>
-                            <li><a href="#">Data Inventaris</a></li>
+                            <li><a href="/kepala/data_inventaris">Data Inventaris</a></li>
+                            <!-- <li><a href="/kepala/add_peminjaman">Add Peminjaman</a></li> -->
+                            <li><a href="/kepala/riwayat_peminjaman">Riwayat Peminjaman</a></li>
+                            <li><a href="/kepala/konfirmasi_peminjaman">Konfirmasi Peminjaman</a></li>
                         </ul>
                     </li>
+                    <!-- <li><a><i class="fa fa-gears"></i> Data Master <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="/kepala/satker">Unit Kerja</a></li>
+                            <li><a href="/kepala/jns_pegawai">Jenis Pegawai</a></li>
+                            <li><a href="/kepala/hub_keluarga">Hubungan Keluarga</a></li>
+                            <li><a href="/kepala/jen_pend">Jenjang Pendidikan</a></li>
+                            <li><a href="/kepala/izin">Data Izin</a></li>
+                        </ul>
+                    </li> -->
                 </ul>
             </div>
         </div>

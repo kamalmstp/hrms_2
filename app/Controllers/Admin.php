@@ -2110,4 +2110,49 @@ class Admin extends BaseController
             return redirect()->to('/admin/riwayat_peminjaman');
         }
     }
+
+    public function change_password()
+    {
+        $data = [
+            'title' => 'Rubah Password',
+            'page' => 'Profile',
+            'validation' => \Config\Services::validation(),
+        ];
+
+        return view('admin/change_password', $data);
+    }
+
+    public function update_password()
+    {
+        $session = session();
+        $id = $session->get('user_id');
+        $rules = [
+            'password_new' => 'required|min_length[5]',
+        ];
+
+        if (!$this->validate($rules)) {
+            $data['validation'] = $this->validator;
+            $session = session();
+            $session->setFlashdata('info', $this->validator->getErrors());
+            $validation = \Config\Services::validation();
+            return redirect()->to('/admin/change_password')->withInput()->with('validation', $validation);
+        } else {
+            $pass_new = $this->request->getVar('password_new');
+            $pass_new_conf = $this->request->getVar('password_new_confirm');
+
+            if ($pass_new == $pass_new_conf) {
+                $pass = password_hash($pass_new, PASSWORD_BCRYPT);
+                $this->userModel->update($id, [
+                    'password' => $pass,
+                ]);
+                $session = session();
+                $session->setFlashdata('success', 'Password Berhasil Dirubah!');
+                return redirect()->to('/admin/change_password');
+            } else {
+                $session = session();
+                $session->setFlashdata('warning', 'Password Tidak Sama');
+                return redirect()->to('/admin/change_password');
+            }
+        }
+    }
 }
