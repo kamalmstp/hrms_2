@@ -1725,7 +1725,7 @@ class Admin extends BaseController
     public function absensi_detail($id)
     {
         $pegawai = $this->pegawaiModel->getData($id)->getRow();
-        if ($pegawai->sidik_id == NULL || $pegawai->sidik_id == '') {
+        if ($pegawai->sidik_id == NULL || $pegawai->sidik_id == '' || $pegawai->sidik_id == '0') {
             $session = session();
             $session->setFlashdata('warning', 'Sidik Jari Pegawai Belum Di Atur, Harap Masukkan Nomor Sidik Jari');
             return redirect()->to('/admin/data_pegawai');
