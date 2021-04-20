@@ -73,6 +73,7 @@
                                 $libur = new \App\Models\LiburModel();
                                 $finger = new \App\Models\FingerprintModel();
                                 $setting = new \App\Models\AbsenSettingModel();
+                                $izin = new \App\Models\IzinModel();
                                 ?>
                                 <?php $no = 1; ?>
                                 <?php
@@ -108,14 +109,16 @@
                                             <td></td>
                                         </tr>
                                     <?php
-                                    } else { ?>
+                                    } else {
+                                        $libur_d = $libur->cek_libur($list[$i])->getRow();
+                                    ?>
                                         <tr bgcolor="#ff9999">
                                             <td><?= $no++; ?></td>
                                             <td><?= $list[$i]; ?></td>
                                             <td></td>
                                             <td></td>
                                             <td>Libur</td>
-                                            <td></td>
+                                            <td><?= $libur_d->keterangan; ?></td>
                                         </tr>
                                 <?php    }
                                 }
