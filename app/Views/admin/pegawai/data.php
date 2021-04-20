@@ -75,9 +75,9 @@
                                                     </li>
                                                     <li><a target="_blank" href="/admin/pegawai_izin_view/<?= $row['pegawai_id'] ?>"><i class="fa fa-table"></i> Izin</a>
                                                     </li>
-                                                    <li class="divider"></li>
+                                                    <!-- <li class="divider"></li>
                                                     <li><a href="#"><i class="fa fa-folder"></i> View</a>
-                                                    </li>
+                                                    </li> -->
                                                 </ul>
                                                 <a href="/admin/edit_pegawai/<?= $row['pegawai_id']; ?>" class="btn btn-warning btn-xs" type="button"><i class="fa fa-pencil"></i> Edit</a>
                                                 <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target=".modal-del<?= $row['pegawai_id'] ?>"><i class="fa fa-trash-o"></i> Delete </button>

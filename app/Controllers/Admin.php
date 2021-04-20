@@ -1724,37 +1724,44 @@ class Admin extends BaseController
 
     public function absensi_detail($id)
     {
-        $periode = $this->periodeModel->aktif()->getRow();
-        $periode_all = $this->periodeModel->getData();
         $pegawai = $this->pegawaiModel->getData($id)->getRow();
-        $fingerprint = $this->fingerprintModel->getData($pegawai->sidik_id)->getResultArray();
+        if ($pegawai->sidik_id == NULL || $pegawai->sidik_id == '') {
+            $session = session();
+            $session->setFlashdata('warning', 'Sidik Jari Pegawai Belum Di Atur, Harap Masukkan Nomor Sidik Jari');
+            return redirect()->to('/admin/data_pegawai');
+        } else {
 
-        $mulai = $periode->tanggal_mulai;
-        $akhir = $periode->tanggal_akhir;
+            $periode = $this->periodeModel->aktif()->getRow();
+            $periode_all = $this->periodeModel->getData();
+            $fingerprint = $this->fingerprintModel->getData($pegawai->sidik_id)->getResultArray();
 
-        $tgl1 = date_create($mulai);
-        $tgl2 = date_create($akhir);
-        $diff  = date_diff($tgl1, $tgl2);
-        $range =  $diff->format("%R%a days");
+            $mulai = $periode->tanggal_mulai;
+            $akhir = $periode->tanggal_akhir;
 
-        $todayDate = $mulai;
-        $now = strtotime($todayDate);
+            $tgl1 = date_create($mulai);
+            $tgl2 = date_create($akhir);
+            $diff  = date_diff($tgl1, $tgl2);
+            $range =  $diff->format("%R%a days");
 
-        for ($i = 0; $i <= $range; $i++) {
-            $nilai[] = date('Y-m-d', strtotime('+' . $i . 'days', $now));
+            $todayDate = $mulai;
+            $now = strtotime($todayDate);
+
+            for ($i = 0; $i <= $range; $i++) {
+                $nilai[] = date('Y-m-d', strtotime('+' . $i . 'days', $now));
+            }
+
+            $data = [
+                'title' => 'Absensi Detail',
+                'page' => 'Absensi',
+                'pegawai' => $pegawai,
+                'fingerprint' => $fingerprint,
+                'list' => $nilai,
+                'periode' => $periode_all,
+                'aktif' => $periode,
+            ];
+
+            return view('admin/absensi/absensi_detail', $data);
         }
-
-        $data = [
-            'title' => 'Absensi Detail',
-            'page' => 'Absensi',
-            'pegawai' => $pegawai,
-            'fingerprint' => $fingerprint,
-            'list' => $nilai,
-            'periode' => $periode_all,
-            'aktif' => $periode,
-        ];
-
-        return view('admin/absensi/absensi_detail', $data);
     }
 
     public function isi_detail($id)
