@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 13, 2021 at 03:42 PM
+-- Generation Time: Apr 20, 2021 at 06:16 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.4.13
 
@@ -20,6 +20,26 @@ SET time_zone = "+00:00";
 --
 -- Database: `hrms`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `absensi_setting`
+--
+
+CREATE TABLE `absensi_setting` (
+  `setting_id` int(11) NOT NULL,
+  `jam_masuk` time DEFAULT NULL,
+  `jam_pulang` time DEFAULT NULL,
+  `periode_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `absensi_setting`
+--
+
+INSERT INTO `absensi_setting` (`setting_id`, `jam_masuk`, `jam_pulang`, `periode_id`) VALUES
+(1, '07:00:00', '16:00:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -7352,6 +7372,26 @@ INSERT INTO `fingerprint` (`id`, `sidik_id`, `date`, `time`, `state`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `hari_libur`
+--
+
+CREATE TABLE `hari_libur` (
+  `libur_id` int(11) NOT NULL,
+  `tgl_libur` date DEFAULT NULL,
+  `keterangan` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `hari_libur`
+--
+
+INSERT INTO `hari_libur` (`libur_id`, `tgl_libur`, `keterangan`) VALUES
+(2, '2021-03-10', 'dsfdsfsdf'),
+(3, '2021-03-07', 'Hari Minggu');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `hubkel`
 --
 
@@ -7370,6 +7410,33 @@ INSERT INTO `hubkel` (`hubkel_id`, `hubkel`, `keterangan`) VALUES
 (3, 'Orang Tua', 'Tes'),
 (4, 'Adik', 'ts'),
 (5, 'Kakak', 'tes');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inventaris`
+--
+
+CREATE TABLE `inventaris` (
+  `inventaris_id` int(11) NOT NULL,
+  `nama_barang` varchar(50) DEFAULT NULL,
+  `nomor_seri` varchar(20) DEFAULT NULL,
+  `merk` varchar(50) DEFAULT NULL,
+  `unit` varchar(20) DEFAULT NULL,
+  `lokasi` varchar(50) DEFAULT NULL,
+  `keterangan` varchar(100) DEFAULT NULL,
+  `jumlah` int(11) DEFAULT NULL,
+  `foto` longtext DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `update_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `inventaris`
+--
+
+INSERT INTO `inventaris` (`inventaris_id`, `nama_barang`, `nomor_seri`, `merk`, `unit`, `lokasi`, `keterangan`, `jumlah`, `foto`, `created_at`, `update_at`) VALUES
+(2, 'Meja & Kursi', '08252', 'Kayu', 'Buah', 'Kelas 10', 'jksdfjkdsnf', 873, NULL, '0000-00-00 00:00:00', '2021-04-17 07:17:31');
 
 -- --------------------------------------------------------
 
@@ -7435,6 +7502,45 @@ CREATE TABLE `izin_pegawai` (
   `created_at` datetime NOT NULL,
   `update_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `izin_pegawai`
+--
+
+INSERT INTO `izin_pegawai` (`izin_pegawai_id`, `izin_id`, `izin_jenis_id`, `pegawai_id`, `tanggal_awal`, `tanggal_akhir`, `keterangan`, `file`, `status`, `created_at`, `update_at`) VALUES
+(8, 2, 1, 17, '2021-04-20', '2021-04-24', 'pulang kampung', '1618712544_b3e8daa80f7d0eaea44b.jpeg', 'Diterima', '0000-00-00 00:00:00', '2021-04-18 02:22:24'),
+(9, 4, 3, 21, '2021-04-20', '2021-04-21', 'dfsfsfsdf', '1618712715_0117e45ec271565555a2.pdf', 'Menunggu', '0000-00-00 00:00:00', '2021-04-18 02:25:15'),
+(10, 1, 1, NULL, '2021-04-20', '2021-04-25', 'dsfdsfsdf', '1618849250_0683f33045adb4cf5ef5.pdf', 'Menunggu', '0000-00-00 00:00:00', '2021-04-19 16:20:50'),
+(11, 2, 1, 17, '2021-04-20', '2021-04-29', 'rfgdgfdgfg', NULL, 'Menunggu', '0000-00-00 00:00:00', '2021-04-19 16:23:01'),
+(12, 5, 2, 17, '2021-04-29', '2021-04-30', 'dfdsf', '1618849408_b8e7bc8bdf193c424b55.pdf', 'Menunggu', '0000-00-00 00:00:00', '2021-04-19 16:23:28');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jabatan_pegawai`
+--
+
+CREATE TABLE `jabatan_pegawai` (
+  `jab_peg_id` int(11) NOT NULL,
+  `pegawai_id` int(11) DEFAULT NULL,
+  `nama_jabatan` varchar(50) DEFAULT NULL,
+  `tmt_jabatan` date DEFAULT NULL,
+  `tanggal_sk` date DEFAULT NULL,
+  `nomor_sk` varchar(50) DEFAULT NULL,
+  `satker_id` int(11) DEFAULT NULL,
+  `keterangan` varchar(100) DEFAULT NULL,
+  `file` longtext DEFAULT NULL,
+  `status` char(2) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `update_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `jabatan_pegawai`
+--
+
+INSERT INTO `jabatan_pegawai` (`jab_peg_id`, `pegawai_id`, `nama_jabatan`, `tmt_jabatan`, `tanggal_sk`, `nomor_sk`, `satker_id`, `keterangan`, `file`, `status`, `created_at`, `update_at`) VALUES
+(1, 17, 'dfsfsdfrterte', '2021-04-20', '2021-04-28', '98457948545', 1, 'sdfdsfdsf', '1618798318_f387fd8f47b19b6a983f.jpeg', '1', '0000-00-00 00:00:00', '2021-04-19 03:19:38');
 
 -- --------------------------------------------------------
 
@@ -7532,10 +7638,10 @@ CREATE TABLE `pegawai` (
   `tanggal_lahir` date DEFAULT NULL,
   `jenis_kelamin` enum('P','L','','') DEFAULT NULL,
   `status_perkawin` enum('Belum Menikah','Menikah','Janda Cerai','Janda Mati','Duda Cerai','Duda Mati') NOT NULL,
-  `provinsi` char(2) DEFAULT NULL,
-  `kota` char(4) DEFAULT NULL,
-  `kecamatan` char(7) DEFAULT NULL,
-  `kelurahan` char(10) DEFAULT NULL,
+  `provinsi` varchar(2) DEFAULT NULL,
+  `kota` varchar(4) DEFAULT NULL,
+  `kecamatan` varchar(7) DEFAULT NULL,
+  `kelurahan` varchar(10) DEFAULT NULL,
   `alamat` varchar(300) DEFAULT NULL,
   `telepon` varchar(50) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
@@ -7555,7 +7661,42 @@ CREATE TABLE `pegawai` (
 
 INSERT INTO `pegawai` (`pegawai_id`, `jenis_pegawai_id`, `nama`, `gelar_depan`, `gelar_belakang`, `nik`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `status_perkawin`, `provinsi`, `kota`, `kecamatan`, `kelurahan`, `alamat`, `telepon`, `email`, `rekening`, `keterangan`, `gambar`, `status_pegawai`, `tanggal_masuk`, `sidik_id`, `created_at`, `update_at`) VALUES
 (17, 1, 'Mustapa Ahmad Kamal', '', '', '75437825873246', 'Amuntai', '1997-07-11', 'L', 'Belum Menikah', '63', '6308', '630805', '6308050023', 'Jl. Lambung Mangkurat RT 06 No 001', '08223775772', 'mustapakamalkml@gmail.com', '0521621914', NULL, '1617915513_5f5baa618a6766340fe4.jpg', 1, '2019-08-10', 159, '0000-00-00 00:00:00', '2021-04-13 09:29:11'),
-(21, 1, 'Rizky Pratama Putra', '', '', '12121212', 'Amuntai', '0000-00-00', 'L', 'Belum Menikah', '35', '3514', '351409', '3514090001', '', '1121212', 'rizky@gmail.com', '234324324', NULL, '1617931043_e47bf7f06c4cee5892fd.jpg', 1, '0000-00-00', 160, '0000-00-00 00:00:00', '2021-04-13 09:29:16');
+(21, 1, 'Rizky Pratama Putra', '', '', '12121212', 'Amuntai', '0000-00-00', 'L', 'Belum Menikah', '35', '3514', '351409', '3514090001', '', '1121212', 'rizky@gmail.com', '234324324', NULL, '1617931043_e47bf7f06c4cee5892fd.jpg', 1, '0000-00-00', 160, '0000-00-00 00:00:00', '2021-04-13 09:29:16'),
+(22, 1, 'Agustina Putri Lestari', '', 'Amd, AB', '76457647', '', '0000-00-00', 'P', 'Belum Menikah', '63', '6308', '630805', '6308050023', '', '082237755772', 'agustinaputrilestarii@gmail.com', '09845798435', NULL, '1618715722_4833b06dec56f487160a.jpeg', 1, '2021-04-19', NULL, '0000-00-00 00:00:00', '2021-04-18 03:15:22');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `peminjaman_inventaris`
+--
+
+CREATE TABLE `peminjaman_inventaris` (
+  `peminjaman_id` int(11) NOT NULL,
+  `inventaris_id` int(50) DEFAULT NULL,
+  `pegawai_id` int(20) DEFAULT NULL,
+  `tanggal_pinjam` datetime DEFAULT NULL,
+  `tanggal_kembali` datetime DEFAULT NULL,
+  `lokasi_pinjam` varchar(50) DEFAULT NULL,
+  `keperluan` varchar(100) DEFAULT NULL,
+  `jumlah` int(11) DEFAULT NULL,
+  `status` varchar(20) DEFAULT NULL,
+  `foto` longtext DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `update_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `peminjaman_inventaris`
+--
+
+INSERT INTO `peminjaman_inventaris` (`peminjaman_id`, `inventaris_id`, `pegawai_id`, `tanggal_pinjam`, `tanggal_kembali`, `lokasi_pinjam`, `keperluan`, `jumlah`, `status`, `foto`, `created_at`, `update_at`) VALUES
+(3, 2, 21, '2021-04-20 00:00:00', '2021-04-19 00:00:00', 'Kelas 11', 'Acaradsfdsf', 11, 'Selesai', '1618711308_b34caf0b688070cc97eb.png', '2021-04-17 21:10:46', '2021-04-18 03:10:09'),
+(4, 2, 21, '2021-04-22 00:00:00', '2021-04-24 00:00:00', 'Gedung 1', 'sfdgdf', 23, 'Selesai', NULL, '2021-04-17 21:42:13', '2021-04-18 03:10:17'),
+(5, 2, 22, '2021-04-23 00:00:00', '2021-04-20 00:00:00', 'Gedung 1', 'sdfjdksfjk', 10, 'Selesai', '1618717885_47d9ed01a68abf2aac62.png', '2021-04-17 22:51:25', '2021-04-18 20:58:11'),
+(6, 2, NULL, '2021-04-01 00:00:00', NULL, 'dsfsdfsdf', 'dfgfdgf', 10, 'Menunggu', '1618842502_9180c58087713641a499.jpeg', '2021-04-19 09:28:22', '2021-04-19 14:28:22'),
+(7, 2, NULL, '2021-04-19 00:00:00', NULL, 'dsfsdfsdf', 'sdfsdfsdfds', 21, 'Menunggu', NULL, '2021-04-19 09:30:27', '2021-04-19 14:30:27'),
+(8, 2, 17, '2021-04-06 00:00:00', NULL, 'dsfsdfsdf', 'dsfdsfd', 12, 'Menunggu', NULL, '2021-04-19 09:35:04', '2021-04-19 14:35:04'),
+(9, 2, 17, '2021-04-19 00:00:00', NULL, 'dsfsdfsdf', 'dsfsdfdsf', 12, 'Menunggu', NULL, '2021-04-19 09:37:57', '2021-04-19 14:37:57');
 
 -- --------------------------------------------------------
 
@@ -7577,6 +7718,13 @@ CREATE TABLE `pendidikan_pegawai` (
   `file` longtext DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `pendidikan_pegawai`
+--
+
+INSERT INTO `pendidikan_pegawai` (`pend_peg_id`, `pegawai_id`, `jenis_pend_id`, `jenj_pend_id`, `nama_pendidikan`, `penyelenggara`, `tanggal_ijazah`, `tahun_lulus`, `nomor_ijazah`, `keterangan`, `file`) VALUES
+(1, NULL, 1, 1, 'SDN Palampitan 1 Amuntai', 'Kementerian Pendidikan', '2021-04-01', 2012, '34987867', 'jdfjnjdf', '1618806239_e541ebf006af81bfa223.png');
+
 -- --------------------------------------------------------
 
 --
@@ -7588,18 +7736,19 @@ CREATE TABLE `periode` (
   `kode` varchar(10) DEFAULT NULL,
   `tanggal_mulai` date DEFAULT NULL,
   `tanggal_akhir` date DEFAULT NULL,
-  `wajib` int(10) DEFAULT NULL
+  `wajib` int(10) DEFAULT NULL,
+  `status` char(2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `periode`
 --
 
-INSERT INTO `periode` (`periode_id`, `kode`, `tanggal_mulai`, `tanggal_akhir`, `wajib`) VALUES
-(1, '202101', '2020-12-26', '2021-01-25', 25),
-(2, '202102', '2021-01-26', '2021-02-25', 25),
-(3, '202103', '2021-02-26', '2021-03-25', 25),
-(4, '202104', '2021-03-26', '2021-04-25', 25);
+INSERT INTO `periode` (`periode_id`, `kode`, `tanggal_mulai`, `tanggal_akhir`, `wajib`, `status`) VALUES
+(1, '202101', '2020-12-26', '2021-01-25', 25, '0'),
+(2, '202102', '2021-01-26', '2021-02-25', 25, '0'),
+(3, '202103', '2021-02-26', '2021-03-25', 25, '1'),
+(4, '202104', '2021-03-26', '2021-04-25', 25, '0');
 
 -- --------------------------------------------------------
 
@@ -8187,6 +8336,27 @@ INSERT INTO `regencies` (`id`, `province_id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `satker`
+--
+
+CREATE TABLE `satker` (
+  `satker_id` int(11) NOT NULL,
+  `nama` varchar(50) DEFAULT NULL,
+  `keterangan` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `satker`
+--
+
+INSERT INTO `satker` (`satker_id`, `nama`, `keterangan`) VALUES
+(1, 'SMK Maestro Islamic School Banjarmasin', 'Sekolah Menengah Kejuruan'),
+(2, 'SMP Al-mazaya Islamic School Banjarmasin', 'Sekolah Menengah Pertama'),
+(3, 'SMA Al-Mazaya Islamic School', 'Sekolah Menengah Atas');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -8204,8 +8374,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `role`, `pegawai_id`) VALUES
 (1, 'admin', '$2y$12$x1mXnPBus96fBhnypelEcOZY/U4kLdXRGgvhOhrYmKX9cUTCoOz3u', 'Admin', NULL),
-(13, 'mustapakamalkml@gmail.com', '$2y$10$4yktIi51fGzsNnZR87dDJefbNQHKSd6uA8yKyQkLFTlEiOQSvs0CG', 'Pegawai', 17),
-(15, 'rizky@gmail.com', '$2y$10$oxHNzccrS63SCxe0DXc4m.x58Tils73Fqr5Lz1MWcSgkRfcrrDIJO', 'Kepala', 21);
+(16, 'rizky@gmail.com', '$2y$10$znEeEOh7OLx5ima/j9rlYuB3cW4JBVubYGK8WMRNt4Xcxdpa/Qyb2', 'Pegawai', 21),
+(18, 'mustapakamalkml@gmail.com', '$2y$10$9CDY1j/6uP.2EHxfwfZ1leTzb1kbXDmqIx2DLpeas3R0C7qGSptyS', 'Pegawai', 17);
 
 -- --------------------------------------------------------
 
@@ -83289,6 +83459,12 @@ INSERT INTO `villages` (`id`, `district_id`, `name`) VALUES
 --
 
 --
+-- Indexes for table `absensi_setting`
+--
+ALTER TABLE `absensi_setting`
+  ADD PRIMARY KEY (`setting_id`);
+
+--
 -- Indexes for table `districts`
 --
 ALTER TABLE `districts`
@@ -83302,10 +83478,22 @@ ALTER TABLE `fingerprint`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `hari_libur`
+--
+ALTER TABLE `hari_libur`
+  ADD PRIMARY KEY (`libur_id`);
+
+--
 -- Indexes for table `hubkel`
 --
 ALTER TABLE `hubkel`
   ADD PRIMARY KEY (`hubkel_id`);
+
+--
+-- Indexes for table `inventaris`
+--
+ALTER TABLE `inventaris`
+  ADD PRIMARY KEY (`inventaris_id`);
 
 --
 -- Indexes for table `izin`
@@ -83328,6 +83516,12 @@ ALTER TABLE `izin_pegawai`
   ADD KEY `izin_id` (`izin_id`,`izin_jenis_id`,`pegawai_id`),
   ADD KEY `izin_jenis_id` (`izin_jenis_id`),
   ADD KEY `pegawai_id` (`pegawai_id`);
+
+--
+-- Indexes for table `jabatan_pegawai`
+--
+ALTER TABLE `jabatan_pegawai`
+  ADD PRIMARY KEY (`jab_peg_id`);
 
 --
 -- Indexes for table `jenis_pegawai`
@@ -83366,6 +83560,12 @@ ALTER TABLE `pegawai`
   ADD KEY `fingerprint_id` (`sidik_id`);
 
 --
+-- Indexes for table `peminjaman_inventaris`
+--
+ALTER TABLE `peminjaman_inventaris`
+  ADD PRIMARY KEY (`peminjaman_id`);
+
+--
 -- Indexes for table `pendidikan_pegawai`
 --
 ALTER TABLE `pendidikan_pegawai`
@@ -83394,6 +83594,12 @@ ALTER TABLE `regencies`
   ADD KEY `regencies_province_id_index` (`province_id`);
 
 --
+-- Indexes for table `satker`
+--
+ALTER TABLE `satker`
+  ADD PRIMARY KEY (`satker_id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -83412,16 +83618,34 @@ ALTER TABLE `villages`
 --
 
 --
+-- AUTO_INCREMENT for table `absensi_setting`
+--
+ALTER TABLE `absensi_setting`
+  MODIFY `setting_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `fingerprint`
 --
 ALTER TABLE `fingerprint`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=427;
 
 --
+-- AUTO_INCREMENT for table `hari_libur`
+--
+ALTER TABLE `hari_libur`
+  MODIFY `libur_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `hubkel`
 --
 ALTER TABLE `hubkel`
   MODIFY `hubkel_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `inventaris`
+--
+ALTER TABLE `inventaris`
+  MODIFY `inventaris_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `izin`
@@ -83439,7 +83663,13 @@ ALTER TABLE `izin_jenis`
 -- AUTO_INCREMENT for table `izin_pegawai`
 --
 ALTER TABLE `izin_pegawai`
-  MODIFY `izin_pegawai_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `izin_pegawai_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `jabatan_pegawai`
+--
+ALTER TABLE `jabatan_pegawai`
+  MODIFY `jab_peg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `jenis_pegawai`
@@ -83463,19 +83693,25 @@ ALTER TABLE `jenjang_pendidikan`
 -- AUTO_INCREMENT for table `keluarga_pegawai`
 --
 ALTER TABLE `keluarga_pegawai`
-  MODIFY `kel_peg_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `kel_peg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `pegawai`
 --
 ALTER TABLE `pegawai`
-  MODIFY `pegawai_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `pegawai_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `peminjaman_inventaris`
+--
+ALTER TABLE `peminjaman_inventaris`
+  MODIFY `peminjaman_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `pendidikan_pegawai`
 --
 ALTER TABLE `pendidikan_pegawai`
-  MODIFY `pend_peg_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `pend_peg_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `periode`
@@ -83484,10 +83720,16 @@ ALTER TABLE `periode`
   MODIFY `periode_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `satker`
+--
+ALTER TABLE `satker`
+  MODIFY `satker_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- Constraints for dumped tables
