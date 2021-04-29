@@ -1926,13 +1926,45 @@ class Admin extends BaseController
             return redirect()->to('/admin/add_peminjaman/');
         } else {
             $file = $this->request->getFile('file');
-            if ($file->isValid() && !$file->hasMoved()) {
-                $file_type = $file->getClientMimeType();
-                $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif');
-                if (in_array($file_type, $valid_type)) {
-                    $randomName = $file->getRandomName();
-                    $file->move(ROOTPATH . 'public/images/peminjaman/', $randomName);
+            $inventaris_id = $this->request->getVar('inventaris');
+            $jml = $this->request->getVar('jumlah');
+            $asal = $this->inventarisModel->getData($inventaris_id)->getRow();
+            $pinjam = $this->peminjamanModel->cek_jumlah($inventaris_id)->getRow();
+            $sisa = (intval($asal->jumlah)) - (intval($pinjam->jumlah));
+            // dd($sisa);
+            if ($sisa < $jml) {
+                $session = session();
+                $session->setFlashdata('warning', 'Barang tidak mencukupi, harap periksa jumlah barang');
+                return redirect()->back()->withInput();
+            } else {
+                if ($file->isValid() && !$file->hasMoved()) {
+                    $file_type = $file->getClientMimeType();
+                    $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif');
+                    if (in_array($file_type, $valid_type)) {
+                        $randomName = $file->getRandomName();
+                        $file->move(ROOTPATH . 'public/images/peminjaman/', $randomName);
 
+                        $date = new DateTime();
+                        $this->peminjamanModel->save([
+                            'inventaris_id' => $this->request->getVar('inventaris'),
+                            'pegawai_id' => $this->request->getVar('pegawai'),
+                            'tanggal_pinjam' => $this->request->getVar('tanggal_pinjam'),
+                            'lokasi_pinjam' => $this->request->getVar('lokasi_pinjam'),
+                            'keperluan' => $this->request->getVar('keperluan'),
+                            'jumlah' => $this->request->getVar('jumlah'),
+                            'status' => $this->request->getVar('status'),
+                            'foto' => $randomName,
+                            'created_at' => $date->format('Y-m-d H:i:s'),
+                        ]);
+                        $session = session();
+                        $session->setFlashdata('success', 'Data Inventaris Berhasil Disimpan!');
+                        return redirect()->to('/admin/riwayat_peminjaman');
+                    } else {
+                        $session = session();
+                        $session->setFlashdata('warning', 'Tipe Gambar Tidak Sesuai');
+                        return redirect()->to('/admin/add_peminjaman/');
+                    }
+                } else {
                     $date = new DateTime();
                     $this->peminjamanModel->save([
                         'inventaris_id' => $this->request->getVar('inventaris'),
@@ -1942,32 +1974,12 @@ class Admin extends BaseController
                         'keperluan' => $this->request->getVar('keperluan'),
                         'jumlah' => $this->request->getVar('jumlah'),
                         'status' => $this->request->getVar('status'),
-                        'foto' => $randomName,
                         'created_at' => $date->format('Y-m-d H:i:s'),
                     ]);
                     $session = session();
                     $session->setFlashdata('success', 'Data Inventaris Berhasil Disimpan!');
-                    return redirect()->to('/admin/riwayat_peminjaman');
-                } else {
-                    $session = session();
-                    $session->setFlashdata('info', 'Tipe Gambar Tidak Sesuai');
-                    return redirect()->to('/admin/add_peminjaman/');
+                    return redirect()->to('/admin/riwayat_peminjaman/');
                 }
-            } else {
-                $date = new DateTime();
-                $this->peminjamanModel->save([
-                    'inventaris_id' => $this->request->getVar('inventaris'),
-                    'pegawai_id' => $this->request->getVar('pegawai'),
-                    'tanggal_pinjam' => $this->request->getVar('tanggal_pinjam'),
-                    'lokasi_pinjam' => $this->request->getVar('lokasi_pinjam'),
-                    'keperluan' => $this->request->getVar('keperluan'),
-                    'jumlah' => $this->request->getVar('jumlah'),
-                    'status' => $this->request->getVar('status'),
-                    'created_at' => $date->format('Y-m-d H:i:s'),
-                ]);
-                $session = session();
-                $session->setFlashdata('success', 'Data Inventaris Berhasil Disimpan!');
-                return redirect()->to('/admin/riwayat_peminjaman/');
             }
         }
     }
@@ -2066,12 +2078,24 @@ class Admin extends BaseController
     public function peminjaman_approve()
     {
         $id = $this->request->getVar('peminjaman_id');
-        $this->peminjamanModel->update($id, [
-            'status' => 'Diterima',
-        ]);
-        $session = session();
-        $session->setFlashdata('success', 'Peminjaman Diterima!');
-        return redirect()->to('/admin/konfirmasi_peminjaman');
+        $peminjaman = $this->peminjamanModel->getData($id)->getRow();
+        $asal = $this->inventarisModel->getData($peminjaman->inventaris_id)->getRow();
+        $pinjam = $this->peminjamanModel->cek_jumlah($peminjaman->inventaris_id)->getRow();
+        $sisa = (intval($asal->jumlah)) - (intval($pinjam->jumlah));
+        $jml = $peminjaman->jumlah;
+        // dd($sisa);
+        if ($sisa < $jml) {
+            $session = session();
+            $session->setFlashdata('warning', 'Barang tidak mencukupi, harap periksa jumlah barang');
+            return redirect()->back()->withInput();
+        } else {
+            $this->peminjamanModel->update($id, [
+                'status' => 'Diterima',
+            ]);
+            $session = session();
+            $session->setFlashdata('success', 'Peminjaman Diterima!');
+            return redirect()->to('/admin/konfirmasi_peminjaman');
+        }
     }
 
     public function peminjaman_reject()

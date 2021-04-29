@@ -19,4 +19,9 @@ class PeminjamanModel extends Model
             return $this->getWhere(['peminjaman_id' => $id]);
         }
     }
+
+    public function cek_jumlah($inventaris_id)
+    {
+        return $this->selectSum('jumlah')->getWhere(['inventaris_id' => $inventaris_id, 'status' => 'Diterima']);
+    }
 }
