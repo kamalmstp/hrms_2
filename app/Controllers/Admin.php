@@ -71,8 +71,12 @@ class Admin extends BaseController
 
     public function index()
     {
+        $pegawai = count($this->pegawaiModel->getData());
+        $inventaris = count($this->inventarisModel->getData());
         $data = [
             'title' => 'Dashboard',
+            'pegawai' => $pegawai,
+            'inventaris' => $inventaris,
         ];
         return view('admin/dashboard', $data);
     }
