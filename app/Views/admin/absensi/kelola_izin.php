@@ -85,7 +85,7 @@
                                 </div>
                                 <?php foreach ($izin_jenis as $izin1) : ?>
                                     <div role="tabpanel" class="tab-pane fade" id="tab_content<?= $izin1['izin_jenis_id'] ?>" aria-labelledby="tab<?= $izin['izin_jenis_id'] ?>">
-                                        <table id="datatable-buttons" class="table table-striped table-bordered">
+                                        <table id="datatable<?= $izin1['izin_jenis_id'] ?>" class="table table-striped table-bordered">
                                             <thead>
                                                 <tr>
                                                     <th width="4%">No</th>
@@ -100,8 +100,12 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php $i = 1; ?>
-                                                <?php foreach ($izin_pegawai as $row) : ?>
+                                                <?php $izin_peg_model = new \App\Models\IzinPegawaiModel(); ?>
+                                                <?php
+                                                $i = 1;
+                                                $izin_peg = $izin_peg_model->get_izin($izin1['izin_jenis_id'])->getResultArray();
+                                                ?>
+                                                <?php foreach ($izin_peg as $row) : ?>
                                                     <tr>
                                                         <td><?= $i++; ?></td>
                                                         <td><?= $row['jenis_izin'] . " - " . $row['nama_izin']; ?></td>
@@ -172,5 +176,12 @@
             </div>
         </div>
     </div>
+<?php endforeach; ?>
+<?php foreach ($izin_jenis as $row1) : ?>
+    <script>
+        $(document).ready(function() {
+            $('#datatable<?= $row1['izin_jenis_id'] ?>').DataTable();
+        });
+    </script>
 <?php endforeach; ?>
 <?= $this->endSection(); ?>

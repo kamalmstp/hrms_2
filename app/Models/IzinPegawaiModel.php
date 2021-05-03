@@ -30,4 +30,17 @@ class IzinPegawaiModel extends Model
 
         return $builder->get();
     }
+
+    public function get_izin($id)
+    {
+        $this->db = \Config\Database::connect();
+        $sql = $this->db->table('izin_pegawai a')
+            ->select('a.izin_pegawai_id, c.nama as jenis_izin, b.nama as nama_izin, p.nama as nama_pegawai, a.tanggal_awal, a.tanggal_akhir, datediff(a.tanggal_akhir, a.tanggal_awal) as lama, a.file, a.status')
+            ->join('pegawai p', 'p.pegawai_id = a.pegawai_id')
+            ->join('izin b', 'b.izin_id = a.izin_id')
+            ->join('izin_jenis c', 'c.izin_jenis_id = b.izin_jenis_id')
+            ->where('c.izin_jenis_id', $id)->get();
+
+        return $sql;
+    }
 }
