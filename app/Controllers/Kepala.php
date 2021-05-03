@@ -2188,4 +2188,14 @@ class Kepala extends BaseController
             }
         }
     }
+
+    public function lap_kehadiran_pegawai()
+    {
+        $data = [
+            'title' => 'Laporan Kehadiran Pegawai',
+            'page' => 'Laporan',
+        ];
+
+        return view('kepala/laporan/kehadiran_pegawai', $data);
+    }
 }
