@@ -71,8 +71,12 @@ class Kepala extends BaseController
 
     public function index()
     {
+        $pegawai = count($this->pegawaiModel->getData());
+        $inventaris = count($this->inventarisModel->getData());
         $data = [
             'title' => 'Dashboard',
+            'pegawai' => $pegawai,
+            'inventaris' => $inventaris,
         ];
         return view('kepala/dashboard', $data);
     }
@@ -1462,11 +1466,14 @@ class Kepala extends BaseController
             ->join('izin b', 'b.izin_id = a.izin_id')
             ->join('izin_jenis c', 'c.izin_jenis_id = b.izin_jenis_id')->get();
         $izin_pegawai = $sql->getResultArray();
+
         // $izin_pegawai = $this->izinPegawaiModel->getData();
         // dd($izin_pegawai);
+        $izin_j = $this->izinjenisModel->getData();
         $data = [
-            'title' => 'Kelola Izin',
+            'title' => 'Riwayat Ketidakhadiran',
             'izin_pegawai' => $izin_pegawai,
+            'izin_jenis' => $izin_j,
         ];
 
         return view('kepala/absensi/kelola_izin', $data);
@@ -1728,11 +1735,12 @@ class Kepala extends BaseController
         if ($pegawai->sidik_id == NULL || $pegawai->sidik_id == '' || $pegawai->sidik_id == '0') {
             $session = session();
             $session->setFlashdata('warning', 'Sidik Jari Pegawai Belum Di Atur, Harap Masukkan Nomor Sidik Jari');
-            return redirect()->to('/kepala/data_pegawai');
+            return redirect()->to('/admin/data_pegawai');
         } else {
             $periode = $this->periodeModel->aktif()->getRow();
             $periode_all = $this->periodeModel->getData();
             $fingerprint = $this->fingerprintModel->getData($pegawai->sidik_id)->getResultArray();
+            $total_libur = $this->liburModel->total($periode->tanggal_mulai, $periode->tanggal_akhir)->getResultArray();
 
             $mulai = $periode->tanggal_mulai;
             $akhir = $periode->tanggal_akhir;
@@ -1757,6 +1765,7 @@ class Kepala extends BaseController
                 'list' => $nilai,
                 'periode' => $periode_all,
                 'aktif' => $periode,
+                'wajib_hadir' => (count($nilai) - count($total_libur)),
             ];
 
             return view('kepala/absensi/absensi_detail', $data);

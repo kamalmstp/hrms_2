@@ -61,8 +61,8 @@
                             <li><a href="/admin/data_fingerprint">Data Fingerprint</a></li>
                             <li><a href="/admin/periode">Periode</a></li>
                             <li><a href="/admin/libur">Hari Libur</a></li>
-                            <li><a href="/admin/konfirmasi_izin">Konfirmasi Izin</a></li>
-                            <li><a href="/admin/kelola_izin">Kelola Izin</a></li>
+                            <li><a href="/admin/konfirmasi_izin">Konfirmasi Ketidakhadiran</a></li>
+                            <li><a href="/admin/kelola_izin">Kelola Ketidakhadiran</a></li>
                         </ul>
                     </li>
                     <li><a><i class="fa fa-table"></i> Inventaris <span class="fa fa-chevron-down"></span></a>

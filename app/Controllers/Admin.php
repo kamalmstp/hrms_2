@@ -1466,11 +1466,12 @@ class Admin extends BaseController
             ->join('izin b', 'b.izin_id = a.izin_id')
             ->join('izin_jenis c', 'c.izin_jenis_id = b.izin_jenis_id')->get();
         $izin_pegawai = $sql->getResultArray();
+
         // $izin_pegawai = $this->izinPegawaiModel->getData();
         // dd($izin_pegawai);
         $izin_j = $this->izinjenisModel->getData();
         $data = [
-            'title' => 'Kelola Izin',
+            'title' => 'Kelola Ketidakhadiran',
             'izin_pegawai' => $izin_pegawai,
             'izin_jenis' => $izin_j,
         ];
@@ -1881,7 +1882,7 @@ class Admin extends BaseController
     {
         $this->db = \Config\Database::connect();
         $sql = $this->db->table('peminjaman_inventaris a')
-            ->select('p.nama as nama_pegawai, a.pegawai_id, a.inventaris_id, i.nama_barang, a.tanggal_kembali, a.status, a.tanggal_pinjam, a.lokasi_pinjam, a.keperluan, a.foto, a.peminjaman_id')
+            ->select('p.nama as nama_pegawai, a.pegawai_id, a.inventaris_id, i.nama_barang, a.tanggal_kembali, a.status, a.tanggal_pinjam, a.jumlah, a.lokasi_pinjam, a.keperluan, a.foto, a.peminjaman_id')
             ->join('pegawai p', 'p.pegawai_id = a.pegawai_id')
             ->join('inventaris i', 'i.inventaris_id = a.inventaris_id')->get();
         $peminjaman = $sql->getResultArray();
@@ -1956,7 +1957,7 @@ class Admin extends BaseController
             } else {
                 if ($file->isValid() && !$file->hasMoved()) {
                     $file_type = $file->getClientMimeType();
-                    $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif');
+                    $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'application/pdf', 'application/doc', 'application/docx');
                     if (in_array($file_type, $valid_type)) {
                         $randomName = $file->getRandomName();
                         $file->move(ROOTPATH . 'public/images/peminjaman/', $randomName);

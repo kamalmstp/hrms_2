@@ -89,7 +89,7 @@
                                 <label for="file" class="control-label col-md-3 col-sm-3 col-xs-12">Foto <br> <small>(dokumen/surat/bukti)</small> </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input id="file" class="form-control col-md-7 col-xs-12" type="file" name="file">
-                                    <small>*) File yang diupload hanya boleh file foto (jpg,jpeg,png,gif) <br> dengan ukuran maksimal 2MB</small>
+                                    <small>*) File yang diupload boleh file foto (jpg,jpeg,png,gif) <br> File document yang diperbolehkan (pdf, doc, docx) <br> dengan ukuran maksimal 2MB</small>
                                 </div>
                             </div>
                             <div class="ln_solid"></div>

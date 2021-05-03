@@ -43,6 +43,9 @@
     <link type="text/css" href="/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link type="text/css" href="/build/css/custom.min.css" rel="stylesheet">
+
+    <link type="text/css" href="/vendors/fullcalendar/dist/fullcalendar.min.css" rel="stylesheet">
+    <link type="text/css" href="/vendors/fullcalendar/dist/fullcalendar.print.css" rel="stylesheet" media="print">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <!-- <script>
         $(document).ready(function() {
@@ -144,7 +147,8 @@
     <script type="text/javascript" src="/vendors/jszip/dist/jszip.min.js"></script>
     <script type="text/javascript" src="/vendors/pdfmake/build/pdfmake.min.js"></script>
     <script type="text/javascript" src="/vendors/pdfmake/build/vfs_fonts.js"></script>
-
+    <script type="text/javascript" src="/vendors/moment/min/moment.min.js"></script>
+    <script type="text/javascript" src="/vendors/fullcalendar/dist/fullcalendar.min.js"></script>
     <!-- Custom Theme Scripts -->
     <script type="text/javascript" src="/build/js/custom.min.js"></script>
     <?php

@@ -34,6 +34,7 @@
                                     <th>Tanggal Selesai</th>
                                     <th>Lokasi Peminjaman</th>
                                     <th>Keperluan</th>
+                                    <th>Jumlah</th>
                                     <th>Bukti</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
@@ -54,6 +55,7 @@
                                             } ?></td>
                                         <td><?= $row['lokasi_pinjam'] ?></td>
                                         <td><?= $row['keperluan'] ?></td>
+                                        <td><?= $row['jumlah'] ?></td>
                                         <td><?php if ($row['foto'] == '') {
                                                 echo '<i>empty</i>';
                                             } else { ?>

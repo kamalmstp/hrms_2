@@ -55,14 +55,14 @@
                             <li><a href="/kepala/jabatan_pegawai">Jabatan Pegawai</a></li>
                         </ul>
                     </li>
-                    <li><a><i class="fa fa-calendar"></i> Izin <span class="fa fa-chevron-down"></span></a>
+                    <li><a><i class="fa fa-calendar"></i> Ketidakhadiran <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <!-- <li><a href="#">Absensi Pegawai</a></li> -->
                             <!-- <li><a href="/kepala/data_fingerprint">Data Fingerprint</a></li> -->
                             <!-- <li><a href="/kepala/periode">Periode</a></li>
                             <li><a href="/kepala/libur">Hari Libur</a></li> -->
-                            <li><a href="/kepala/konfirmasi_izin">Konfirmasi Izin</a></li>
-                            <li><a href="/kepala/kelola_izin">Kelola Izin</a></li>
+                            <li><a href="/kepala/konfirmasi_izin">Konfirmasi Ketidakhadiran</a></li>
+                            <li><a href="/kepala/kelola_izin">Riwayat Ketidakhadiran</a></li>
                         </ul>
                     </li>
                     <li><a><i class="fa fa-table"></i> Inventaris <span class="fa fa-chevron-down"></span></a>
