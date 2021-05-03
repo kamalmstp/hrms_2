@@ -103,4 +103,11 @@ class FingerprintModel extends Model
     {
         return $this->getWhere(['sidik_id' => $id, 'date' => $tgl, 'state' => 'C/Out']);
     }
+
+    public function total_hadir($id)
+    {
+        $tgl = $this->listPeriode();
+
+        return $tgl;
+    }
 }

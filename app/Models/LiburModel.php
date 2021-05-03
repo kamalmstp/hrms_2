@@ -24,4 +24,13 @@ class LiburModel extends Model
     {
         return $this->getWhere(['tgl_libur' => $tgl]);
     }
+
+    public function total($mulai, $selesai)
+    {
+        $db      = \Config\Database::connect();
+        $builder = $db->table('hari_libur');
+        $builder->where("tgl_libur BETWEEN '" . $mulai . "' AND '" . $selesai . "'");
+
+        return $builder->get();
+    }
 }

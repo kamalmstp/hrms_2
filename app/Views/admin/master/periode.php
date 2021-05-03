@@ -31,7 +31,6 @@
                                     <th>Kode</th>
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Akhir</th>
-                                    <th>Wajib Hadir</th>
                                     <th>Status</th>
                                     <th style="width: 20%">Aksi</th>
                                 </tr>
@@ -50,7 +49,6 @@
                                         <td>
                                             <?= date('d F Y', strtotime($row['tanggal_akhir'])) ?>
                                         </td>
-                                        <td><?= $row['wajib']; ?></td>
                                         <td><?php if ($row['status'] == 1) {
                                                 echo 'Aktif';
                                             } ?></td>
@@ -105,13 +103,13 @@
                             <input type="date" id="tanggal_akhir" name="tanggal_akhir" class="form-control col-md-7 col-xs-12" required>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="wajib">Wajib Hadir
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                             <input type="number" id="wajib" name="wajib" class="form-control col-md-7 col-xs-12" required>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="form-group">
                         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="wajib">Status
@@ -170,13 +168,13 @@
                                 <input type="date" id="tanggal_akhir" value="<?= $row['tanggal_akhir'] ?>" name="tanggal_akhir" class="form-control col-md-7 col-xs-12" required>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="wajib">Wajib Hadir
                             </label>
                             <div class="col-md-6 col-sm-6 col-xs-12">
                                 <input type="number" id="wajib" value="<?= $row['wajib'] ?>" name="wajib" class="form-control col-md-7 col-xs-12" required>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="form-group">
                             <label class="control-label col-md-3 col-sm-3 col-xs-12" for="wajib">Status
                             </label>

@@ -19,4 +19,15 @@ class IzinPegawaiModel extends Model
             return $this->getWhere(['izin_pegawai_id' => $id]);
         }
     }
+
+    public function absensi_libur($id, $tgl)
+    {
+        $db      = \Config\Database::connect();
+        $builder = $db->table('izin_pegawai');
+        $builder->where("'" . $tgl . "' BETWEEN tanggal_awal AND tanggal_akhir");
+        $builder->where('pegawai_id', $id);
+        $builder->where('status', 'Diterima');
+
+        return $builder->get();
+    }
 }

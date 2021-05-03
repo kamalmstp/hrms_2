@@ -1468,9 +1468,11 @@ class Admin extends BaseController
         $izin_pegawai = $sql->getResultArray();
         // $izin_pegawai = $this->izinPegawaiModel->getData();
         // dd($izin_pegawai);
+        $izin_j = $this->izinjenisModel->getData();
         $data = [
             'title' => 'Kelola Izin',
             'izin_pegawai' => $izin_pegawai,
+            'izin_jenis' => $izin_j,
         ];
 
         return view('admin/absensi/kelola_izin', $data);
@@ -1576,6 +1578,15 @@ class Admin extends BaseController
                 return redirect()->to('/admin/kelola_izin');
             }
         }
+    }
+
+    public function izin_pegawai_del()
+    {
+        $id = $this->request->getVar('izin_pegawai_id');
+        $this->izinPegawaiModel->where('izin_pegawai_id', $id)->delete($id);
+        $session = session();
+        $session->setFlashdata('success', 'Data Berhasil Dihapus!');
+        return redirect()->to('/admin/kelola_izin');
     }
 
     public function file_izin_download($id)
@@ -1737,6 +1748,7 @@ class Admin extends BaseController
             $periode = $this->periodeModel->aktif()->getRow();
             $periode_all = $this->periodeModel->getData();
             $fingerprint = $this->fingerprintModel->getData($pegawai->sidik_id)->getResultArray();
+            $total_libur = $this->liburModel->total($periode->tanggal_mulai, $periode->tanggal_akhir)->getResultArray();
 
             $mulai = $periode->tanggal_mulai;
             $akhir = $periode->tanggal_akhir;
@@ -1761,6 +1773,7 @@ class Admin extends BaseController
                 'list' => $nilai,
                 'periode' => $periode_all,
                 'aktif' => $periode,
+                'wajib_hadir' => (count($nilai) - count($total_libur)),
             ];
 
             return view('admin/absensi/absensi_detail', $data);
