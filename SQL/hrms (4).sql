@@ -1,4 +1,4 @@
--- phpMyAdmin SQL Dump
+﻿-- phpMyAdmin SQL Dump
 -- version 5.0.4
 -- https://www.phpmyadmin.net/
 --
@@ -48,10 +48,10 @@ INSERT INTO `absensi_setting` (`setting_id`, `jam_masuk`, `jam_pulang`, `periode
 --
 
 CREATE TABLE `districts` (
-  `id` char(7) COLLATE utf8_unicode_ci NOT NULL,
-  `regency_id` char(4) COLLATE utf8_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `id` char(7) NOT NULL,
+  `regency_id` char(4) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `districts`
@@ -7757,9 +7757,9 @@ INSERT INTO `periode` (`periode_id`, `kode`, `tanggal_mulai`, `tanggal_akhir`, `
 --
 
 CREATE TABLE `provinces` (
-  `id` char(2) COLLATE utf8_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `id` char(2) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `provinces`
@@ -7808,10 +7808,10 @@ INSERT INTO `provinces` (`id`, `name`) VALUES
 --
 
 CREATE TABLE `regencies` (
-  `id` char(4) COLLATE utf8_unicode_ci NOT NULL,
-  `province_id` char(2) COLLATE utf8_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `id` char(4) NOT NULL,
+  `province_id` char(2) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `regencies`
@@ -8384,10 +8384,10 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `role`, `pegawai_id`) VA
 --
 
 CREATE TABLE `villages` (
-  `id` char(10) COLLATE utf8_unicode_ci NOT NULL,
-  `district_id` char(7) COLLATE utf8_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `id` char(10) NOT NULL,
+  `district_id` char(7) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `villages`

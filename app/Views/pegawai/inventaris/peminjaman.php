@@ -18,7 +18,7 @@
                     <div class="x_title">
                         <h2><?= $title; ?></h2>
                         <div class="nav navbar-right panel_toolbox">
-                            <a href="/admin/add_peminjaman" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Add </a>
+                            <a href="/pegawai/add_peminjaman" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Add </a>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -70,8 +70,8 @@
                                             } ?>
                                         </td>
                                         <td>
-                                            <a href="/admin/edit_peminjaman/<?= $row['peminjaman_id']; ?>" class="btn btn-warning btn-xs" type="button"><i class="fa fa-pencil"></i> Edit</a>
-                                            <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target=".modal-del<?= $row['peminjaman_id'] ?>"><i class="fa fa-trash-o"></i> Delete </button>
+                                            <a href="/pegawai/edit_peminjaman/<?= $row['peminjaman_id']; ?>" class="btn btn-warning btn-xs" type="button"><i class="fa fa-pencil"></i> Edit</a>
+                                            <!-- <button type="button" class="btn btn-danger btn-xs" data-toggle="modal" data-target=".modal-del<?= $row['peminjaman_id'] ?>"><i class="fa fa-trash-o"></i> Delete </button> -->
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -91,7 +91,7 @@
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
 
-                <form action="/admin/peminjaman_del" method="post" class="form-horizontal form-label-left">
+                <form action="/pegawai/peminjaman_del" method="post" class="form-horizontal form-label-left">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
                         </button>
@@ -117,7 +117,7 @@
         <div class="modal-dialog modal-md">
             <div class="modal-content">
 
-                <form action="/admin/peminjaman_return" method="post" class="form-horizontal form-label-left">
+                <form action="/pegawai/peminjaman_return" method="post" class="form-horizontal form-label-left">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
                         </button>

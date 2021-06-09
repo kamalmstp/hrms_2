@@ -23,7 +23,7 @@
                         <br />
                         <?= $validation->listErrors(); ?>
                         <form action="/kepala/peminjaman_update" enctype="multipart/form-data" method="POST" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
-
+                            <?php $inputs = session()->getFlashdata('inputs'); ?>
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="last-name">Pegawai
                                 </label>
@@ -57,8 +57,7 @@
                             <div class="form-group">
                                 <label for="tanggal-pinjam" class="control-label col-md-3 col-sm-3 col-xs-12">Tanggal Pinjam</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input id="tanggal-pinjam" value="<?= $peminjaman->tanggal_pinjam ?>" class="form-control col-md-7 col-xs-12" type="date" name="tanggal_pinjam">
-
+                                    <input id="tanggal-pinjam" value="<?= date('Y-m-d', strtotime($peminjaman->tanggal_pinjam)) ?>" class="form-control col-md-7 col-xs-12" type="date" name="tanggal_pinjam">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -84,13 +83,13 @@
                                 <label for="file" class="control-label col-md-3 col-sm-3 col-xs-12">Foto <br> <small>(dokumen/surat/bukti)</small> </label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <input id="file" class="form-control col-md-7 col-xs-12" type="file" name="file">
-                                    <small>*) File yang diupload hanya boleh file foto (jpg,jpeg,png,gif) <br> dengan ukuran maksimal 2MB</small>
+                                    <small>*) File yang diupload boleh file foto (jpg,jpeg,png,gif) <br> File document yang diperbolehkan (pdf, doc, docx) <br> dengan ukuran maksimal 2MB</small>
                                 </div>
                             </div>
                             <div class="ln_solid"></div>
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                    <button class="btn btn-primary" type="button">Cancel</button>
+                                    <a href="/kepala/riwayat_peminjaman" class="btn btn-primary" type="button">Cancel</a>
                                     <button type="submit" class="btn btn-success">Submit</button>
                                 </div>
                             </div>

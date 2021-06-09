@@ -1735,7 +1735,7 @@ class Kepala extends BaseController
         if ($pegawai->sidik_id == NULL || $pegawai->sidik_id == '' || $pegawai->sidik_id == '0') {
             $session = session();
             $session->setFlashdata('warning', 'Sidik Jari Pegawai Belum Di Atur, Harap Masukkan Nomor Sidik Jari');
-            return redirect()->to('/admin/data_pegawai');
+            return redirect()->to('/kepala/data_pegawai');
         } else {
             $periode = $this->periodeModel->aktif()->getRow();
             $periode_all = $this->periodeModel->getData();
@@ -1925,14 +1925,16 @@ class Kepala extends BaseController
             'inventaris' => 'required',
             'tanggal_pinjam' => 'required',
             'keperluan' => 'required',
+            'status' => 'required',
         ];
 
         if (!$this->validate($rules)) {
             $data = $this->validator->listErrors();
             $session = session();
+            $session->setFlashdata('inputs', $this->request->getPost());
             $session->setFlashdata('info', $this->validator->getErrors());
             // dd($data);
-            return redirect()->to('/admin/add_peminjaman/');
+            return redirect()->to('/kepala/add_peminjaman/');
         } else {
             $file = $this->request->getFile('file');
             $inventaris_id = $this->request->getVar('inventaris');
@@ -1943,12 +1945,13 @@ class Kepala extends BaseController
             // dd($sisa);
             if ($sisa < $jml) {
                 $session = session();
+                $session->setFlashdata('inputs', $this->request->getPost());
                 $session->setFlashdata('warning', 'Barang tidak mencukupi, harap periksa jumlah barang');
                 return redirect()->back()->withInput();
             } else {
                 if ($file->isValid() && !$file->hasMoved()) {
                     $file_type = $file->getClientMimeType();
-                    $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif');
+                    $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'application/pdf', 'application/doc', 'application/docx');
                     if (in_array($file_type, $valid_type)) {
                         $randomName = $file->getRandomName();
                         $file->move(ROOTPATH . 'public/images/peminjaman/', $randomName);
@@ -1967,11 +1970,12 @@ class Kepala extends BaseController
                         ]);
                         $session = session();
                         $session->setFlashdata('success', 'Data Inventaris Berhasil Disimpan!');
-                        return redirect()->to('/admin/riwayat_peminjaman');
+                        return redirect()->to('/kepala/riwayat_peminjaman');
                     } else {
                         $session = session();
-                        $session->setFlashdata('warning', 'Tipe Gambar Tidak Sesuai');
-                        return redirect()->to('/admin/add_peminjaman/');
+                        $session->setFlashdata('inputs', $this->request->getPost());
+                        $session->setFlashdata('warning', 'Tipe File Tidak Sesuai');
+                        return redirect()->to('/kepala/add_peminjaman/');
                     }
                 } else {
                     $date = new DateTime();
@@ -1987,7 +1991,7 @@ class Kepala extends BaseController
                     ]);
                     $session = session();
                     $session->setFlashdata('success', 'Data Inventaris Berhasil Disimpan!');
-                    return redirect()->to('/admin/riwayat_peminjaman/');
+                    return redirect()->to('/kepala/riwayat_peminjaman/');
                 }
             }
         }
@@ -2007,18 +2011,52 @@ class Kepala extends BaseController
         if (!$this->validate($rules)) {
             $data = $this->validator->listErrors();
             $session = session();
+            $session->setFlashdata('inputs', $this->request->getPost());
             $session->setFlashdata('info', $this->validator->getErrors());
             // dd($data);
             return redirect()->to('/kepala/edit_peminjaman/' . $id);
         } else {
             $file = $this->request->getFile('file');
-            if ($file->isValid() && !$file->hasMoved()) {
-                $file_type = $file->getClientMimeType();
-                $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif');
-                if (in_array($file_type, $valid_type)) {
-                    $randomName = $file->getRandomName();
-                    $file->move(ROOTPATH . 'public/images/peminjaman/', $randomName);
+            $inventaris_id = $this->request->getVar('inventaris');
+            $jml = $this->request->getVar('jumlah');
+            $asal = $this->inventarisModel->getData($inventaris_id)->getRow();
+            $pinjam = $this->peminjamanModel->cek_jumlah($inventaris_id)->getRow();
+            $sisa = (intval($asal->jumlah)) - (intval($pinjam->jumlah));
 
+            if ($sisa < $jml) {
+                $session = session();
+                $session->setFlashdata('inputs', $this->request->getPost());
+                $session->setFlashdata('warning', 'Barang tidak mencukupi, harap periksa jumlah barang');
+                return redirect()->back()->withInput();
+            } else {
+                if ($file->isValid() && !$file->hasMoved()) {
+                    $file_type = $file->getClientMimeType();
+                    $valid_type = array('image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'application/pdf', 'application/doc', 'application/docx');
+                    if (in_array($file_type, $valid_type)) {
+                        $randomName = $file->getRandomName();
+                        $file->move(ROOTPATH . 'public/images/peminjaman/', $randomName);
+
+                        $date = new DateTime();
+                        $this->peminjamanModel->update($id, [
+                            'inventaris_id' => $this->request->getVar('inventaris'),
+                            'pegawai_id' => $this->request->getVar('pegawai'),
+                            'tanggal_pinjam' => $this->request->getVar('tanggal_pinjam'),
+                            'lokasi_pinjam' => $this->request->getVar('lokasi_pinjam'),
+                            'keperluan' => $this->request->getVar('keperluan'),
+                            'jumlah' => $this->request->getVar('jumlah'),
+                            'foto' => $randomName,
+                            'created_at' => $date->format('Y-m-d H:i:s'),
+                        ]);
+                        $session = session();
+                        $session->setFlashdata('success', 'Data Inventaris Berhasil Disimpan!');
+                        return redirect()->to('/kepala/riwayat_peminjaman/');
+                    } else {
+                        $session = session();
+                        $session->setFlashdata('inputs', $this->request->getPost());
+                        $session->setFlashdata('info', 'Tipe File Tidak Sesuai');
+                        return redirect()->to('/kepala/edit_peminjaman/' . $id);
+                    }
+                } else {
                     $date = new DateTime();
                     $this->peminjamanModel->update($id, [
                         'inventaris_id' => $this->request->getVar('inventaris'),
@@ -2027,34 +2065,16 @@ class Kepala extends BaseController
                         'lokasi_pinjam' => $this->request->getVar('lokasi_pinjam'),
                         'keperluan' => $this->request->getVar('keperluan'),
                         'jumlah' => $this->request->getVar('jumlah'),
-                        'foto' => $randomName,
                         'created_at' => $date->format('Y-m-d H:i:s'),
                     ]);
                     $session = session();
                     $session->setFlashdata('success', 'Data Inventaris Berhasil Disimpan!');
                     return redirect()->to('/kepala/riwayat_peminjaman/');
-                } else {
-                    $session = session();
-                    $session->setFlashdata('info', 'Tipe Gambar Tidak Sesuai');
-                    return redirect()->to('/kepala/edit_peminjaman/');
                 }
-            } else {
-                $date = new DateTime();
-                $this->peminjamanModel->update($id, [
-                    'inventaris_id' => $this->request->getVar('inventaris'),
-                    'pegawai_id' => $this->request->getVar('pegawai'),
-                    'tanggal_pinjam' => $this->request->getVar('tanggal_pinjam'),
-                    'lokasi_pinjam' => $this->request->getVar('lokasi_pinjam'),
-                    'keperluan' => $this->request->getVar('keperluan'),
-                    'jumlah' => $this->request->getVar('jumlah'),
-                    'created_at' => $date->format('Y-m-d H:i:s'),
-                ]);
-                $session = session();
-                $session->setFlashdata('success', 'Data Inventaris Berhasil Disimpan!');
-                return redirect()->to('/kepala/riwayat_peminjaman/');
             }
         }
     }
+
 
     public function peminjaman_del()
     {
