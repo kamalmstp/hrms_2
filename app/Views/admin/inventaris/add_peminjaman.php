@@ -33,6 +33,7 @@
                                         <?php foreach ($pegawai as $row) : ?>
                                             <option value="<?= $row['pegawai_id'] ?>" <?php if ($inputs['pegawai'] == $row['pegawai_id']) {
                                                                                             echo 'selected';
+                                                                                        } else {
                                                                                         } ?>><?= $row['nama']; ?></option>
                                         <?php endforeach; ?>
                                     </select>
@@ -48,6 +49,7 @@
                                         <?php foreach ($inventaris as $row) : ?>
                                             <option value="<?= $row['inventaris_id']; ?>" <?php if ($inputs['inventaris'] == $row['inventaris_id']) {
                                                                                                 echo 'selected';
+                                                                                            } else {
                                                                                             } ?>><?= $row['nama_barang']; ?></option>
                                         <?php endforeach; ?>
                                     </select>
@@ -85,12 +87,15 @@
                                         <option value="">--Pilih Status--</option>
                                         <option value="Menunggu" <?php if ($inputs['status'] == 'Menunggu') {
                                                                         echo 'selected';
+                                                                    } else {
                                                                     } ?>>Menunggu</option>
                                         <option value="Diterima" <?php if ($inputs['status'] == 'Diterima') {
                                                                         echo 'selected';
+                                                                    } else {
                                                                     } ?>>Diterima</option>
                                         <option value="Ditolak" <?php if ($inputs['status'] == 'Ditolak') {
                                                                     echo 'selected';
+                                                                } else {
                                                                 } ?>>Ditolak</option>
                                     </select>
                                 </div>
