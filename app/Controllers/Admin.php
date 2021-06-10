@@ -1935,6 +1935,7 @@ class Admin extends BaseController
             'tanggal_pinjam' => 'required',
             'keperluan' => 'required',
             'status' => 'required',
+            'jumlah' => 'required',
         ];
 
         if (!$this->validate($rules)) {
